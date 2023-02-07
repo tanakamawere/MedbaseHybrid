@@ -1,0 +1,163 @@
+﻿@page "/questions/{topicRef:int}/{source}"
+@using MedbaseHybrid.Models
+@using MedbaseHybrid.Services
+@inject IApiRepository repository
+@inject IDatabaseRepository database
+@using Markdig
+
+<PageTitle>Questions</PageTitle>
+
+<div class="text-center m-3">
+    <div class="btn-group">
+        <button @onclick="() => GetQuestions(QuestionPaged.CurrentPage -1)" class="btn btn-outline-primary @(!(QuestionPaged.CurrentPage > 1) ? "disabled" : "")">
+            Previous
+        </button>
+        <p>Page @QuestionPaged.CurrentPage of @QuestionPaged.Pages</p>
+        <button @onclick="() => GetQuestions(QuestionPaged.CurrentPage +1)"
+                class="btn btn-outline-primary @(!(QuestionPaged.CurrentPage < QuestionPaged.Pages) ? "disabled" : "")">
+            Next
+        </button>
+    </div>
+</div>
+
+<Virtualize Items="QuestionPaged.Questions.ToList()" Context="question" TItem="Question">
+    <ItemContent>
+
+        <div class="container-fluid" style="max-width:500px">
+            <!--Question-->
+            <div class="row">
+                <div class="col">
+                    <h5 class="h5">
+                        @question.Id - @question.QuestionMain
+                    </h5>
+                </div>
+                <div class="col col-2">
+                    <a class="btn"
+                       href="https://wa.me/263718086035?text=Questions%20ID:%20@(question.Id)%20has%20an%20error.%20(Please%20write%20your%20suggested%20answers%20here.)">
+                        <i class="bi bi-flag text-dark"
+                           style="font-size:small"></i>
+                    </a>
+                </div>
+            </div>
+            <input hidden asp-for="@question.Id" />
+            <div class="text-start">
+                <!--Child1-->
+                <div>
+                    <div class="col">
+                        <p class="card-text">a) @question.ChildA</p>
+                    </div>
+                    <div class="container card h-100 border-1" style="display:@(Answers == 1 && qts == question.Id ? "block" : "none")">
+                        <div class="card-body p-1">
+                            <p class="card-text">
+                                @question.AnswerA.ToString()
+                            </p>
+                            @((MarkupString)Markdown.ToHtml(question.ExplanationA == null ? " " : question.ExplanationA))
+                        </div>
+                    </div>
+                </div>
+                <!--Child2-->
+                <div>
+                    <div class="col">
+                        <p class="card-text">b) @question.ChildB</p>
+                    </div>
+                    <div class="container card h-100 border-1" style="display:@(Answers == 1 && qts == question.Id ? "block" : "none")">
+                        <div class="card-body p-1">
+                            <p class="card-text">
+                                @question.AnswerB.ToString()
+                            </p>
+                            @((MarkupString)Markdown.ToHtml(question.ExplanationB == null ? " " : question.ExplanationB))
+                        </div>
+                    </div>
+                </div>
+                <!--Child3-->
+                <div>
+                    <div class="col">
+                        <p class="card-text">c) @question.ChildC</p>
+                    </div>
+                    <div class="container card h-100 border-1" style="display:@(Answers == 1 && qts == question.Id ? "block" : "none")">
+                        <div class="card-body p-1">
+                            <p class="card-text">
+                                @question.AnswerC.ToString()
+                            </p>
+                            @((MarkupString)Markdown.ToHtml(question.ExplanationC == null ? " " : question.ExplanationC))
+                        </div>
+                    </div>
+                </div>
+                <!--Child4-->
+                <div>
+                    <div class="col">
+                        <p class="card-text">d) @question.ChildD</p>
+                    </div>
+                    <div class="container card h-100 border-1" style="display:@(Answers == 1 && qts == question.Id ? "block" : "none")">
+                        <div class="card-body p-1">
+                            <p class="card-text">
+                                @question.AnswerD.ToString()
+                            </p>
+                            @((MarkupString)Markdown.ToHtml(question.ExplanationD == null ? " " : question.ExplanationD))
+                        </div>
+                    </div>
+                </div>
+                <!--Child5-->
+                <div>
+                    <div class="col">
+                        <p class="card-text">e) @question.ChildE</p>
+                    </div>
+                    <div class="container card h-100 border-1" style="display:@(Answers == 1 && qts == question.Id ? "block" : "none")">
+                        <div class="card-body p-1">
+                            <p class="card-text">
+                                @question.AnswerE.ToString()
+                            </p>
+                            @((MarkupString)Markdown.ToHtml(question.ExplanationE == null ? " " : question.ExplanationE))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="justify-content-sm-center justify-content-xl-start text-center m-2">
+            <a class="btn btn-primary px-4" href="/courses">
+                <span class="oi oi-share" aria-hidden="true"></span>
+            </a>
+            <button class="btn btn-outline-dark px-4" @onclick="() => ShowAnswers(question.Id)">
+                <span class="oi oi-envelope-open" aria-hidden="true"></span>
+            </button>
+        </div>
+
+    </ItemContent>
+</Virtualize>
+
+
+@code {
+    [Parameter]
+    public int topicRef { get; set; } = 0;
+    [Parameter]
+    public string source { get; set; }
+    public int Answers { get; set; } = 0;
+    public int qts;
+
+    QuestionPaged QuestionPaged = new ();
+
+    private List<Question> QuestionsList { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync() => await GetQuestions();
+
+    private void ShowAnswers(int questionToShow)
+    {
+        qts = questionToShow;
+        if (Answers == 0)
+            Answers = 1;
+        else if (Answers == 1)
+            Answers = 0;
+    }
+
+    private async Task GetQuestions(int page = 1)
+    {
+        if (source.Equals("online"))
+        {
+            QuestionPaged = await repository.GetPagedQuestions(topicRef, page, 10f);
+        }
+        else if (source.Equals("offline"))
+        {
+            QuestionPaged = await database.GetQuestionsPaged(topicRef, page, 10f);
+        }
+    }
+}

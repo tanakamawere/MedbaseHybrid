@@ -9,12 +9,13 @@ namespace MedbaseHybrid.Services
         IQueryable<Topic> GetTopicsAsync();
         IQueryable<Question> GetQuestionsAsync(int topicReference);
         IQueryable<Question> GetQuizQuestionsAsync(int topicReference, int number);
+        Task<QuestionPaged> GetQuestionsPaged(int topic, int page, double numResults);
 
         Task SaveTopicAndQuestionsAsync(IEnumerable<Question> questions, Topic topic);
 
         Task SaveSession(Session session);
         IQueryable<Session> GetSessionsAsync();
 
-        Task DeleteTopicAsync(Topic topic);
+        Task DeleteTopicAsync(int topic);
     }
 }

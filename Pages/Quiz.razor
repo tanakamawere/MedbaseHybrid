@@ -1,16 +1,25 @@
-﻿@page "/quiz/{topicId:int}/{number:int}/{negativeMarking}"
+﻿@page "/quiz/{topicId:int}/{number:int}/{negativeMarking}/{source}"
 @using System.Diagnostics;
+@using MedbaseHybrid.Services;
+@inject IDatabaseRepository database
 @inject IApiRepository repository
 
 <input type="text" @onkeydown="HandleKeyDown"  @ref="answerKeyboardInput" style="visibility:hidden"/>
 
 <div style="display:@(quizDone == false ? "block" : "none")">
-    <h2>@QuestionSelected.Question</h2>
-    <div style="visibility:@answerVisibility">
-        <p>@answerResult</p>
-        <p>@QuestionSelected.Answer</p>
-        <p>@QuestionSelected.Explanation</p>
-    </div>
+    @if (!Quizzes.Any())
+    {
+        <p><em>Loading your questions...</em></p>
+    }
+    else
+    {
+        <h2>@QuestionSelected.Question</h2>
+        <div style="visibility:@answerVisibility">
+            <p>@answerResult</p>
+            <p>@QuestionSelected.Answer</p>
+            <p>@QuestionSelected.Explanation</p>
+        </div>
+    }
     <div>
         <div class="row btn-group-sm" style="display:@(quizDone == false ? "block" : "none")">
             <button class="btn btn-success btn-sm m-1" style="visibility:@((answerVisibility == "visible") ? "hidden" : "visible")" @onclick="() => AnswerResponse(answerTrue)">
@@ -46,6 +55,8 @@
     public int number { get; set; }
     [Parameter]
     public string negativeMarking { get; set; }
+    [Parameter]
+    public string source { get; set; }
 
 
     private int count = 0;
@@ -68,7 +79,17 @@
 
     protected async override Task OnParametersSetAsync()
     {
-        foreach (var item in GetQuizQuestionsAsync(await repository.GetQuestionsSimple((long)topicId)))
+        List<Question> questions = new();
+        if (source.Equals("online"))
+        {
+            questions = GetQuizQuestionsAsync(await repository.GetQuestionsSimple((long)topicId));
+        }
+        else if (source.Equals("offline"))
+        {
+            questions = database.GetQuizQuestionsAsync(topicId, number).ToList();
+        }
+
+        foreach (Question item in questions)
         {
             QuizQuestion card = new()
                 {
