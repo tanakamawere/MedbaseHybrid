@@ -1,0 +1,200 @@
+﻿@page "/quiz/{topicId:int}/{number:int}/{negativeMarking}"
+@using System.Diagnostics;
+@inject IApiRepository repository
+
+<input type="text" @onkeydown="HandleKeyDown"  @ref="answerKeyboardInput" style="visibility:hidden"/>
+
+<div style="display:@(quizDone == false ? "block" : "none")">
+    <h2>@QuestionSelected.Question</h2>
+    <div style="visibility:@answerVisibility">
+        <p>@answerResult</p>
+        <p>@QuestionSelected.Answer</p>
+        <p>@QuestionSelected.Explanation</p>
+    </div>
+    <div>
+        <div class="row btn-group-sm" style="display:@(quizDone == false ? "block" : "none")">
+            <button class="btn btn-success btn-sm m-1" style="visibility:@((answerVisibility == "visible") ? "hidden" : "visible")" @onclick="() => AnswerResponse(answerTrue)">
+                True
+            </button>
+            <button class="btn btn-info btn-sm m-1" style="visibility:@((answerVisibility == "visible") ? "hidden" : "visible")" @onclick="() => AnswerResponse(answerLeft)">
+                I don't know
+            </button>
+            <button class="btn btn-primary btn-sm m-1"  style="visibility:@((answerVisibility == "visible") ? "hidden" : "visible")" @onclick="() => AnswerResponse(answerFalse)">
+                False
+            </button>
+        </div>
+        <button class="btn btn-primary" style="visibility:@answerVisibility" @onclick="NextQuestion">
+            Next
+        </button>
+    </div>
+</div>
+
+<QuizDone 
+        Visibility="@quizDone"
+        Percentage="@(result * 100)" 
+        TimeTaken="@watch.Elapsed.ToString("mm\\:ss")" />
+
+@code {
+    public List<QuizQuestion> Quizzes = new();
+    private Stopwatch watch = new();
+
+    [Inject]
+    public NavigationManager navigationManager { get; set; }
+    [Parameter]
+    public int topicId { get; set; }
+    [Parameter]
+    public int number { get; set; }
+    [Parameter]
+    public string negativeMarking { get; set; }
+
+
+    private int count = 0;
+    private int totalQuizzes;
+    private int correctCount = 0;
+    private int wrongCount = 0;
+    double result;
+
+
+    public string numberLeft;
+    public string answerResult;
+    public string answerVisibility = "hidden";
+    public bool quizDone = false;
+
+    public string answerTrue = "true";
+    public string answerFalse = "false";
+    public string answerLeft = "null";
+
+    public QuizQuestion QuestionSelected = new();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        foreach (var item in GetQuizQuestionsAsync(await repository.GetQuestionsSimple((long)topicId)))
+        {
+            QuizQuestion card = new()
+                {
+                    Question = $"{item.Id}a. {item.QuestionMain}, {item.ChildA}",
+                    Answer = item.AnswerA,
+                    Explanation = item.ExplanationA
+                };
+            QuizQuestion cardB = new()
+                {
+                    Question = $"{item.Id}b. {item.QuestionMain}, {item.ChildB}",
+                    Answer = item.AnswerB,
+                    Explanation = item.ExplanationB
+                };
+            QuizQuestion cardC = new()
+                {
+                    Question = $"{item.Id}c. {item.QuestionMain}, {item.ChildC}",
+                    Answer = item.AnswerC,
+                    Explanation = item.ExplanationC
+                };
+            QuizQuestion cardD = new()
+                {
+                    Question = $"{item.Id}d. {item.QuestionMain}, {item.ChildD}",
+                    Answer = item.AnswerD,
+                    Explanation = item.ExplanationD
+                };
+            QuizQuestion cardE = new()
+                {
+                    Question = $"{item.Id}e. {item.QuestionMain}, {item.ChildE}",
+                    Answer = item.AnswerE,
+                    Explanation = item.ExplanationE
+                };
+
+            Quizzes.Add(card);
+            Quizzes.Add(cardB);
+            Quizzes.Add(cardC);
+            Quizzes.Add(cardD);
+            Quizzes.Add(cardE);
+        }
+        totalQuizzes = Quizzes.Count;
+        GetQuizQuestion();
+        watch.Start();
+    }
+
+    public List<Question> GetQuizQuestionsAsync(IEnumerable<Question> questions) => questions.Take(number).ToList();
+    void GetQuizQuestion()
+    {
+        if (count < totalQuizzes)
+        {
+            answerVisibility = "hidden";
+            answerKeyboardInput.FocusAsync();
+
+            numberLeft = $"{totalQuizzes - count} questions left";
+
+            QuestionSelected = Quizzes[count];
+        }
+        else
+        {
+            QuizDone();
+        }
+    }
+
+
+    private ElementReference answerKeyboardInput;
+    private string pressedKey;
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "j":
+                AnswerResponse(answerTrue);
+                break;
+            case "k":
+                AnswerResponse(answerLeft);
+                break;
+            case "l":
+                AnswerResponse(answerFalse);
+                break;
+            default:
+                return;
+        }
+    }
+
+
+    void AnswerResponse(string answer)
+    {
+        answerVisibility = "visible";
+
+        if (answer.Equals("null"))
+        {
+            answerResult = "Question left";
+        }
+        else
+        {
+            if (bool.Parse(answer).CompareTo(QuestionSelected.Answer) == 0)
+            {
+                answerResult = "Correct";
+                correctCount++;
+            }
+            else
+            {
+                answerResult = "Wrong";
+                wrongCount++;
+            }
+        }
+    }
+    void NextQuestion()
+    {
+        answerVisibility = "hidden";
+        count++;
+        GetQuizQuestion();
+    }
+
+    void QuizDone()
+    {
+        watch.Stop();
+
+        if (bool.Parse(negativeMarking))
+        {
+            result = (double)(correctCount - wrongCount) / (double)totalQuizzes;
+        }
+        else
+        {
+            result = (double)correctCount / (double)totalQuizzes;
+        }
+
+        quizDone = true;
+    }
+}

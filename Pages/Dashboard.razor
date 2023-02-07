@@ -1,0 +1,76 @@
+﻿@page "/"
+@page "/dashboard"
+@using MedbaseHybrid.Services;
+@inject IDatabaseRepository database
+
+<div class="container mt-5">
+    <div class="row gx-5 align-items-center justify-content-center">
+        <div class="text-center text-xl-start">
+            <h1 class="display-5 fw-bolder text-dark mb-2">Choose Topic</h1>
+        </div>
+        <div class="row gx-5">
+            @if (!TopicsList.Any())
+            {
+                <p><em>Loading...</em></p>
+            }
+            else
+            {
+                @foreach (Topic item in TopicsList)
+                {
+                    <div class="col-lg-4 mb-5">
+                        <div class="card h-100 shadow border-0">
+                            <div class="card-body p-4">
+                                <h5 class="card-title mb-3">
+                                    @item.Name
+                                </h5>
+                                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+                                    <a class="btn btn-primary" href="@($"questions/{item.TopicRef}")">View All</a>
+                                    <button class="btn btn-outline-dark" @onclick="() => CustomiseQuiz(item.TopicRef)">
+                                        Quiz
+                                    </button>
+                                </div>
+                                <div class="container-fluid text-center border-0 shadow card-footer mt-2" style="display:@(showCustomisation.Equals(true) && topicToCustomise == item.TopicRef ? "block" : "none")">
+                                    <h6 class="fw-bold">CustomiseQuiz</h6>
+
+                                    <div class="row">
+                                        <p class="col-auto">Negative Marking</p>
+                                        <InputCheckbox class="col-auto" @bind-Value="negativeMarking"></InputCheckbox>
+                                    </div>
+                                    <div class="row text-center align-content-center justify-content-center">
+                                        <p class="col-auto">Number Of Questions</p>
+                                        <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
+                                    </div>
+                                    <a class="btn btn-primary" href="@($"/quiz/{item.TopicRef}/{numberOfQuestions}/{negativeMarking}")">
+                                        Start!
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private IEnumerable<Topic> TopicsList { get; set; } = Enumerable.Empty<Topic>();
+
+    bool showCustomisation = false;
+    int topicToCustomise;
+    private bool negativeMarking = false;
+    private int numberOfQuestions = 1;
+    private void CustomiseQuiz(int reference)
+    {
+        topicToCustomise = reference;
+
+        if (showCustomisation.Equals(false))
+            showCustomisation = true;
+        else if (showCustomisation.Equals(true))
+            showCustomisation = false;
+    }
+    protected override void OnInitialized()
+    {
+        TopicsList = database.GetTopicsAsync().ToList();
+    }
+}

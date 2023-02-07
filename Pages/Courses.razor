@@ -1,0 +1,42 @@
+﻿@page "/courses"
+@inject IApiRepository repository
+
+
+<div class="container">
+
+    <h1>Courses</h1>
+
+    <div class="row gx-5">
+        @foreach (Course item in CoursesList)
+        {
+            <div class="col-lg-4 mb-5">
+                <div class="card h-100 shadow border-0">
+                    <img class="card-img-top" src="@item.ImageURL" alt="..." />
+                    <div class="card-body p-4">
+                        <a class="text-decoration-none link-dark stretched-link" href="@($"/topics/{item.CourseRef}")">
+                            <h5 class="card-title mb-3">
+                                @item.Title
+                            </h5>
+                        </a>
+                        <p class="card-text mb-0">
+                            @item.Description
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+@code {
+    private IEnumerable<Course> CoursesList { get; set; } = Enumerable.Empty<Course>();
+
+    protected override Task OnInitializedAsync() => GetHomeDetailsAsync();
+
+    private async Task GetHomeDetailsAsync()
+    { 
+        CoursesList = await repository.GetCourses();
+    }
+}
