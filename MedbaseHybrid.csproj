@@ -53,6 +53,7 @@
         <PackageReference Include="Markdig" Version="0.30.4" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.2" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Identity.Client" Version="4.49.1" />
     </ItemGroup>
 
 </Project>

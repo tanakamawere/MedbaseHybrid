@@ -1,4 +1,11 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using MedbaseHybrid.Auth;
+@using MedbaseHybrid.Services;
+@using Microsoft.Identity.Client
+@using System.Security.Claims
+@using System.Diagnostics;
+@inject IApiRepository repository
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Medbase</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -9,6 +16,19 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
+        <a class="text-white btn btn-outline-light">
+                <span class="oi oi-expand-down" aria-hidden="true"></span>
+            Hi, @UserName
+            </a>
+        <a class="dropdown-item btn-outline-light">
+            @SubscriptionEndDateLabel
+        </a>
+        <button class="dropdown-item btn-outline-light" @onclick="SignIn">
+            <span class="oi oi-account-logout" aria-hidden="true"></span>
+            @(SignInStatus == false ? "Login" : "Log out")
+        </button>
+
+
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Dashboard
@@ -29,11 +49,117 @@
 
 @code {
     private bool collapseNavMenu = true;
-
+    private bool collapseUserMenu = true;
+    private bool SignInStatus;
+    private string UserName = "Guest";
+    private string Email = "guest@medbase.co.zw";
+    private string Initials = "GU";
+    private AuthenticationResult result;
+    string SubscriptionEndDateLabel = "Not subscribed";
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string? UserMenuCssClass => collapseUserMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
     }
+    private void ToggleUserMenu()
+    {
+        collapseUserMenu = !collapseUserMenu;
+    }
+
+    protected override void OnInitialized()
+    {
+        GetAccounts();
+    }
+
+    async void GetAccounts()
+    {
+        try
+        {
+            // First attempt silent login, which checks the cache for an existing valid token.
+            // If this is very first time or user has signed out, it will throw MsalUiRequiredException
+            result = await PCAWrapperB2C.Instance.AcquireTokenSilentAsync(B2CConstants.Scopes);
+            GetClaims(result);
+
+            SignInStatus = true;
+        }
+        catch (MsalUiRequiredException)
+        {
+            SignInStatus = false;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+        }
+        finally {}
+    }
+    static string GetInitials(string name)
+    {
+        // StringSplitOptions.RemoveEmptyEntries excludes empty spaces returned by the Split method
+
+        string[] nameSplit = name.Split(new string[] { ",", " " }, StringSplitOptions.RemoveEmptyEntries);
+
+        string initials = "";
+
+        foreach (string item in nameSplit)
+        {
+            initials += item.Substring(0, 1).ToUpper();
+        }
+
+        return initials;
+    }
+    private void GetClaims(AuthenticationResult result)
+    {
+        UserName = result.ClaimsPrincipal.Claims.Where(x => x.Type == "name").Select(x => x.Value).SingleOrDefault().ToString();
+        Email = result.ClaimsPrincipal.Claims.Where(x => x.Type == "emails").Select(x => x.Value).SingleOrDefault().ToString();
+    }
+
+    private async void SignIn()
+    {
+        try
+        {
+            result = await PCAWrapperB2C.Instance.AcquireTokenInteractiveAsync(B2CConstants.Scopes);
+            GetClaims(result);
+            SignInStatus = true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+        }
+        finally { }
+    }
+
+    private async void SignOut()
+    {
+        await PCAWrapperB2C.Instance.SignOutAsync();
+        Helpers.RemoveSubscription();
+    }
+
+    async Task CheckSubscription()
+    {
+        if (SignInStatus && Helpers.InternetAvailable())
+        {
+            Subscription subscription = await repository.GetSubscription(Email);
+
+            if (!string.IsNullOrEmpty(subscription.Email))
+            {
+                if (Preferences.ContainsKey(Constants.SubscriptionPreferenceDate()))
+                {
+                    Preferences.Remove(Constants.SubscriptionPreferenceDate());
+                }
+                Preferences.Set(Constants.SubscriptionPreferenceDate(), subscription.EndDate.ToString());
+                await Shell.Current.DisplayAlert("Subscription Found", $"Ending {subscription.EndDate.Date.ToString()}", "Ok");
+            }
+            else
+            {
+                //Sub not found
+            }
+        }
+        else
+        {
+            await Shell.Current.DisplayAlert("No accounts found", "Sign in first", "Ok");
+        }
+    }
+    void UpdateSubscriptionStatus() => SubscriptionEndDateLabel = $"Subscription Ending: {Preferences.Get(Constants.SubscriptionPreferenceDate(), "Not subscribed")}";
 }

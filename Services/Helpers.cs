@@ -2,6 +2,18 @@
 {
     public class Helpers
     {
+        public static bool InternetAvailable()
+        {
+            bool internet = false;
+            NetworkAccess access = Connectivity.Current.NetworkAccess;
+
+            if (access == NetworkAccess.Internet)
+                internet = true;
+            else if (access == NetworkAccess.None || access == NetworkAccess.Unknown)
+                internet = false;
+
+            return internet;
+        }
         public static bool CheckSubscription()
         {
             bool active = false;
