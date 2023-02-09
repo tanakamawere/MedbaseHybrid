@@ -12,41 +12,64 @@
             <h1 class="display-5 fw-bolder text-dark mb-2">Choose Topic</h1>
         </div>
         <div class="row">
-            @foreach (Topic item in TopicsList)
+            @if (loadingDownload.Equals(true))
             {
-                <div class="col-lg-4 mb-2">
-                    <div class="card h-100 shadow border-0">
-                        <div class="card-body p-4">
-                            <h5 class="card-title mb-3">
-                                @item.Name
-                            </h5>
-                            <div class="btn-group justify-content-sm-center justify-content-xl-start">
-                                <a class="btn btn-primary" href="@($"questions/{item.TopicRef}/online")">View All</a>
-                                <button @(canDownload == false ? "disabled") class="btn btn-outline-dark" @onclick="() => DownloadTopic(item.Id)">
-                                    Download
-                                </button>
-                                <button class="btn btn-outline-dark" @onclick="() => CustomiseQuiz(item.TopicRef)">
-                                    Quiz
-                                </button>
-                            </div>
-                            <div class="container-fluid text-center border-0 shadow card-footer mt-2" style="display:@(showCustomisation.Equals(true) && topicToCustomise == item.TopicRef ? "block" : "none")">
-                                <h6 class="fw-bold">Customise Quiz</h6>
+                <div class="d-flex justify-content-center text-center">
+                    <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span class="visible">Downloading your topic, please wait a bit...</span>
+                    <img src="img/download.svg" style="max-width:300px" />
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning @(topicAlreadyDownloaded == true ? "d-block" : "d-none")" role="alert" @onclick="DismissAlreadyDownloadedMessage">
+                    Topic is already downloaded. Click to dismiss this message
+                </div>
+                <div class="alert alert-success @(downloadSuccessful == true ? "d-block" : "d-none")" role="alert" @onclick="DismissDownloadSuccessfulMessage">
+                    Your topic was downloaded successfully! Go to <a href="/dashboard">to see your downloads</a>
+                </div>
+                <div class="alert alert-info @(maxFreeDownloads == true ? "d-block" : "d-none")" role="alert" @onclick="DismissMaxFreeDownloads">
+                    You have reached your maximum free downloads of 2. Upgrade to <a href="https://medbase.co.zw/premium">Medbase Premium</a> for more downloads and more.
+                </div>
+                <Virtualize Items="TopicsList.ToList()" TItem="Topic" Context="item">
+                    <ItemContent>
+                        <div class="col-lg-4 mb-2">
+                            <div class="card h-100 shadow border-0">
+                                <div class="card-body p-4">
+                                    <h5 class="card-title mb-3">
+                                        @item.Name
+                                    </h5>
+                                    <div class="btn-group justify-content-center">
+                                        <a class="btn btn-outline-dark" href="@($"questions/{item.TopicRef}/online")">View All</a>
+                                        <button class="btn btn-outline-dark @(canDownload == true ? "" : "disabled" )" @onclick="() => Download(item.Id)">
+                                            Download
+                                        </button>
+                                        <button class="btn btn-outline-dark" @onclick="() => CustomiseQuiz(item.TopicRef)">
+                                            Quiz
+                                        </button>
+                                    </div>
+                                    <div class="container-fluid text-center border-0 shadow card-footer mt-2" style="display:@(showCustomisation.Equals(true) && topicToCustomise == item.TopicRef ? "block" : "none")">
+                                        <h6 class="fw-bold">Customise Quiz</h6>
 
-                                <div class="row">
-                                    <p class="col-auto">Negative Marking</p>
-                                    <InputCheckbox class="col-auto" @bind-Value="negativeMarking"></InputCheckbox>
+                                        <div class="row">
+                                            <p class="col-auto">Negative Marking</p>
+                                            <InputCheckbox class="col-auto" @bind-Value="negativeMarking"></InputCheckbox>
+                                        </div>
+                                        <div class="row text-center align-content-center justify-content-center">
+                                            <p class="col-auto">Number Of Questions</p>
+                                            <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
+                                        </div>
+                                        <a class="btn btn-primary" href="@($"/quiz/{item.TopicRef}/{numberOfQuestions}/{negativeMarking}/online")">
+                                            Start!
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="row text-center align-content-center justify-content-center">
-                                    <p class="col-auto">Number Of Questions</p>
-                                    <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
-                                </div>
-                                <a class="btn btn-primary" href="@($"/quiz/{item.TopicRef}/{numberOfQuestions}/{negativeMarking}/online")">
-                                    Start!
-                                </a>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </ItemContent>
+                </Virtualize>
             }
         </div>
     </div>
@@ -57,6 +80,10 @@
     public string courseRef { get; set; } = "";
     bool showCustomisation = false;
     bool canDownload = true;
+    bool topicAlreadyDownloaded = false;
+    bool downloadSuccessful;
+    bool maxFreeDownloads;
+    bool loadingDownload;
     int topicToCustomise;
     private bool negativeMarking = false;
     private int numberOfQuestions = 1;
@@ -77,21 +104,21 @@
             showCustomisation = false;
     }
 
-    private async void DownloadTopic(long inputId)
+    async Task Download(long inputId)
     {
         Topic topic = TopicsList.Where(x => x.Id == inputId).First();
-        await Download(topic);
-    }
-    async Task Download(Topic topic)
-    {
+        loadingDownload = true;
         if (topic is null) return;
 
         try
         {
             if (CheckIfAlreadyDownloaded(topic) == false)
-                await DownloadMethod(topic);
+            {
+                await database.SaveTopicAndQuestionsAsync(await repository.GetQuestionsSimple(topic.TopicRef), topic);
+                downloadSuccessful = true;
+            }
             else
-                await Shell.Current.DisplayAlert("Already downloaded", "Your requested topic is already downloaded on your device", "Ok");
+                topicAlreadyDownloaded = true;
         }
         catch (Exception)
         {
@@ -99,12 +126,12 @@
         }
         finally
         {
+            loadingDownload = false;
+            CheckIfCanDownload();
+            StateHasChanged();
         }
     }
-    async Task DownloadMethod(Topic topic)
-    {
-        await database.SaveTopicAndQuestionsAsync(await repository.GetQuestionsSimple(topic.TopicRef), topic);
-    }
+
     void CheckIfCanDownload()
     {
         List<Topic> downloadedTopics = database.GetTopicsAsync().ToList();
@@ -142,6 +169,22 @@
     }
     void DisableDownloads()
     {
+        maxFreeDownloads = true;
         canDownload = false;
+    }
+    void DismissAlreadyDownloadedMessage()
+    {
+        topicAlreadyDownloaded = !topicAlreadyDownloaded;
+        StateHasChanged();
+    }
+    void DismissDownloadSuccessfulMessage()
+    {
+        downloadSuccessful = !downloadSuccessful;
+        StateHasChanged();
+    }
+    void DismissMaxFreeDownloads()
+    {
+        maxFreeDownloads = !maxFreeDownloads;
+        StateHasChanged();
     }
 }

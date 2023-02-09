@@ -9,47 +9,69 @@
             <h6 class="display-5 fw-bolder text-dark mb-2">Downloaded Topics</h6>
         </div>
         <div class="row gx-3">
-            @if (!TopicsList.Any())
+            @if (loadingQuestions.Equals(true))
             {
-                <p><em>Loading...</em></p>
+                <div class="d-flex justify-content-center"> 
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            }
+            else if (loadingDeleteTopic.Equals(true))
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
             }
             else
             {
-                @foreach (Topic item in TopicsList)
+                if (!TopicsList.Any())
                 {
-                    <div class="col-lg-4 m-2">
-                        <div class="card h-100 shadow border-0">
-                            <div class="card-body p-4">
-                                <h5 class="card-title mb-3">
-                                    @item.Name
-                                </h5>
-                                <div class="btn-group justify-content-sm-center justify-content-xl-start text-center">
-                                    <button class="btn btn-danger" @onclick="() => DeleteTopic(item.TopicRef)">
-                                        Delete
-                                    </button>
-                                    <a class="btn btn-primary" href="@($"questions/{item.TopicRef}/offline")">View All</a>
-                                    <button class="btn btn-outline-dark" @onclick="() => CustomiseQuiz(item.TopicRef)">
-                                        Quiz
-                                    </button>
-                                </div>
-                                <div class="container-fluid text-center border-0 shadow card-footer mt-2" style="display:@(showCustomisation.Equals(true) && topicToCustomise == item.TopicRef ? "block" : "none")">
-                                    <h6 class="fw-bold">CustomiseQuiz</h6>
+                    <div class="d-flex justify-content-center text-center">
+                        <p class="text-center mt-5"><em>You have no topics downloaded. <a href="/courses">Click here </a> to download.</em></p>
+                        <img src="img/undraw_empty.svg" style="max-width:300px"/>
+                    </div>
+                }
+                else
+                {
+                    @foreach (Topic item in TopicsList)
+                    {
+                        <div class="col-lg-4 m-2">
+                            <div class="card h-100 shadow border-0">
+                                <div class="card-body p-4">
+                                    <h5 class="card-title mb-3">
+                                        @item.Name
+                                    </h5>
+                                    <div class="btn-group justify-content-sm-center justify-content-xl-start text-center">
+                                        <button class="btn btn-outline-danger" @onclick="() => DeleteTopic(item.TopicRef)">
+                                            Delete
+                                        </button>
+                                        <a class="btn btn-outline-dark" href="@($"questions/{item.TopicRef}/offline")">View All</a>
+                                        <button class="btn btn-outline-dark" @onclick="() => CustomiseQuiz(item.TopicRef)">
+                                            Quiz
+                                        </button>
+                                    </div>
+                                    <div class="container-fluid text-center border-0 shadow card-footer mt-2" style="display:@(showCustomisation.Equals(true) && topicToCustomise == item.TopicRef ? "block" : "none")">
+                                        <h6 class="fw-bold">CustomiseQuiz</h6>
 
-                                    <div class="row">
-                                        <p class="col-auto">Negative Marking</p>
-                                        <InputCheckbox class="col-auto" @bind-Value="negativeMarking"></InputCheckbox>
+                                        <div class="row">
+                                            <p class="col-auto">Negative Marking</p>
+                                            <InputCheckbox class="col-auto" @bind-Value="negativeMarking"></InputCheckbox>
+                                        </div>
+                                        <div class="row text-center align-content-center justify-content-center">
+                                            <p class="col-auto">Number Of Questions</p>
+                                            <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
+                                        </div>
+                                        <a class="btn btn-primary" href="@($"/quiz/{item.TopicRef}/{numberOfQuestions}/{negativeMarking}/offline")">
+                                            Start!
+                                        </a>
                                     </div>
-                                    <div class="row text-center align-content-center justify-content-center">
-                                        <p class="col-auto">Number Of Questions</p>
-                                        <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
-                                    </div>
-                                    <a class="btn btn-primary" href="@($"/quiz/{item.TopicRef}/{numberOfQuestions}/{negativeMarking}/offline")">
-                                        Start!
-                                    </a>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 }
             }
         </div>
@@ -58,6 +80,8 @@
 
 @code {
     private IEnumerable<Topic> TopicsList { get; set; } = Enumerable.Empty<Topic>();
+    private bool loadingQuestions;
+    private bool loadingDeleteTopic;
 
     [Inject]
     NavigationManager navigationManager { get; set; }
@@ -66,6 +90,19 @@
     int topicToCustomise;
     private bool negativeMarking = false;
     private int numberOfQuestions = 1;
+    protected override void OnInitialized()
+    {
+        loadingQuestions = true;
+        GetQuestionsFromDb();
+        loadingQuestions = false;
+        StateHasChanged();
+    }
+
+    private void GetQuestionsFromDb()
+    {
+        TopicsList = database.GetTopicsAsync().ToList();
+    }
+
     private void CustomiseQuiz(int reference)
     {
         topicToCustomise = reference;
@@ -75,14 +112,13 @@
         else if (showCustomisation.Equals(true))
             showCustomisation = false;
     }
-    protected override void OnInitialized()
-    {
-        TopicsList = database.GetTopicsAsync().ToList();
-    }
 
     private void DeleteTopic(int topic)
     {
+        loadingDeleteTopic = true;
         database.DeleteTopicAsync(topic);
-        navigationManager.NavigateTo("/dashboard");
+        GetQuestionsFromDb();
+        loadingDeleteTopic = false;
+        StateHasChanged();
     }
 }

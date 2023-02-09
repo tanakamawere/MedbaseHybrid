@@ -37,7 +37,6 @@
             {
                 Preferences.Remove(Constants.SubscriptionPreferenceDate());
             }
-            else return;
         }
 
         public static bool CheckForSubPreference()

@@ -136,8 +136,6 @@
 
     QuestionPaged QuestionPaged = new ();
 
-    private List<Question> QuestionsList { get; set; } = new();
-
     protected override async Task OnParametersSetAsync() => await GetQuestions();
 
     private void ShowAnswers(int questionToShow)

@@ -4,12 +4,17 @@
 @inject IDatabaseRepository database
 @inject IApiRepository repository
 
-<input type="text" @onkeydown="HandleKeyDown"  @ref="answerKeyboardInput" style="visibility:hidden"/>
 
 <div style="display:@(quizDone == false ? "block" : "none")">
     @if (!Quizzes.Any())
     {
-        <p><em>Loading your questions...</em></p>
+                <div class="d-flex justify-content-center text-center">
+                    <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span class="visible">Loading your quiz, please wait a bit...</span>
+                    <img src="img/loading.svg" style="max-width:300px" />
+                </div>
     }
     else
     {
@@ -139,8 +144,6 @@
         if (count < totalQuizzes)
         {
             answerVisibility = "hidden";
-            answerKeyboardInput.FocusAsync();
-
             numberLeft = $"{totalQuizzes - count} questions left";
 
             QuestionSelected = Quizzes[count];
@@ -150,29 +153,6 @@
             QuizDone();
         }
     }
-
-
-    private ElementReference answerKeyboardInput;
-    private string pressedKey;
-
-    private void HandleKeyDown(KeyboardEventArgs e)
-    {
-        switch (e.Key)
-        {
-            case "j":
-                AnswerResponse(answerTrue);
-                break;
-            case "k":
-                AnswerResponse(answerLeft);
-                break;
-            case "l":
-                AnswerResponse(answerFalse);
-                break;
-            default:
-                return;
-        }
-    }
-
 
     void AnswerResponse(string answer)
     {
