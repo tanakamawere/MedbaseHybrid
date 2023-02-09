@@ -12,15 +12,14 @@
             <h1 class="display-5 fw-bolder text-dark mb-2">Choose Topic</h1>
         </div>
         <div class="row">
-            @if (loadingDownload.Equals(true))
+            @if (loadingDownload.Equals(true) || !TopicsList.Any())
             {
-                <div class="d-flex justify-content-center text-center">
+                <div class="text-center">
                     <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
-                    <span class="visible">Downloading your topic, please wait a bit...</span>
-                    <img src="img/download.svg" style="max-width:300px" />
                 </div>
+                <span class="visible">Loading, please wait a bit...</span>
             }
             else
             {
