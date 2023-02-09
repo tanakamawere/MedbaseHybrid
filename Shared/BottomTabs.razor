@@ -5,69 +5,54 @@
 @using System.Diagnostics;
 @inject IApiRepository repository
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Medbase</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        @if (loadingAccounts.Equals(true))
-        {
-            <div class="d-flex justify-content-center">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="nav-item px-3 border-3 gap-2">
-                <a class="text-white btn">
-                     <span class="oi oi-expand-down" aria-hidden="true"></span>
-                    Hi, @UserName<br />
+<nav class="navbar fixed-bottom shadow bg-light d-xl-none d-xxl-none">
+    <ul class="nav nav-tabs nav-fill">
+        <li class="nav-item">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span>Home
+            </NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="courses">
+                <span class="oi oi-book" aria-hidden="true"></span>Courses
+            </NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="articles">
+                <span class="oi oi-spreadsheet" aria-hidden="true"></span>Articles
+            </NavLink>
+        </li>
+        <li class="nav-item" @onclick="ToggleUserMenu">
+            <NavLink class="nav-link">
+                <span class="oi oi-person" aria-hidden="true"></span>You
+            </NavLink>
+            <div class="nav-item px-3 border-3 gap-2 @(collapseUserMenu == true ? "d-none" : "d-block")">
+                <a class="text-dark btn">
+                    <span class="oi oi-expand-down" aria-hidden="true"></span>
+                    Hi, @UserName <br/>
                     @Email
                 </a>
-                <button class="btn btn-outline-light @(SignInStatus == false ? "d-none" : "d-block") @(checkingSubscription == true ? "disabled" : "")" @onclick="CheckSubscription">
+                <button class="btn btn-outline-dark @(SignInStatus == false ? "d-none" : "d-block") @(checkingSubscription == true ? "disabled" : "")" @onclick="CheckSubscription">
                     <span class="spinner-border spinner-border-sm @(checkingSubscription == false ? "d-none" : "d-block")" role="status" aria-hidden="true"></span>
                     @SubscriptionEndDateLabel
                 </button>
-                <div class="alert alert-warning @(collapseUserMenu == true ? "d-none" : "d-block")" role="alert">
+                <div class="alert alert-warning @(collapseSubscriptionMenu == true ? "d-none" : "d-block")" role="alert">
                     No active subscription found
                 </div>
-                <button class="btn btn-outline-light" @onclick="SignIn">
+                <button class="btn btn-outline-dark" @onclick="SignIn">
                     <span class="oi oi-account-logout" aria-hidden="true"></span>
                     @(SignInStatus == false ? "Login" : "Log out")
                 </button>
             </div>
-        }
-
-        <hr/>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Dashboard
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="courses">
-                <span class="oi oi-plus" aria-hidden="true"></span> Courses
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="articles">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Articles
-            </NavLink>
-        </div>
-    </nav>
-</div>
+        </li>
+    </ul>
+</nav>
 
 @code {
     private bool collapseNavMenu = true;
     private bool collapseUserMenu = true;
+    private bool collapseSubscriptionMenu = true;
+    private string hideMenuOffline = "disabled";
     private bool loadingAccounts = false;
     private bool checkingSubscription = false;
     private bool SignInStatus;
@@ -78,6 +63,7 @@
     string SubscriptionEndDateLabel = "Check subscription";
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
     private string? UserMenuCssClass => collapseUserMenu ? "collapse" : null;
+    private string? SubscriptionMenuCssClass => collapseSubscriptionMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {
@@ -87,12 +73,22 @@
     {
         collapseUserMenu = !collapseUserMenu;
     }
+    private void ToggleSubMenu()
+    {
+        collapseSubscriptionMenu = !collapseSubscriptionMenu;
+    }
 
     protected override void OnInitialized()
     {
         GetAccounts();
+        CheckIfUserOnline();
     }
 
+    private void CheckIfUserOnline()
+    {
+        if (Helpers.InternetAvailable())
+            hideMenuOffline = "";
+    }
     async void GetAccounts()
     {
         try
@@ -152,7 +148,8 @@
         {
             Debug.WriteLine(ex.Message);
         }
-        finally { 
+        finally
+        {
             loadingAccounts = false;
             StateHasChanged();
         }
