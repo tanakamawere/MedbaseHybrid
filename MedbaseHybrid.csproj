@@ -16,12 +16,12 @@
         <ApplicationTitle>Medbase</ApplicationTitle>
 
         <!-- App Identifier -->
-        <ApplicationId>com.companyname.medbasehybrid</ApplicationId>
+        <ApplicationId>com.tanakamawere.medbasehybrid</ApplicationId>
         <ApplicationIdGuid>620A195F-F4BD-42AD-9B3E-E45F7BCC319B</ApplicationIdGuid>
 
         <!-- Versions -->
-        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-        <ApplicationVersion>1</ApplicationVersion>
+        <ApplicationDisplayVersion>1.0.3</ApplicationDisplayVersion>
+        <ApplicationVersion>3</ApplicationVersion>
 
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
