@@ -14,11 +14,11 @@
         public bool AnswerC { get; set; }
         public bool AnswerD { get; set; }
         public bool AnswerE { get; set; }
-        public string ExplanationA { get; set; } = string.Empty;
-        public string ExplanationB { get; set; } = string.Empty;
-        public string ExplanationC { get; set; } = string.Empty;
-        public string ExplanationD { get; set; } = string.Empty;
-        public string ExplanationE { get; set; } = string.Empty;
+        public string ExplanationA { get; set; } = "";
+        public string ExplanationB { get; set; } = "";
+        public string ExplanationC { get; set; } = "";
+        public string ExplanationD { get; set; } = "";
+        public string ExplanationE { get; set; } = "";
         public int TopicRef { get; set; }
     }
 }

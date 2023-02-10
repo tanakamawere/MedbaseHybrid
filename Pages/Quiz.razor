@@ -25,7 +25,9 @@
             <div class="align-top">
                 <h4>@QuestionSelected.Question</h4>
             </div>
-            <hr />
+            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="@count" aria-valuemin="0" aria-valuemax="@totalQuizzes">
+                <div class="progress-bar" style="width: @((double)count/(double)totalQuizzes * 100)%">@count / @totalQuizzes questions done</div>
+            </div>
             <div class="text-center align-content-center" style="visibility:@answerVisibility">
                 <h5>Your answer was @answerResult</h5>
                 <h5>Answer is @QuestionSelected.Answer</h5>
@@ -108,31 +110,31 @@
                 {
                     Question = $"{item.Id}a. {item.QuestionMain}, {item.ChildA}",
                     Answer = item.AnswerA,
-                    Explanation = item.ExplanationA
+                    Explanation = string.IsNullOrEmpty(item.ExplanationA) ? "n/a" : item.ExplanationA
                 };
             QuizQuestion cardB = new()
                 {
                     Question = $"{item.Id}b. {item.QuestionMain}, {item.ChildB}",
                     Answer = item.AnswerB,
-                    Explanation = item.ExplanationB
+                    Explanation = string.IsNullOrEmpty(item.ExplanationB) ? "n/a" : item.ExplanationB
                 };
             QuizQuestion cardC = new()
                 {
                     Question = $"{item.Id}c. {item.QuestionMain}, {item.ChildC}",
                     Answer = item.AnswerC,
-                    Explanation = item.ExplanationC
+                    Explanation = string.IsNullOrEmpty(item.ExplanationC) ? "n/a" : item.ExplanationC
                 };
             QuizQuestion cardD = new()
                 {
                     Question = $"{item.Id}d. {item.QuestionMain}, {item.ChildD}",
                     Answer = item.AnswerD,
-                    Explanation = item.ExplanationD
+                    Explanation = string.IsNullOrEmpty(item.ExplanationD) ? "n/a" : item.ExplanationD
                 };
             QuizQuestion cardE = new()
                 {
                     Question = $"{item.Id}e. {item.QuestionMain}, {item.ChildE}",
                     Answer = item.AnswerE,
-                    Explanation = item.ExplanationE
+                    Explanation = string.IsNullOrEmpty(item.ExplanationE) ? "n/a" : item.ExplanationE
                 };
 
             Quizzes.Add(card);

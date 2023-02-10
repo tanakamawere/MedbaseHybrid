@@ -8,6 +8,11 @@
         <div class="text-start text-xl-start">
             <h6 class="display-5 fw-bolder text-dark mb-2">Downloads⏬</h6>
         </div>
+        <div class="alert alert-info @(premiumAlertVisible == true ? "d-block" : "d-none")">
+            You aren't a premium user. Upgrade to <a class="https://medbase.co.zw/premium">Medbase Premium</a> for more downloads & customisable quizzes
+            <br/>
+            or if you have Medbase Premium, log in below
+        </div>
         <div class="row">
             @if (loadingQuestions.Equals(true))
             {
@@ -48,21 +53,47 @@
                                         <button class="btn btn-outline-danger" @onclick="() => DeleteTopic(item.TopicRef)">
                                             Delete🚮
                                         </button>
-                                        <a class="btn btn-outline-dark" href="@($"questions/{item.TopicRef}/offline")">View All</a>
+                                        <a class="btn btn-outline-dark" href="@($"questions/{item.TopicRef}/offline")">View👓</a>
                                         <button class="btn btn-outline-dark" @onclick="() => CustomiseQuiz(item.TopicRef)">
                                             Quiz🤔
                                         </button>
                                     </div>
                                     <div class="container-fluid text-center border-0 shadow card-footer mt-2" style="display:@(showCustomisation.Equals(true) && topicToCustomise == item.TopicRef ? "block" : "none")">
                                         <h6 class="fw-bold">Customise Quiz🛠️</h6>
-
-                                        <div class="row">
-                                            <p class="col-auto">Negative Marking➖</p>
-                                            <InputCheckbox class="col-auto" @bind-Value="negativeMarking"></InputCheckbox>
+                                        <div class="container text-center m-1">
+                                            @if (!premiumAlertVisible)
+                                            {
+                                                <button class="btn @(negativeMarking.Equals(true) ? "btn-primary" : "btn-outline-primary")" @onclick="ToggleNegativeMarking">
+                                                    @(negativeMarking.Equals(true) ? "Negative Marking On" : "Negative Marking Off")
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn @(negativeMarking.Equals(true) ? "btn-primary" : "btn-outline-primary")" @onclick="ToggleNegativeMarkingInactive">
+                                                    @(negativeMarking.Equals(true) ? "Negative Marking On" : "Negative Marking Off")
+                                                </button>
+                                                <div class="alert alert-warning m-1 @(customiseQuizPremiumAlert == true ? "d-block" : "d-none")">
+                                                    Customising quizzes is a premium feature. 
+                                                </div>
+                                            }
                                         </div>
-                                        <div class="row text-center align-content-center justify-content-center">
-                                            <p class="col-auto">Number Of Questions🔢</p>
-                                            <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
+                                        <div class="container text-center">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p class="col-auto">Number Of Questions🔢</p>
+                                                </div>
+                                                <div class="col">
+                                                    @if (premiumAlertVisible)
+                                                    {
+                                                        <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" disabled/>
+                                                    }
+                                                    else
+                                                    {
+
+                                                        <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
+                                                    }
+                                                </div>
+                                            </div>
                                         </div>
                                         <a class="btn btn-primary" href="@($"/quiz/{item.TopicRef}/{numberOfQuestions}/{negativeMarking}/offline")">
                                             Start🥸!
@@ -82,20 +113,33 @@
     private IEnumerable<Topic> TopicsList { get; set; } = Enumerable.Empty<Topic>();
     private bool loadingQuestions;
     private bool loadingDeleteTopic;
+    private bool premiumAlertVisible;
+    private bool customiseQuizPremiumAlert;
 
     [Inject]
     NavigationManager navigationManager { get; set; }
 
     bool showCustomisation = false;
     int topicToCustomise;
-    private bool negativeMarking = false;
-    private int numberOfQuestions = 1;
+    private bool negativeMarking = true;
+    private int numberOfQuestions = 2;
     protected override void OnInitialized()
     {
         loadingQuestions = true;
         GetQuestionsFromDb();
+        CheckSubscription();
         loadingQuestions = false;
         StateHasChanged();
+    }
+
+    private void ToggleNegativeMarking()
+    {
+        negativeMarking = !negativeMarking;   
+    }
+
+    private void ToggleNegativeMarkingInactive()
+    {
+        customiseQuizPremiumAlert = !customiseQuizPremiumAlert;
     }
 
     private void GetQuestionsFromDb()
@@ -119,6 +163,14 @@
         database.DeleteTopicAsync(topic);
         GetQuestionsFromDb();
         loadingDeleteTopic = false;
+        StateHasChanged();
+    }
+    private void CheckSubscription()
+    {
+        if (Helpers.CheckSubscription())
+            premiumAlertVisible = false;
+        else
+            premiumAlertVisible = true;
         StateHasChanged();
     }
 }

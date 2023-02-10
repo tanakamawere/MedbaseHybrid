@@ -23,10 +23,8 @@
 
                 int subActive = subEndDate.Date.CompareTo(DateTime.Now.Date);
                 if (subActive > 0)
-                {
                     //This means the user's subscription is active.
                     active = true;
-                }
             }
             return active;
         }
