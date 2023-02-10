@@ -1,18 +1,20 @@
 ﻿using MedbaseHybrid.Models;
 using MedbaseHybrid.Services;
+using System.Net.Http;
 using System.Net.Http.Json;
 
 namespace MedbaseHybrid.Repositories
 {
     public class ApiRepository : IApiRepository 
     {
-        private HttpClient httpClient;
+        private static readonly HttpClient httpClient = new()
+        {
+            BaseAddress = new Uri(Constants.apiUrl)
+        };
+
         public ApiRepository()
         {
-            httpClient = new HttpClient()
-            {
-                BaseAddress = new Uri(Constants.apiUrl)
-            };
+            
         }
 
         public async Task<IEnumerable<Article>> GetArticlesNumbered(int num)
