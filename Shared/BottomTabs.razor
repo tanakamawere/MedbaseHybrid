@@ -5,26 +5,31 @@
 @using System.Diagnostics;
 @inject IApiRepository repository
 
-<nav class="navbar fixed-bottom shadow bg-light d-xl-none d-xxl-none">
+<nav class="navbar fixed-bottom shadow">
     <ul class="nav nav-tabs nav-fill">
         <li class="nav-item">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span>Home
+                <span class="oi oi-home" aria-hidden="true"></span>
             </NavLink>
         </li>
         <li class="nav-item">
             <NavLink class="nav-link" href="courses">
-                <span class="oi oi-book" aria-hidden="true"></span>Courses
+                <span class="oi oi-book" aria-hidden="true"></span>
             </NavLink>
         </li>
         <li class="nav-item">
             <NavLink class="nav-link" href="articles">
-                <span class="oi oi-spreadsheet" aria-hidden="true"></span>Articles
+                <span class="oi oi-spreadsheet" aria-hidden="true"></span>
+            </NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="settings">
+                <span class="oi oi-cog"></span>
             </NavLink>
         </li>
         <li class="nav-item" @onclick="ToggleUserMenu">
             <NavLink class="nav-link">
-                <span class="oi oi-person" aria-hidden="true"></span>You
+                <span class="oi oi-person" aria-hidden="true"></span>
             </NavLink>
             <div class="nav-item px-3 border-3 gap-2 @(collapseUserMenu == true ? "d-none" : "d-block")">
                 <a class="text-dark btn">

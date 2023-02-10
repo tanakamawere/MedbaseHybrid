@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row align-items-center justify-content-center">
         <div class="text-start text-xl-start">
-            <h6 class="display-5 fw-bolder text-dark mb-2">Downloaded Topics</h6>
+            <h6 class="display-5 fw-bolder text-dark mb-2">Downloads⏬</h6>
         </div>
         <div class="row">
             @if (loadingQuestions.Equals(true))
@@ -30,7 +30,7 @@
                 if (!TopicsList.Any())
                 {
                     <div class="text-center">
-                        <p class="mt-5"><em>You have no topics downloaded. <a href="/courses">Click here </a> to download.</em></p>
+                        <p class="mt-5"><em>You have no topics downloaded.😟 <a href="/courses">Click here </a> to download.</em></p>
                         <img src="img/undraw_empty.svg" style="max-width:300px"/>
                     </div>
                 }
@@ -46,26 +46,26 @@
                                     </h5>
                                     <div class="btn-group justify-content-sm-center justify-content-xl-start text-center">
                                         <button class="btn btn-outline-danger" @onclick="() => DeleteTopic(item.TopicRef)">
-                                            Delete
+                                            Delete🚮
                                         </button>
                                         <a class="btn btn-outline-dark" href="@($"questions/{item.TopicRef}/offline")">View All</a>
                                         <button class="btn btn-outline-dark" @onclick="() => CustomiseQuiz(item.TopicRef)">
-                                            Quiz
+                                            Quiz🤔
                                         </button>
                                     </div>
                                     <div class="container-fluid text-center border-0 shadow card-footer mt-2" style="display:@(showCustomisation.Equals(true) && topicToCustomise == item.TopicRef ? "block" : "none")">
-                                        <h6 class="fw-bold">CustomiseQuiz</h6>
+                                        <h6 class="fw-bold">Customise Quiz🛠️</h6>
 
                                         <div class="row">
-                                            <p class="col-auto">Negative Marking</p>
+                                            <p class="col-auto">Negative Marking➖</p>
                                             <InputCheckbox class="col-auto" @bind-Value="negativeMarking"></InputCheckbox>
                                         </div>
                                         <div class="row text-center align-content-center justify-content-center">
-                                            <p class="col-auto">Number Of Questions</p>
+                                            <p class="col-auto">Number Of Questions🔢</p>
                                             <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
                                         </div>
                                         <a class="btn btn-primary" href="@($"/quiz/{item.TopicRef}/{numberOfQuestions}/{negativeMarking}/offline")">
-                                            Start!
+                                            Start🥸!
                                         </a>
                                     </div>
                                 </div>
