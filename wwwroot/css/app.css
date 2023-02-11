@@ -82,3 +82,49 @@ a, .btn-link {
         padding-left: env(safe-area-inset-left);
     }
 }
+
+
+.media-scroller {
+    --spacer: 1rem;
+    display: grid;
+    gap: var(--spacer);
+    grid-template-rows: min-content;
+    grid-auto-flow: column;
+    grid-auto-columns: 66%;
+    padding: 0 0 var(--spacer) -1rem;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+}
+
+.media-element {
+    display: grid;
+    gap: var(--spacer);
+    padding: var(--spacer);
+    box-shadow: 10px;
+    border-radius: 2px;
+}
+
+    .media-element > img {
+        inline-size: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+    }
+
+    .media-element > p {
+        font-size: 8px;
+    }
+
+.snaps-inline {
+    scroll-snap-type: inline mandatory;
+    scroll-padding-inline: var(--spacer, 1rem);
+}
+
+    .snaps-inline > * {
+        scroll-snap-align: start;
+    }
+
+.dashboard-image {
+    inline-size: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+}
