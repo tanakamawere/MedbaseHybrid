@@ -1,45 +1,57 @@
 ﻿@page "/articles"
+@using MedbaseHybrid.Services;
 @inject IApiRepository repository
 
-
-<div class="text-start text-xl-start">
-    <h6 class="display-6 fw-bolder text-dark mb-2">Articles📖</h6>
-</div>
-<div class="media-scroller spans-inline">
-    @if (!allArticles.Any())
-    {
-        <div class="text-center">
-            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
-    }
-    else
-    {
-        @foreach (Article item in allArticles)
+@if (!Helpers.InternetAvailable())
+{
+    <p class="text-muted fst-italic" style="font-size:8px;">
+        Internet isn't available to show courses and articles.
+    </p>
+}
+else
+{
+    <div class="text-start text-xl-start">
+        <h6 class="display-6 fw-bolder text-dark mb-2">Articles📖</h6>
+    </div>
+    <div class="media-scroller spans-inline">
+        @if (!allArticles.Any())
         {
-            <div class="media-element">
-                <div class="card h-100 shadow border-0">
-                    <img class="card-img-top" src="@item.ImageURL" alt="..." />
-                    <div class="card-body p-4">
-                        <a class="text-decoration-none link-dark stretched-link" href="@($"https://medbase.co.zw/article/{item.Id}")">
-                            <h5 class="card-title mb-3">
-                                @item.Title
-                            </h5>
-                            <div class="d-flex align-items-center">
-                                <div class="small">
-                                    <div class="text-muted">
-                                        @item.DatePosted.ToString("dddd, dd MMMM yyyy")
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+            <div class="text-center">
+                <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
         }
-    }
-</div>
+        else
+        {
+            @foreach (Article item in allArticles)
+            {
+                <div class="media-element">
+                    <div class="card h-100 shadow border-0">
+                        <img class="card-img-top" src="@item.ImageURL" alt="..." />
+                        <div class="card-body p-4">
+                            <a class="text-decoration-none link-dark stretched-link" href="@($"https://medbase.co.zw/article/{item.Id}")">
+                                <h5 class="card-title mb-3">
+                                    @item.Title
+                                </h5>
+                                <div class="d-flex align-items-center">
+                                    <div class="small">
+                                        <div class="text-muted">
+                                            @item.DatePosted.ToString("dddd, dd MMMM yyyy")
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+}
+
+
 
 @code {
     public IEnumerable<Article> allArticles { get; set; } = Enumerable.Empty<Article>();
@@ -48,6 +60,7 @@
 
     private async Task UpdatePage()
     {
-        allArticles = await repository.GetArticlesNumbered(3);
+        if(Helpers.InternetAvailable())
+            allArticles = await repository.GetArticlesNumbered(3);
     }
 }
