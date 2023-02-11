@@ -63,7 +63,6 @@
     private bool SignInStatus;
     private string UserName = "Guest";
     private string Email = "guest@medbase.co.zw";
-    private string Initials = "GU";
     private AuthenticationResult result;
     string SubscriptionEndDateLabel = "Check subscription";
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
@@ -117,21 +116,6 @@
             Debug.WriteLine(ex);
         }
         finally { loadingAccounts = false; }
-    }
-    static string GetInitials(string name)
-    {
-        // StringSplitOptions.RemoveEmptyEntries excludes empty spaces returned by the Split method
-
-        string[] nameSplit = name.Split(new string[] { ",", " " }, StringSplitOptions.RemoveEmptyEntries);
-
-        string initials = "";
-
-        foreach (string item in nameSplit)
-        {
-            initials += item.Substring(0, 1).ToUpper();
-        }
-
-        return initials;
     }
     private void GetClaims(AuthenticationResult result)
     {

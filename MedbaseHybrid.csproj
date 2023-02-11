@@ -56,4 +56,11 @@
         <PackageReference Include="Microsoft.Identity.Client" Version="4.49.1" />
     </ItemGroup>
 
+	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
+		<AndroidKeyStore>True</AndroidKeyStore>
+		<AndroidSigningKeyStore>medbase.keystore</AndroidSigningKeyStore>
+		<AndroidSigningKeyAlias>MedbaseAlias</AndroidSigningKeyAlias>
+		<AndroidSigningKeyPass>tanakamawere</AndroidSigningKeyPass>
+		<AndroidSigningStorePass>tanakamawere</AndroidSigningStorePass>
+	</PropertyGroup>
 </Project>

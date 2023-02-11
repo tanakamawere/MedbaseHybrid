@@ -1,12 +1,18 @@
 ﻿@page "/"
 @page "/dashboard"
+@inject IApiRepository repository
 @using MedbaseHybrid.Services;
 @inject IDatabaseRepository database
 
 <div class="container">
+    
+
+<div class="container">
+    <Courses />
+</div>
     <div class="row align-items-center justify-content-center">
         <div class="text-start text-xl-start">
-            <h6 class="display-5 fw-bolder text-dark mb-2">Downloads⏬</h6>
+            <h6 class="display-6 fw-bolder text-dark mb-2">Downloads⏬</h6>
         </div>
         <div class="alert alert-info @(premiumAlertVisible == true ? "d-block" : "d-none")">
             You aren't a premium user. Upgrade to <a class="https://medbase.co.zw/premium">Medbase Premium</a> for more downloads & customisable quizzes

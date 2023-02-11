@@ -5,7 +5,7 @@
 @using System.Diagnostics;
 @inject IApiRepository repository
 
-<div class="top-row ps-3 navbar navbar-dark d-sm-none d-xxl-block d-xl-block d-md-block">
+<div class="top-row ps-3 navbar navbar-dark sticky-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Medbase</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -30,7 +30,6 @@
                 <a class="text-white btn">
                      <span class="oi oi-expand-down" aria-hidden="true"></span>
                     Hi, @UserName<br />
-                    @Email
                 </a>
                 <button class="btn btn-outline-light @(SignInStatus == false ? "d-none" : "d-block") @(checkingSubscription == true ? "disabled" : "")" @onclick="CheckSubscription">
                     <span class="spinner-border spinner-border-sm @(checkingSubscription == false ? "d-none" : "d-block")" role="status" aria-hidden="true"></span>
@@ -47,21 +46,6 @@
         }
 
         <hr/>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Dashboard
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="courses">
-                <span class="oi oi-plus" aria-hidden="true"></span> Courses
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="articles">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Articles
-            </NavLink>
-        </div>
     </nav>
 </div>
 
