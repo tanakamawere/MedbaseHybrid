@@ -5,7 +5,7 @@
 @using System.Diagnostics;
 @inject IApiRepository repository
 
-<div class="top-row ps-3 navbar navbar-dark sticky-top">
+<div class="top-row ps-3 navbar navbar-dark sticky-top" style="background-color:#6397ff">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Medbase</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -16,7 +16,7 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
-        @if (loadingAccounts.Equals(true))
+        @*@if (loadingAccounts.Equals(true))
         {
             <div class="d-flex justify-content-center">
                 <div class="spinner-border" role="status">
@@ -45,7 +45,7 @@
             </div>
         }
 
-        <hr />
+        <hr />*@
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="/">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
@@ -67,11 +67,10 @@
     private bool SignInStatus;
     private string UserName = "Guest";
     private string Email = "guest@medbase.co.zw";
-    private string Initials = "GU";
     private AuthenticationResult result;
     string SubscriptionEndDateLabel = "Check subscription";
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-    private string? UserMenuCssClass => collapseUserMenu ? "collapse" : null;
+    private string UserMenuCssClass => collapseUserMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {
@@ -84,7 +83,6 @@
 
     protected override void OnInitialized()
     {
-        GetAccounts();
     }
 
     async void GetAccounts()

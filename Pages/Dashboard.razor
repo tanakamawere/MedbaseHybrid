@@ -38,7 +38,7 @@
                 if (!TopicsList.Any())
                 {
                     <div class="text-center">
-                        <p class="mt-5"><em>You have no topics downloaded.😟 <a href="/courses">Click here </a> to download.</em></p>
+                        <p class="mt-5">You have no topics downloaded.😟 <a href="/courses">Click here </a> to download.</p>
                         <img src="img/undraw_empty.svg" style="max-width:300px"/>
                     </div>
                 }
@@ -64,21 +64,10 @@
                                     <div class="container-fluid text-center border-0 shadow card-footer mt-2" style="display:@(showCustomisation.Equals(true) && topicToCustomise == item.TopicRef ? "block" : "none")">
                                         <h6 class="fw-bold">Customise Quiz🛠️</h6>
                                         <div class="container text-center m-1">
-                                            @if (!premiumAlertVisible)
-                                            {
-                                                <button class="btn @(negativeMarking.Equals(true) ? "btn-primary" : "btn-outline-primary")" @onclick="ToggleNegativeMarking">
-                                                    @(negativeMarking.Equals(true) ? "Negative Marking On" : "Negative Marking Off")
-                                                </button>
-                                            }
-                                            else
-                                            {
-                                                <button class="btn @(negativeMarking.Equals(true) ? "btn-primary" : "btn-outline-primary")" @onclick="ToggleNegativeMarkingInactive">
-                                                    @(negativeMarking.Equals(true) ? "Negative Marking On" : "Negative Marking Off")
-                                                </button>
-                                                <div class="alert alert-warning m-1 @(customiseQuizPremiumAlert == true ? "d-block" : "d-none")">
-                                                    Customising quizzes is a premium feature. 
-                                                </div>
-                                            }
+
+                                            <button class="btn @(negativeMarking.Equals(true) ? "btn-primary" : "btn-outline-primary")" @onclick="ToggleNegativeMarking">
+                                                @(negativeMarking.Equals(true) ? "Negative Marking On" : "Negative Marking Off")
+                                            </button>
                                         </div>
                                         <div class="container text-center">
                                             <div class="row">
@@ -86,15 +75,7 @@
                                                     <p class="col-auto">Number Of Questions🔢</p>
                                                 </div>
                                                 <div class="col">
-                                                    @if (premiumAlertVisible)
-                                                    {
-                                                        <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" disabled/>
-                                                    }
-                                                    else
-                                                    {
-
-                                                        <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
-                                                    }
+                                                    <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
                                                 </div>
                                             </div>
                                         </div>
@@ -131,7 +112,6 @@
     {
         loadingQuestions = true;
         GetQuestionsFromDb();
-        CheckSubscription();
         loadingQuestions = false;
         StateHasChanged();
     }

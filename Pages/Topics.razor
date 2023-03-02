@@ -38,9 +38,6 @@
                 <div class="alert alert-success @(downloadSuccessful == true ? "d-block" : "d-none")" role="alert" @onclick="DismissDownloadSuccessfulMessage">
                     Your topic was downloaded successfully! Go to <a href="/dashboard">to see your downloads</a>😃
                 </div>
-                <div class="alert alert-info @(maxFreeDownloads == true ? "d-block" : "d-none")" role="alert" @onclick="DismissMaxFreeDownloads">
-                    You have reached your maximum free download of 1. Upgrade to <a href="https://medbase.co.zw/premium">Medbase Premium</a>for more downloads & customisable quizzes🆙
-                </div>
                 <Virtualize Items="TopicsList.ToList()" TItem="Topic" Context="item">
                     <ItemContent>
                         <div class="col-lg-4 mb-2">
@@ -51,7 +48,7 @@
                                     </h5>
                                     <div class="btn-group justify-content-center">
                                         <a class="btn btn-outline-dark" href="@($"questions/{item.TopicRef}/online")">View🥸</a>
-                                        <button class="btn btn-outline-dark @(canDownload == true ? "" : "disabled" )" @onclick="() => Download(item.Id)">
+                                        <button class="btn btn-outline-dark" @onclick="() => Download(item.Id)">
                                             Download⏬
                                         </button>
                                         <button class="btn btn-outline-dark" @onclick="() => CustomiseQuiz(item.TopicRef)">
@@ -62,34 +59,14 @@
                                         <h6 class="fw-bold">Customise Quiz🛠️</h6>
                                         
                                         <div class="container text-center m-1">
-                                            @if (canDownload)
-                                            {
-                                                <button class="btn @(negativeMarking.Equals(true) ? "btn-primary" : "btn-outline-primary")" @onclick="ToggleNegativeMarking">
-                                                    @(negativeMarking.Equals(true) ? "Negative Marking On" : "Negative Marking Off")
-                                                </button>
-                                            }
-                                            else
-                                            {
-                                                <button class="btn @(negativeMarking.Equals(true) ? "btn-primary" : "btn-outline-primary")" @onclick="ToggleNegativeMarkingInactive">
-                                                    @(negativeMarking.Equals(true) ? "Negative Marking On" : "Negative Marking Off")
-                                                </button>
-                                                <div class="alert alert-warning m-1 @(customiseQuizPremiumAlert == true ? "d-block" : "d-none")">
-                                                    Customising quizzes is a premium feature. 
-                                                </div>
-                                            }
+
+                                            <button class="btn @(negativeMarking.Equals(true) ? "btn-primary" : "btn-outline-primary")" @onclick="ToggleNegativeMarking">
+                                                @(negativeMarking.Equals(true) ? "Negative Marking On" : "Negative Marking Off")
+                                            </button>
                                         </div>
                                         <div class="row text-center align-content-center justify-content-center">
                                             <p class="col-auto">Number Of Questions</p>
-
-                                            @if (!canDownload)
-                                            {
-                                                <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" disabled />
-                                            }
-                                            else
-                                            {
-
-                                                <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
-                                            }
+                                            <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
                                         </div>
                                         <a class="btn btn-primary" href="@($"/quiz/{item.TopicRef}/{numberOfQuestions}/{negativeMarking}/online")">
                                             Start!🥸
@@ -109,24 +86,14 @@
     [Parameter]
     public string courseRef { get; set; } = "";
     bool showCustomisation = false;
-    bool canDownload = true;
     bool topicAlreadyDownloaded = false;
-    private bool customiseQuizPremiumAlert;
     bool downloadSuccessful;
-    bool maxFreeDownloads;
     bool loadingDownload;
     int topicToCustomise;
     private bool negativeMarking = true;
     private int numberOfQuestions = 2;
 
     private IEnumerable<Topic> TopicsList { get; set; } = Enumerable.Empty<Topic>();
-
-    protected override void OnInitialized() => CheckIfCanDownload();
-    private void ToggleNegativeMarkingInactive()
-    {
-        customiseQuizPremiumAlert = !customiseQuizPremiumAlert;
-    }
-
 
     private void ToggleNegativeMarking()
     {
@@ -168,28 +135,7 @@
         finally
         {
             loadingDownload = false;
-            CheckIfCanDownload();
             StateHasChanged();
-        }
-    }
-
-    void CheckIfCanDownload()
-    {
-        List<Topic> downloadedTopics = database.GetTopicsAsync().ToList();
-        if (downloadedTopics.Count >= 1)
-        {
-            if (Helpers.CheckSubscription())
-            {
-                EnableDownloads();
-            }
-            else
-            {
-                DisableDownloads();
-            }
-        }
-        else if (downloadedTopics.Count < 1)
-        {
-            EnableDownloads();
         }
     }
     bool CheckIfAlreadyDownloaded(Topic topic)
@@ -204,15 +150,6 @@
         }
         return downloaded;
     }
-    void EnableDownloads()
-    {
-        canDownload = true;
-    }
-    void DisableDownloads()
-    {
-        maxFreeDownloads = true;
-        canDownload = false;
-    }
     void DismissAlreadyDownloadedMessage()
     {
         topicAlreadyDownloaded = !topicAlreadyDownloaded;
@@ -221,11 +158,6 @@
     void DismissDownloadSuccessfulMessage()
     {
         downloadSuccessful = !downloadSuccessful;
-        StateHasChanged();
-    }
-    void DismissMaxFreeDownloads()
-    {
-        maxFreeDownloads = !maxFreeDownloads;
         StateHasChanged();
     }
 }
