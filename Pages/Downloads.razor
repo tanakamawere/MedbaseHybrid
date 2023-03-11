@@ -1,12 +1,14 @@
 ﻿@page "/"
-@page "/dashboard"
+@page "/downloads"
 @inject IApiRepository repository
 @using MedbaseHybrid.Services;
 @inject IDatabaseRepository database
 
 <div class="container">
+    <div class="fixed-top">
+        <TopNavBar NavTitle="Downloads"/>
+    </div>
 
-    <Courses />
     <div class="row align-items-center justify-content-center">
         <div class="text-start text-xl-start">
             <h6 class="display-6 fw-bolder text-dark mb-2">Downloads⏬</h6>
@@ -75,7 +77,10 @@
             }
         </div>
     </div>
-    <Articles/>
+
+    <div class="fixed-bottom">
+        <BottomTabs />
+    </div>
 </div>
 
 @code {

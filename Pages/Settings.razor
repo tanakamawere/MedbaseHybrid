@@ -1,7 +1,11 @@
 ﻿@page "/settings"
 
 <div class="container-fluid">
-    <header class="bg-white py-5 medbase-font">
+    <div class="fixed-top">
+        <TopNavBar NavTitle="Settings"/>
+    </div>
+
+    <header class="py-5 medbase-font">
         <div class="container px-5">
             <div class="row gx-5 align-items-center justify-content-center">
                 <div class="col-lg-6 col-xl-6 col-xxl-4">
@@ -33,32 +37,37 @@
         <a class="btn btn-outline-dark" href="https://fb.me/medbase.co.zw">Facebook</a>
         <a class="btn btn-outline-dark" href="https://instagram.com/medbase.zw">Instagram</a>
     </div>
-</div>
-<section class="py-5 card shadow">
-    <div class="container px-5">
-        <div class="text-center mb-5">
-            <i class="bi bi-laptop text-dark"></i>
-            <h1 class="fw-bolder">About Medbase</h1>
-            <p class="lead fw-normal text-muted mb-0">Information you probably don't care about🥲</p>
-        </div>
+    <section class="py-5 card shadow">
+        <div class="container px-5">
+            <div class="text-center mb-5">
+                <i class="bi bi-laptop text-dark"></i>
+                <h1 class="fw-bolder">About Medbase</h1>
+                <p class="lead fw-normal text-muted mb-0">Information you probably don't care about🥲</p>
+            </div>
 
-        <p class="lead text-dark mb-1 text-center">
-            App Version 1.0
-            <br />
-            Blazor Hybrid + .NET MAUI
-        </p>
-        <div class="col text-center">
-            <i class="bi bi-globe text-dark"></i>
-            <div class="h5">Visit my website</div>
-            <p class="text-muted mb-0">
-                Get in touch at
-                <a href="https://www.tanakamawere.co.zw">
-                    www.tanakamawere.co.zw
-                </a>
+            <p class="lead text-dark mb-1 text-center">
+                App Version 1.0
+                <br />
+                Blazor Hybrid + .NET MAUI
             </p>
+            <div class="col text-center">
+                <i class="bi bi-globe text-dark"></i>
+                <div class="h5">Visit my website</div>
+                <p class="text-muted mb-0">
+                    Get in touch at
+                    <a href="https://www.tanakamawere.co.zw">
+                        www.tanakamawere.co.zw
+                    </a>
+                </p>
+            </div>
         </div>
+    </section>
+
+
+    <div class="fixed-bottom">
+        <BottomTabs />
     </div>
-</section>
+</div>
 
 @code {
 
