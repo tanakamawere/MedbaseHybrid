@@ -11,27 +11,11 @@
         <div class="text-start text-xl-start">
             <h6 class="display-6 fw-bolder text-dark mb-2">Downloads⏬</h6>
         </div>
-        @*<div class="alert alert-info @(premiumAlertVisible == true ? "d-block" : "d-none")">
-            <p style="font-size:12px; padding:-3px">
-                Upgrade to <a class="https://medbase.co.zw/premium">Medbase Premium</a> for more downloads & customisable quizzes
-            </p>
-        </div>*@
+
         <div class="row">
-            @if (loadingQuestions.Equals(true))
+            @if (loadingQuestions.Equals(true) || loadingDeleteTopic.Equals(true))
             {
-                <div class="d-flex justify-content-center"> 
-                    <div class="spinner-border text-secondary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            }
-            else if (loadingDeleteTopic.Equals(true))
-            {
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border text-secondary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
+                <LoadingComponent/>
             }
             else
             {
@@ -98,8 +82,6 @@
     private IEnumerable<Topic> TopicsList { get; set; } = Enumerable.Empty<Topic>();
     private bool loadingQuestions;
     private bool loadingDeleteTopic;
-    private bool premiumAlertVisible;
-    private bool customiseQuizPremiumAlert;
 
     [Inject]
     NavigationManager navigationManager { get; set; }
@@ -120,12 +102,6 @@
     {
         negativeMarking = !negativeMarking;   
     }
-
-    private void ToggleNegativeMarkingInactive()
-    {
-        customiseQuizPremiumAlert = !customiseQuizPremiumAlert;
-    }
-
     private void GetQuestionsFromDb()
     {
         TopicsList = database.GetTopicsAsync().ToList();
@@ -147,14 +123,6 @@
         database.DeleteTopicAsync(topic);
         GetQuestionsFromDb();
         loadingDeleteTopic = false;
-        StateHasChanged();
-    }
-    private void CheckSubscription()
-    {
-        if (Helpers.CheckSubscription())
-            premiumAlertVisible = false;
-        else
-            premiumAlertVisible = true;
         StateHasChanged();
     }
 }

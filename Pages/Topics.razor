@@ -8,27 +8,20 @@
 
 <div class="container">
     <div class="row align-items-center justify-content-center">
-        <div class="text-center text-xl-start">
-            <h1 class="display-5 fw-bolder text-dark mb-2">Choose Topic😙</h1>
-        </div>
+
+
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/">Courses</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Topics</li>
+            </ol>
+        </nav>
+
         <div class="row">
-            @if (!TopicsList.Any())
+            @if (!TopicsList.Any() || loadingDownload.Equals(true))
             {
-                <div class="text-center">
-                    <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-                <span class="visible">Loading, please wait a bit...</span>
-            }
-            else if (loadingDownload.Equals(true))
-            {
-                <div class="text-center">
-                    <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-                <span class="visible">Downloading, please wait a bit...</span>
+                <LoadingComponent />
             }
             else
             {
@@ -46,14 +39,16 @@
                                     <h5 class="card-title mb-3">
                                         @item.Name
                                     </h5>
-                                    <div class="btn-group justify-content-center">
-                                        <a class="btn btn-outline-dark" href="@($"questions/{item.TopicRef}/online")">View🥸</a>
-                                        <button class="btn btn-outline-dark" @onclick="() => Download(item.Id)">
-                                            Download⏬
-                                        </button>
-                                        <button class="btn btn-outline-dark" @onclick="() => CustomiseQuiz(item.TopicRef)">
-                                            Quiz🤔
-                                        </button>
+                                    <div class="row text-center">
+                                        <div class="col-4">
+                                            <a class="btn btn-primary" href="@($"questions/{item.TopicRef}/online")">View😆</a>
+                                        </div>
+                                        <div class="col-5">
+                                            <a class="btn btn-primary" @onclick="() => Download(item.Id)">Download⏬</a>
+                                        </div>
+                                        <div class="col-3">
+                                            <a class="btn btn-primary" @onclick="() => CustomiseQuiz(item.TopicRef)">Quiz🤔</a>
+                                        </div>
                                     </div>
                                     <div class="container-fluid text-center border-0 shadow card-footer mt-2" style="display:@(showCustomisation.Equals(true) && topicToCustomise == item.TopicRef ? "block" : "none")">
                                         <h6 class="fw-bold">Customise Quiz🛠️</h6>
@@ -90,8 +85,8 @@
     bool downloadSuccessful;
     bool loadingDownload;
     int topicToCustomise;
-    private bool negativeMarking = true;
-    private int numberOfQuestions = 2;
+    private bool negativeMarking = false;
+    private int numberOfQuestions = 1;
 
     private IEnumerable<Topic> TopicsList { get; set; } = Enumerable.Empty<Topic>();
 

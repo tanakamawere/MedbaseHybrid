@@ -1,8 +1,4 @@
-﻿@using MedbaseHybrid.Auth;
-@using MedbaseHybrid.Services;
-@using Microsoft.Identity.Client
-@using System.Security.Claims
-@using System.Diagnostics;
+﻿@using MedbaseHybrid.Services;
 @inject IApiRepository repository
 
 <div class="top-row ps-3 navbar navbar-dark sticky-top" style="background-color:#6397ff">
@@ -16,36 +12,6 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
-        @*@if (loadingAccounts.Equals(true))
-        {
-            <div class="d-flex justify-content-center">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="nav-item px-3 border-3 gap-2">
-                <a class="text-white btn">
-                     <span class="oi oi-expand-down" aria-hidden="true"></span>
-                    Hi, @UserName<br />
-                </a>
-                <button class="btn btn-outline-light @(SignInStatus == false ? "d-none" : "d-block") @(checkingSubscription == true ? "disabled" : "")" @onclick="CheckSubscription">
-                    <span class="spinner-border spinner-border-sm @(checkingSubscription == false ? "d-none" : "d-block")" role="status" aria-hidden="true"></span>
-                    @SubscriptionEndDateLabel
-                </button>
-                <div class="alert alert-warning @(collapseUserMenu == true ? "d-none" : "d-block")" role="alert">
-                    No active subscription found
-                </div>
-                <button class="btn btn-outline-light" @onclick="SignIn">
-                    <span class="oi oi-account-logout" aria-hidden="true"></span>
-                    @(SignInStatus == false ? "Login" : "Log out")
-                </button>
-            </div>
-        }
-
-        <hr />*@
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="/">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
@@ -62,13 +28,6 @@
 @code {
     private bool collapseNavMenu = true;
     private bool collapseUserMenu = true;
-    private bool loadingAccounts = false;
-    private bool checkingSubscription = false;
-    private bool SignInStatus;
-    private string UserName = "Guest";
-    private string Email = "guest@medbase.co.zw";
-    private AuthenticationResult result;
-    string SubscriptionEndDateLabel = "Check subscription";
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
     private string UserMenuCssClass => collapseUserMenu ? "collapse" : null;
 
@@ -84,114 +43,4 @@
     protected override void OnInitialized()
     {
     }
-
-    async void GetAccounts()
-    {
-        try
-        {
-            // First attempt silent login, which checks the cache for an existing valid token.
-            // If this is very first time or user has signed out, it will throw MsalUiRequiredException
-            loadingAccounts = true;
-            result = await PCAWrapperB2C.Instance.AcquireTokenSilentAsync(B2CConstants.Scopes);
-            GetClaims(result);
-
-            SignInStatus = true;
-            StateHasChanged();
-        }
-        catch (MsalUiRequiredException)
-        {
-            SignInStatus = false;
-            Helpers.RemoveSubscription();
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine(ex);
-        }
-        finally { loadingAccounts = false; }
-    }
-    static string GetInitials(string name)
-    {
-        // StringSplitOptions.RemoveEmptyEntries excludes empty spaces returned by the Split method
-
-        string[] nameSplit = name.Split(new string[] { ",", " " }, StringSplitOptions.RemoveEmptyEntries);
-
-        string initials = "";
-
-        foreach (string item in nameSplit)
-        {
-            initials += item.Substring(0, 1).ToUpper();
-        }
-
-        return initials;
-    }
-    private void GetClaims(AuthenticationResult result)
-    {
-        UserName = result.ClaimsPrincipal.Claims.Where(x => x.Type == "name").Select(x => x.Value).SingleOrDefault().ToString();
-        Email = result.ClaimsPrincipal.Claims.Where(x => x.Type == "emails").Select(x => x.Value).SingleOrDefault().ToString();
-    }
-
-    private async void SignIn()
-    {
-        try
-        {
-            loadingAccounts = true;
-            result = await PCAWrapperB2C.Instance.AcquireTokenInteractiveAsync(B2CConstants.Scopes);
-            GetClaims(result);
-            SignInStatus = true;
-            StateHasChanged();
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine(ex.Message);
-        }
-        finally { 
-            loadingAccounts = false;
-            StateHasChanged();
-        }
-    }
-
-    private async void SignOut()
-    {
-        await PCAWrapperB2C.Instance.SignOutAsync();
-        Helpers.RemoveSubscription();
-    }
-
-    async Task CheckSubscription()
-    {
-        if (SignInStatus && Helpers.InternetAvailable())
-        {
-            checkingSubscription = true;
-            UpdateSubscriptionStatus("Checking Subscription");
-            Subscription subscription = await repository.GetSubscription(Email);
-
-            if (!string.IsNullOrEmpty(subscription.Email))
-            {
-                if (Preferences.ContainsKey(Constants.SubscriptionPreferenceDate()))
-                {
-                    Preferences.Remove(Constants.SubscriptionPreferenceDate());
-                }
-                Preferences.Set(Constants.SubscriptionPreferenceDate(), subscription.EndDate.ToString());
-
-                DateTime subEndDate = DateTime.Parse(Preferences.Get(Constants.SubscriptionPreferenceDate(), "01/01/2099"));
-
-                int subActive = subEndDate.Date.CompareTo(DateTime.Now.Date);
-                if (subActive > 0)
-                {
-                    //This means the user's subscription is active.
-                    UpdateSubscriptionStatus($"Subscription Ending: {Preferences.Get(Constants.SubscriptionPreferenceDate(), "Not subscribed")}");
-                }
-                else if (subActive < 0)
-                {
-                    UpdateSubscriptionStatus($"Subscription expired. Renew");
-                }
-                StateHasChanged();
-            }
-            else
-            {
-                ToggleUserMenu();
-            }
-            checkingSubscription = false;
-        }
-    }
-    void UpdateSubscriptionStatus(string text) => SubscriptionEndDateLabel = text;
 }
