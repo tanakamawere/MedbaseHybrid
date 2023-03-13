@@ -6,7 +6,11 @@
 
 <div class="container">
     <div class="fixed-top">
-        <TopNavBar NavTitle="Downloads"/>
+        <TopNavBar>
+            <div class="container-fluid">
+                <span class="navbar-brand text-white mb-0 h1">Downloads</span>
+            </div>
+        </TopNavBar>
     </div>
 
     <div class="row align-items-center justify-content-center">
@@ -32,20 +36,26 @@
                 {
                     @foreach (Topic item in TopicsList)
                     {
-                        <div class="col-lg-4 m-2">
+                        <div class="col-lg-4">
                             <div class="card h-100 shadow border-0">
                                 <div class="card-body p-4">
                                     <h5 class="card-title mb-3">
                                         @item.Name
                                     </h5>
-                                    <div class="btn-group justify-content-sm-center justify-content-xl-start text-center">
-                                        <button class="btn btn-outline-danger" @onclick="() => DeleteTopic(item.TopicRef)">
-                                            Delete🚮
-                                        </button>
-                                        <a class="btn btn-outline-dark" href="@($"questions/{item.TopicRef}/offline")">View👓</a>
-                                        <button class="btn btn-outline-dark" @onclick="() => CustomiseQuiz(item.TopicRef)">
-                                            Quiz🤔
-                                        </button>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <button class="btn btn-danger" @onclick="() => DeleteTopic(item.TopicRef)">
+                                                Delete🚮
+                                            </button>
+                                        </div>
+                                        <div class="col-4">
+                                            <a class="btn btn-primary" href="@($"questions/{item.TopicRef}/offline")">View👓</a>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-primary" @onclick="() => CustomiseQuiz(item.TopicRef)">
+                                                Quiz🤔
+                                            </button>
+                                        </div>
                                     </div>
                                     <div class="container-fluid text-center border-0 shadow card-footer mt-2" style="display:@(showCustomisation.Equals(true) && topicToCustomise == item.TopicRef ? "block" : "none")">
                                         <h6 class="fw-bold">Customise Quiz🛠️</h6>

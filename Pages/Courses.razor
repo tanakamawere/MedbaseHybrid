@@ -4,7 +4,11 @@
 
 <div class="container">
     <div class="fixed-top">
-        <TopNavBar NavTitle="Courses"/>
+        <TopNavBar>
+            <div class="container-fluid">
+                <span class="navbar-brand text-white mb-0 h1">Courses</span>
+            </div>
+        </TopNavBar>
     </div>
 
     @if (Helpers.InternetAvailable())

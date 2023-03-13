@@ -7,16 +7,14 @@
 
 
 <div class="container">
-    <div class="row align-items-center justify-content-center">
-
-
-        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item"><a href="/">Courses</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Topics</li>
-            </ol>
-        </nav>
+    <div class="fixed-top">
+        <TopNavBar>
+            <div class="container-fluid">
+                <span class="navbar-brand text-white mb-0 h1">Topics</span>
+            </div>
+        </TopNavBar>
+    </div>
+    <div class="row align-items-center justify-content-center mt-5">
 
         <div class="row">
             @if (!TopicsList.Any() || loadingDownload.Equals(true))
@@ -29,7 +27,7 @@
                     Topic is already downloaded. Click to dismiss this message🫢
                 </div>
                 <div class="alert alert-success @(downloadSuccessful == true ? "d-block" : "d-none")" role="alert" @onclick="DismissDownloadSuccessfulMessage">
-                    Your topic was downloaded successfully! Go to <a href="/dashboard">to see your downloads</a>😃
+                    Your topic was downloaded successfully! Go to <a href="/downloads">to see your downloads</a>😃
                 </div>
                 <Virtualize Items="TopicsList.ToList()" TItem="Topic" Context="item">
                     <ItemContent>
@@ -44,10 +42,10 @@
                                             <a class="btn btn-primary" href="@($"questions/{item.TopicRef}/online")">View😆</a>
                                         </div>
                                         <div class="col-5">
-                                            <a class="btn btn-primary" @onclick="() => Download(item.Id)">Download⏬</a>
+                                            <button class="btn btn-primary" @onclick="() => Download(item.Id)">Download⏬</button>
                                         </div>
                                         <div class="col-3">
-                                            <a class="btn btn-primary" @onclick="() => CustomiseQuiz(item.TopicRef)">Quiz🤔</a>
+                                            <button class="btn btn-primary" @onclick="() => CustomiseQuiz(item.TopicRef)">Quiz🤔</button>
                                         </div>
                                     </div>
                                     <div class="container-fluid text-center border-0 shadow card-footer mt-2" style="display:@(showCustomisation.Equals(true) && topicToCustomise == item.TopicRef ? "block" : "none")">

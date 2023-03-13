@@ -1,10 +1,10 @@
 ﻿<nav class="navbar" style="background-color:#6397ff">
-    <div class="container-fluid">
-        <span class="navbar-brand text-white mb-0 h1">@NavTitle</span>
-    </div>
+    @ChildContent
 </nav>
 
 @code{
     [Parameter]
     public string NavTitle { get; set; } = "Medbase";
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = default!;
 }

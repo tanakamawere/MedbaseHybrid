@@ -1,17 +1,23 @@
-﻿<div class="row text-center bg-white shadow border-2 p-3" style="min-height:20px">
-    <NavLink class="col-3" Match="NavLinkMatch.Prefix">
-        <a href="/courses"><span class="oi oi-home fs-1"></span></a>
-    </NavLink>
-    <NavLink class="col-3">
-        <a href="/downloads"><span class="oi oi-cloud-download fs-1"></span></a>
-    </NavLink>
-    <div class="col-3">
-        <a href="/articles"><span class="oi oi-book fs-1"></span></a>
+﻿@using MedbaseHybrid.Services;
+
+<div class="row text-center bg-white shadow border-2 p-3" style="min-height:20px">
+    @if (Helpers.InternetAvailable())
+    {
+        <div class="col-3">
+            <a class="bottombarlink" href="/courses"><span class="oi oi-home fs-1"></span></a>
+        </div>
+        <div class="col-3">
+            <a class="bottombarlink" href="/articles"><span class="oi oi-book fs-1"></span></a>
+        </div>
+    }
+    <div class="@(Helpers.InternetAvailable() ? "col-3" : "col-6")">
+        <a class="bottombarlink" href="/downloads"><span class="oi oi-cloud-download fs-1"></span></a>
     </div>
-    <div class="col-3">
-        <a href="/settings"><span class="oi oi-cog fs-1"></span></a>
+    <div class="@(Helpers.InternetAvailable() ? "col-3" : "col-6")">
+        <a class="bottombarlink" href="/settings"><span class="oi oi-cog fs-1"></span></a>
     </div>
 </div>
+
 @code {
 
 }
