@@ -36,49 +36,47 @@
                 {
                     @foreach (Topic item in TopicsList)
                     {
-                        <div class="col-lg-4">
-                            <div class="card h-100 shadow border-0">
-                                <div class="card-body p-4">
-                                    <h5 class="card-title mb-3">
-                                        @item.Name
-                                    </h5>
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <button class="btn btn-danger" @onclick="() => DeleteTopic(item.TopicRef)">
-                                                Delete🚮
-                                            </button>
-                                        </div>
-                                        <div class="col-4">
-                                            <a class="btn btn-primary" href="@($"questions/{item.TopicRef}/offline")">View👓</a>
-                                        </div>
-                                        <div class="col-4">
-                                            <button class="btn btn-primary" @onclick="() => CustomiseQuiz(item.TopicRef)">
-                                                Quiz🤔
-                                            </button>
-                                        </div>
+                        <div class="card h-100 shadow border-0 mb-3">
+                            <div class="card-body p-4">
+                                <h5 class="card-title mb-3">
+                                    @item.Name
+                                </h5>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <button class="btn btn-danger" @onclick="() => DeleteTopic(item.TopicRef)">
+                                            Delete
+                                        </button>
                                     </div>
-                                    <div class="container-fluid text-center border-0 shadow card-footer mt-2" style="display:@(showCustomisation.Equals(true) && topicToCustomise == item.TopicRef ? "block" : "none")">
-                                        <h6 class="fw-bold">Customise Quiz🛠️</h6>
-                                        <div class="container text-center m-1">
+                                    <div class="col-4">
+                                        <a class="btn btn-primary" href="@($"questions/{item.TopicRef}/offline")">View</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <button class="btn btn-primary" @onclick="() => CustomiseQuiz(item.TopicRef)">
+                                            Quiz
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="container-fluid text-center border-0 shadow card-footer mt-2" style="display:@(showCustomisation.Equals(true) && topicToCustomise == item.TopicRef ? "block" : "none")">
+                                    <h6 class="fw-bold">Customise Quiz🛠️</h6>
+                                    <div class="container text-center m-1">
 
-                                            <button class="btn @(negativeMarking.Equals(true) ? "btn-primary" : "btn-outline-primary")" @onclick="ToggleNegativeMarking">
-                                                @(negativeMarking.Equals(true) ? "Negative Marking On" : "Negative Marking Off")
-                                            </button>
-                                        </div>
-                                        <div class="container text-center">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <p class="col-auto">Number Of Questions🔢</p>
-                                                </div>
-                                                <div class="col">
-                                                    <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
-                                                </div>
+                                        <button class="btn @(negativeMarking.Equals(true) ? "btn-primary" : "btn-outline-primary")" @onclick="ToggleNegativeMarking">
+                                            @(negativeMarking.Equals(true) ? "Negative Marking On" : "Negative Marking Off")
+                                        </button>
+                                    </div>
+                                    <div class="container text-center">
+                                        <div class="row">
+                                            <div class="col">
+                                                <p class="col-auto">Number Of Questions🔢</p>
+                                            </div>
+                                            <div class="col">
+                                                <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
                                             </div>
                                         </div>
-                                        <a class="btn btn-primary" href="@($"/quiz/{item.TopicRef}/{numberOfQuestions}/{negativeMarking}/offline")">
-                                            Start🥸!
-                                        </a>
                                     </div>
+                                    <a class="btn btn-primary" href="@($"/quiz/{item.TopicRef}/{numberOfQuestions}/{negativeMarking}/offline")">
+                                        Start🥸!
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -86,10 +84,6 @@
                 }
             }
         </div>
-    </div>
-
-    <div class="fixed-bottom">
-        <BottomTabs />
     </div>
 </div>
 

@@ -127,3 +127,23 @@ a, .btn-link {
     aspect-ratio: 16/9;
     object-fit: cover;
 }
+
+.bottom-bar-icons-active {
+    max-width: 24px;
+    filter: invert(45%) sepia(56%) saturate(2260%) hue-rotate(162deg) brightness(96%) contrast(102%);
+}
+
+.bottom-bar-icons-inactive {
+    max-width: 22px;
+    align-self:center;
+    justify-self:center;
+}
+
+.bottom-bar-text-active {
+    font-size: 12px;
+    color: #00a4d6;
+}
+
+.bottom-bar-text-inactive {
+    display:none;
+}

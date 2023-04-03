@@ -1,23 +1,34 @@
 ﻿@using MedbaseHybrid.Services;
+@inject NavigationManager navigation;
 
-<div class="row text-center bg-white shadow border-2 p-3" style="min-height:20px">
+<div class="row text-center bg-white shadow border-2 p-3 justify-content-center align-content-center" style="min-height:20px">
     @if (Helpers.InternetAvailable())
     {
         <div class="col-3">
-            <a class="bottombarlink" href="/courses"><span class="oi oi-home fs-1"></span></a>
+            <a class="bottombarlink text-decoration-none" href="/courses">
+                <img src="img/house_solid.svg" class="@(navigation.ToBaseRelativePath(navigation.Uri) == "courses" ? "bottom-bar-icons-active" : "bottom-bar-icons-inactive")" />
+                @*<div class="@(navigation.ToBaseRelativePath(navigation.Uri) == "courses" ? "bottom-bar-text-active" : "bottom-bar-text-inactive")" >
+                    Courses
+                </div>*@
+            </a>
         </div>
         <div class="col-3">
-            <a class="bottombarlink" href="/articles"><span class="oi oi-book fs-1"></span></a>
+            <a class="bottombarlink text-decoration-none" href="/articles">
+                <img src="img/newspaper_solid.svg" class="@(navigation.ToBaseRelativePath(navigation.Uri) == "articles" ? "bottom-bar-icons-active" : "bottom-bar-icons-inactive")" />
+            </a>
         </div>
     }
     <div class="@(Helpers.InternetAvailable() ? "col-3" : "col-6")">
-        <a class="bottombarlink" href="/downloads"><span class="oi oi-cloud-download fs-1"></span></a>
+        <a class="bottombarlink text-decoration-none" href="/downloads">
+            <img src="img/download_solid.svg" class="@(navigation.ToBaseRelativePath(navigation.Uri) == "downloads" ? "bottom-bar-icons-active" : "bottom-bar-icons-inactive")" />
+        </a>
     </div>
     <div class="@(Helpers.InternetAvailable() ? "col-3" : "col-6")">
-        <a class="bottombarlink" href="/settings"><span class="oi oi-cog fs-1"></span></a>
+        <a class="bottombarlink text-decoration-none" href="/settings">
+            <img src="img/bars_solid.svg" class="@(navigation.ToBaseRelativePath(navigation.Uri) == "settings" ? "bottom-bar-icons-active" : "bottom-bar-icons-inactive")" />
+        </a>
     </div>
 </div>
 
 @code {
-
 }
