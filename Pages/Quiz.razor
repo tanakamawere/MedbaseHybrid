@@ -34,23 +34,35 @@
                 <br />
                 Explanation: @((MarkupString)Markdown.ToHtml(@QuestionSelected.Explanation))
             </div>
-
-            <div class="btn-group align-bottom align-text-bottom fixed-bottom" role="group" aria-label="Basic example" style="display:@(quizDone == false ? "block" : "none"); margin-bottom:8rem">
-                <button type="button" class="btn btn-outline-success m-1" style="visibility:@((answerVisibility == "visible") ? "hidden" : "visible")" @onclick="() => AnswerResponse(answerTrue)">
-                    True
-                </button>
-                <button type="button" class="btn btn-outline-info m-1" style="visibility:@((answerVisibility == "visible") ? "hidden" : "visible")" @onclick="() => AnswerResponse(answerLeft)">
-                    I don't know
-                </button>
-                <button type="button" class="btn btn-outline-primary m-1"  style="visibility:@((answerVisibility == "visible") ? "hidden" : "visible")" @onclick="() => AnswerResponse(answerFalse)">
-                    False
-                </button>
-            </div>
-            <button class="btn btn-primary align-bottom fixed-bottom" style="visibility:@answerVisibility; margin-bottom:8rem" @onclick="NextQuestion">
-                Next
-            </button>
     </div>
     }
+    <div class="fixed-bottom">
+        <TopNavBar>
+
+            <button class="btn btn-primary justify-content-center" style="display:@((answerVisibility == "visible") ? "block" : "none");" @onclick="NextQuestion">
+                Next
+            </button>
+            <div class="row">
+                <div class="col-4">
+                    <button class="btn btn-primary" style="display:@((answerVisibility == "visible") ? "none" : "block");" @onclick="() => AnswerResponse(answerTrue)">
+                        True
+                    </button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary" style="display:@((answerVisibility == "visible") ? "none" : "block");" @onclick="() => AnswerResponse(answerLeft)">
+                        Leave
+                    </button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary" style="display:@((answerVisibility == "visible") ? "none" : "block");" @onclick="() => AnswerResponse(answerFalse)">
+                        False
+                    </button>
+                </div>
+            </div>
+
+
+        </TopNavBar>
+    </div>
 </div>
 
 <QuizDone 

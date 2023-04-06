@@ -10,6 +10,7 @@ namespace MedbaseHybrid.Services
         IQueryable<Question> GetQuestionsAsync(int topicReference);
         IQueryable<Question> GetQuizQuestionsAsync(int topicReference, int number);
         Task<QuestionPaged> GetQuestionsPaged(int topic, int page, double numResults);
+        Task<QuestionPaged> GetSearchQuestionsPaged(int topic, int page, double numResults, string keyword);
 
         Task SaveTopicAndQuestionsAsync(IEnumerable<Question> questions, Topic topic);
 

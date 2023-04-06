@@ -15,6 +15,7 @@ namespace MedbaseHybrid.Repositories
         Task<IEnumerable<Question>> GetQuestionsSimple(long id);
         Task<Question> GetQuestion(int id);
         Task<QuestionPaged> GetPagedQuestions(int topic, int page, double numResults);
+        Task<QuestionPaged> GetSearchPagedQuestions(int topic, int page, double numResults, string keyword);
         Task<IEnumerable<Subscription>> GetSubscriptions();
         Task<Subscription> GetSubscription(string email);
         Task<IEnumerable<Question>> GetAllQuestions();

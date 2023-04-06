@@ -1,6 +1,5 @@
 ﻿using MedbaseHybrid.Models;
 using MedbaseHybrid.Services;
-using System.Net.Http;
 using System.Net.Http.Json;
 
 namespace MedbaseHybrid.Repositories
@@ -50,6 +49,10 @@ namespace MedbaseHybrid.Repositories
         public async Task<QuestionPaged> GetPagedQuestions(int topic, int page, double numResults = 10f)
         {
             return await httpClient.GetFromJsonAsync<QuestionPaged>($"questions/{topic}/{numResults}/{page}");
+        }
+        public async Task<QuestionPaged> GetSearchPagedQuestions(int topic, int page, double numResults, string keyword)
+        {
+            return await httpClient.GetFromJsonAsync<QuestionPaged>($"questions/{topic}/{numResults}/{page}/{keyword}");
         }
 
         public async Task<IEnumerable<Topic>> GetAllTopics()

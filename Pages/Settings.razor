@@ -9,63 +9,83 @@
         </TopNavBar>
     </div>
 
-    <header class="py-5 medbase-font">
-        <div class="container px-5">
-            <div class="row gx-5 align-items-center justify-content-center">
-                <div class="col-lg-6 col-xl-6 col-xxl-4">
-                    <div class="my-5 text-center text-xl-start">
-                        <h1 class="display-5 fw-bolder text-dark mb-2">
-                            About Medbase😌
-                        </h1>
-                        <p class="lead fw-normal text-muted mb-0">
-                            This is supposed to be a settings page. But I didn't know what settings you'd like to change
-                            So below, there's a feedback link and links to Medbase socials. Please suggest features, complain about something or say hie😁
-                        </p>
+    <section class="mt-5">
+        <div class="card h-100 shadow border-0 mb-2">
+            <div class="card-body p-4">
+                <h4 class="card-title mb-3">
+                    Change Font
+                </h4>
+                <div class="card-body">
+                    <p class="card-text mb-1">
+                        Changes the font on the questions page
+                    </p>
+                    <label>
+                        <select @onchange="SetFont" class="form-select">
+                            <option value="questions-section-mont-font">Montserrat</option>
+                            <option value="questions-section-roboto-font">Roboto</option>
+                            <option value="questions-section-roman-font">Gideon Roman</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="card h-100 shadow border-0 mb-2">
+            <div class="card-body p-4">
+                <h4 class="card-title">
+                    Contact Us
+                </h4>
+                <div class="card-body">
+                    <p class="card-text mb-1">
+                        Do you like something? Or want to complain about something? Use any of the networks below
+                    </p>
+
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <a class="btn btn-outline-primary" href="https://wa.me/263718086035">WhatsApp</a>
+                        </div>
+                        <div class="col-4">
+                            <a class="btn btn-outline-primary" href="https://fb.me/medbase.co.zw">Facebook</a>
+                        </div>
+                        <div class="col-4">
+                            <a class="btn btn-outline-primary" href="https://instagram.com/medbase.zw">Instagram</a>
+                        </div>
                     </div>
                 </div>
-                <div class="col-xl-6 col-xxl-6 text-center">
-                    <img class="img-fluid rounded-3 my-5"
-                         src="img/joyride.svg" alt="..." />
+            </div>
+        </div>
+
+        <div class="card h-100 shadow border-0 mb-2">
+            <div class="card-body p-4">
+                <h4 class="card-title mb-3">
+                    About Medbase
+                </h4>
+                <div class="card-body">
+                    <p class="card-text fw-lighter">
+                        Built with Blazor Hybrid & C#
+                        <br />
+                        App Version @(VersionTracking.Default.CurrentVersion.ToString())
+                        <br />
+                        <br />
+                        Tanaka Mawere ©️ @(DateTime.Now.Year.ToString())
+                    </p>
                 </div>
             </div>
         </div>
-    </header>
-    <hr />
-    <div class="text-center p-5">
-        <h6>Feedback</h6>
-        <a class="btn btn-outline-dark" href="https://wa.me/263718086035">WhatsApp Us</a>
 
-        <h6>Socials</h6>
-        <a class="btn btn-outline-dark" href="https://fb.me/medbase.co.zw">Facebook</a>
-        <a class="btn btn-outline-dark" href="https://instagram.com/medbase.zw">Instagram</a>
-    </div>
-    <section class="py-5 card shadow">
-        <div class="container px-5">
-            <div class="text-center mb-5">
-                <i class="bi bi-laptop text-dark"></i>
-                <h4 class="fw-bolder">About Medbase</h4>
-                <p class="lead fw-normal text-muted mb-0">Information you probably don't care about🥲</p>
-            </div>
-
-            <p class="lead text-dark mb-1 text-center">
-                App Version 1.2
-                <br />
-                Blazor Hybrid + .NET MAUI
-            </p>
-            <div class="col text-center">
-                <i class="bi bi-globe text-dark"></i>
-                <div class="h5">Visit my website</div>
-                <p class="text-muted mb-0">
-                    Get in touch at
-                    <a href="https://www.tanakamawere.co.zw">
-                        www.tanakamawere.co.zw
-                    </a>
-                </p>
-            </div>
-        </div>
     </section>
+
+    <div class="fixed-bottom">
+        <BottomTabs />
+    </div>
 </div>
 
 @code {
+    private void SetFont(ChangeEventArgs e)
+    {
+        // Set a string value:
+        Preferences.Default.Set("questions_font", e.Value.ToString());
+    }
 
+    string[] fonts = { "Montserrat", "Roboto", "Gideon Roman" };
 }

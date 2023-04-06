@@ -12,8 +12,7 @@
     }
     else
     {
-        <div class="mb-5">
-
+        <div class="mt-5 @(Preferences.Get("questions_font", "questions-section-mont-font"))">
             <Virtualize Items="QuestionPaged.Questions.ToList()" Context="question" TItem="Question">
                 <ItemContent>
 
@@ -122,23 +121,42 @@
         </div>
 
 
-        <div class="fixed-bottom">
+        <div class="fixed-top">
             <TopNavBar>
                 <div class="container align-content-center justify-content-center text-center">
                     <div class="row">
-                        <div class="col-4">
-                            <button @onclick="() => GetQuestions(QuestionPaged.CurrentPage -1)" class="btn btn-outline-light @(!(QuestionPaged.CurrentPage > 1) ? "disabled" : "")">
-                                Previous
-                            </button>
+                        <div class="row col">
+                            <div class="col-4">
+                                <button @onclick="() => GetQuestions(QuestionPaged.CurrentPage -1)" class="btn btn-outline-light @(!(QuestionPaged.CurrentPage > 1) ? "disabled" : "")">
+                                    Previous
+                                </button>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p style="font-size:small">
+                                    Page @QuestionPaged.CurrentPage / @QuestionPaged.Pages
+                                </p>
+                            </div>
+                            <div class="col-4">
+                                <button @onclick="() => GetQuestions(QuestionPaged.CurrentPage +1)"
+                                        class="btn btn-outline-light @(!(QuestionPaged.CurrentPage < QuestionPaged.Pages) ? "disabled" : "")">
+                                    Next
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-4">
-                            Page @QuestionPaged.CurrentPage of @QuestionPaged.Pages
+                        <div class="col-2 align-self-center" @onclick="() => OpenSearchBar()">
+                            <span class="oi oi-magnifying-glass text-white" aria-hidden="true"></span>
                         </div>
-                        <div class="col-4">
-                            <button @onclick="() => GetQuestions(QuestionPaged.CurrentPage +1)"
-                                    class="btn btn-outline-light @(!(QuestionPaged.CurrentPage < QuestionPaged.Pages) ? "disabled" : "")">
-                                Next
-                            </button>
+                    </div>
+                    <div style="display:@(searchBarOpen == true ? "block" : "none");" class="m-1">
+                        <div class="row text-center">
+                            <div class="col-10">
+                                <InputText class="form-control" DisplayName="searchQuestions" @bind-Value="searchTerm" placeholder="Search for one keyword" />
+                            </div>
+                            <div class="col-2">
+                                <button class="btn btn-primary" @onclick="() => GetSearchQuestions()">
+                                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -156,6 +174,9 @@
     public string source { get; set; }
     public int Answers { get; set; } = 0;
     public int qts;
+    public bool searchBarOpen = false;
+    public bool searchResultsNull = false;
+    private string searchTerm = "";
 
     QuestionPaged QuestionPaged = new ();
 
@@ -181,4 +202,22 @@
             QuestionPaged = await database.GetQuestionsPaged(topicRef, page, 10f);
         }
     }
+    private async Task GetSearchQuestions(int page = 1)
+    {
+
+        if (source.Equals("online"))
+        {
+            QuestionPaged = await repository.GetSearchPagedQuestions(topicRef, page, 30f, searchTerm);
+        }
+        else if (source.Equals("offline"))
+        {
+            QuestionPaged = await database.GetSearchQuestionsPaged(topicRef, page, 10f, searchTerm);
+        }
+
+        if (QuestionPaged.Questions.ToList().Count() == 0)
+        {
+            searchResultsNull = true;
+        }
+    }
+    private void OpenSearchBar() => searchBarOpen = !searchBarOpen;
 }

@@ -54,6 +54,28 @@ namespace MedbaseHybrid.Services
                     .Take(number);
         }
 
+        public async Task<QuestionPaged> GetSearchQuestionsPaged(int topic, int page, double numResults, string keyword)
+        {
+            var pageResults = numResults;
+            var pageCount = Math.Ceiling(context.Questions.Where(x => x.TopicRef == topic).Count() / pageResults);
+
+            var products = await context.Questions
+                .Where(x => x.TopicRef == topic)
+                .Where(x => x.QuestionMain.Contains(keyword))
+                .Skip((page - 1) * (int)pageResults)
+                .Take((int)pageResults)
+                .ToListAsync();
+
+            var response = new QuestionPaged
+            {
+                Questions = products,
+                CurrentPage = page,
+                Pages = (int)pageCount
+            };
+
+            return response;
+        }
+
         public IQueryable<Session> GetSessionsAsync()
         {
             return context.Sessions;
