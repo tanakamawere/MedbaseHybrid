@@ -3,8 +3,17 @@
 @using MedbaseHybrid.Services
 @inject IApiRepository repository
 @inject IDatabaseRepository database
+@inject IDialogService DialogService
 @using Markdig
-<div class="container text-center">
+
+<div class="container">
+    <div class="fixed-top">
+        <TopNavBar>
+            <div class="container-fluid">
+                <span class="navbar-brand text-white mb-0 h1">Questions</span>
+            </div>
+        </TopNavBar>
+    </div>
 
     @if (!QuestionPaged.Questions.Any())
     {
@@ -12,115 +21,119 @@
     }
     else
     {
-        <div class="mt-5 @(Preferences.Get("questions_font", "questions-section-mont-font"))">
+        <div class="m-2 position-fixed bottom-0 @(showToolbar.Equals(false) ? "d-none" : "d-block")">
+            <MudPaper Elevation="25" Outlined=true>
+                <MudToolBar>
+                    <MudIconButton Icon="@Icons.Material.Outlined.Search" />
+                    <MudGrid Spacing="1" Justify="Justify.Center">
+                        <MudIconButton @onclick="() => GetQuestions(QuestionPaged.CurrentPage -1)" class="@(!(QuestionPaged.CurrentPage > 1) ? "disabled" : "")" Icon="@Icons.Material.Filled.ArrowBack">
+                        </MudIconButton>
+                        <MudButton Disabled="true" Typo="Typo.caption" Align="Align.Center">
+                            Page @QuestionPaged.CurrentPage / @QuestionPaged.Pages
+                        </MudButton>
+                        <MudIconButton @onclick="() => GetQuestions(QuestionPaged.CurrentPage +1)"
+                                       class="@(!(QuestionPaged.CurrentPage < QuestionPaged.Pages) ? "disabled" : "")" Icon="@Icons.Material.Filled.ArrowForward">
+                        </MudIconButton>
+                    </MudGrid>
+                    <MudIconButton Icon="@Icons.Material.Outlined.Menu" OnClick="OpenToolbar" />
+                </MudToolBar>
+            </MudPaper>
+        </div>
+        <div class="m-2 position-fixed bottom-0 end-0 justify-content-center @(showToolbar.Equals(true) ? "d-none" : "d-block")">
+            <MudFab Color="Color.Primary"
+                    StartIcon="@Icons.Material.Filled.More"
+                    OnClick="OpenToolbar"
+                    Label="Show Toolbar"
+                    Class="object-left" />
+        </div>
+
+        <div class="@(Preferences.Get("questions_font", "questions-section-mont-font"))" style="margin-bottom:100px;">
             <Virtualize Items="QuestionPaged.Questions.ToList()" Context="question" TItem="Question">
                 <ItemContent>
-
-                    <div class="container-fluid" style="max-width:500px">
-                        <!--Question-->
-
-
-                        <div class="row">
-                            <div class="col">
-                                <h5 class="h5">
+                    <MudCard class="mb-2">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.h6">
                                     @question.Id - @question.QuestionMain
-                                </h5>
-                            </div>
-                            <div class="col col-2">
-                                <a class="btn">
-                                    <i class="bi bi-flag text-dark"
-                                       style="font-size:small"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <input hidden asp-for="@question.Id" />
-                        <div class="text-start">
+                                </MudText>
+                            </CardHeaderContent>
+                            <CardHeaderActions>
+                                <MudIconButton Icon="@Icons.Material.Filled.Feedback" OnClick="() => OpenDialog(question.Id)" Color="Color.Default" />
+                            </CardHeaderActions>
+                        </MudCardHeader>
+                        <MudCardContent>
+                            <input hidden asp-for="@question.Id" />
                             <!--Child1-->
                             <div>
-                                <div class="col">
-                                    <p class="card-text">a) @question.ChildA</p>
-                                </div>
-                                <div class="container card h-100 border-1" style="display:@(Answers == 1 && qts == question.Id ? "block" : "none")">
-                                    <div class="card-body p-1">
-                                        <p class="card-text">
+                                <MudText>a) @question.ChildA</MudText>
+                                <div style="display:@(Answers == 1 && qts == question.Id ? "block" : "none")">
+                                    <MudPaper Outlined="true" Class="p-1">
+                                        <MudText>
                                             @question.AnswerA.ToString()
-                                        </p>
+                                        </MudText>
                                         @((MarkupString)Markdown.ToHtml(question.ExplanationA == null ? " " : question.ExplanationA))
-                                    </div>
+                                    </MudPaper>
                                 </div>
                             </div>
                             <!--Child2-->
                             <div>
-                                <div class="col">
-                                    <p class="card-text">b) @question.ChildB</p>
-                                </div>
-                                <div class="container card h-100 border-1" style="display:@(Answers == 1 && qts == question.Id ? "block" : "none")">
-                                    <div class="card-body p-1">
-                                        <p class="card-text">
+                                <MudText>b) @question.ChildB</MudText>
+                                <div style="display:@(Answers == 1 && qts == question.Id ? "block" : "none")">
+                                    <MudPaper Outlined="true" Class="p-1">
+                                        <MudText>
                                             @question.AnswerB.ToString()
-                                        </p>
+                                        </MudText>
                                         @((MarkupString)Markdown.ToHtml(question.ExplanationB == null ? " " : question.ExplanationB))
-                                    </div>
+                                    </MudPaper>
                                 </div>
                             </div>
                             <!--Child3-->
                             <div>
-                                <div class="col">
-                                    <p class="card-text">c) @question.ChildC</p>
-                                </div>
-                                <div class="container card h-100 border-1" style="display:@(Answers == 1 && qts == question.Id ? "block" : "none")">
-                                    <div class="card-body p-1">
-                                        <p class="card-text">
+                                <MudText>c) @question.ChildC</MudText>
+                                <div style="display:@(Answers == 1 && qts == question.Id ? "block" : "none")">
+                                    <MudPaper Class="p-1" Outlined="true">
+                                        <MudText>
                                             @question.AnswerC.ToString()
-                                        </p>
+                                        </MudText>
                                         @((MarkupString)Markdown.ToHtml(question.ExplanationC == null ? " " : question.ExplanationC))
-                                    </div>
+                                    </MudPaper>
                                 </div>
                             </div>
                             <!--Child4-->
                             <div>
-                                <div class="col">
-                                    <p class="card-text">d) @question.ChildD</p>
-                                </div>
-                                <div class="container card h-100 border-1" style="display:@(Answers == 1 && qts == question.Id ? "block" : "none")">
-                                    <div class="card-body p-1">
-                                        <p class="card-text">
+                                <MudText>d) @question.ChildD</MudText>
+                                <div style="display:@(Answers == 1 && qts == question.Id ? "block" : "none")">
+                                    <MudPaper Outlined="true" Class="p-1">
+                                        <MudText>
                                             @question.AnswerD.ToString()
-                                        </p>
+                                        </MudText>
                                         @((MarkupString)Markdown.ToHtml(question.ExplanationD == null ? " " : question.ExplanationD))
-                                    </div>
+                                    </MudPaper>
                                 </div>
                             </div>
                             <!--Child5-->
                             <div>
-                                <div class="col">
-                                    <p class="card-text">e) @question.ChildE</p>
-                                </div>
-                                <div class="container card h-100 border-1" style="display:@(Answers == 1 && qts == question.Id ? "block" : "none")">
-                                    <div class="card-body p-1">
-                                        <p class="card-text">
+                                <MudText>e) @question.ChildE</MudText>
+
+                                <div style="display:@(Answers == 1 && qts == question.Id ? "block" : "none")">
+                                    <MudPaper Class="p-1" Outlined="true">
+                                        <MudText>
                                             @question.AnswerE.ToString()
-                                        </p>
+                                        </MudText>
                                         @((MarkupString)Markdown.ToHtml(question.ExplanationE == null ? " " : question.ExplanationE))
-                                    </div>
+                                    </MudPaper>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="justify-content-sm-center justify-content-xl-start text-center m-2">
-                        <a class="btn btn-primary px-4" href="https://wa.me/263718086035?text=Questions%20ID:%20@(question.Id)%20has%20an%20error.%20(Please%20write%20your%20suggested%20answers%20here.)">
-                            <span class="oi oi-flag" aria-hidden="true"></span>
-                        </a>
-                        <button class="btn btn-outline-dark px-4" @onclick="() => ShowAnswers(question.Id)">
-                            <span class="oi oi-envelope-open" aria-hidden="true"></span>
-                        </button>
-                    </div>
-
+                        </MudCardContent>
+                        <MudCardActions class="justify-content-end">
+                            <MudButton Variant="Variant.Text" OnClick="() => ShowAnswers(question.Id)" Color="Color.Primary">Answers</MudButton>
+                        </MudCardActions>
+                    </MudCard>
                 </ItemContent>
             </Virtualize>
         </div>
 
-
+@*
         <div class="fixed-top">
             <TopNavBar>
                 <div class="container align-content-center justify-content-center text-center">
@@ -161,7 +174,7 @@
                     </div>
                 </div>
             </TopNavBar>
-        </div>
+        </div>*@
     }
 </div>
 
@@ -176,6 +189,7 @@
     public int qts;
     public bool searchBarOpen = false;
     public bool searchResultsNull = false;
+    private bool showToolbar = true;
     private string searchTerm = "";
 
     QuestionPaged QuestionPaged = new ();
@@ -219,5 +233,20 @@
             searchResultsNull = true;
         }
     }
+
     private void OpenSearchBar() => searchBarOpen = !searchBarOpen;
+    private void OpenToolbar() => showToolbar = !showToolbar;
+
+    private void OpenDialog(int questionId)
+    {
+        var parameters = new DialogParameters<CorrectionsDialog>();
+        parameters.Add(x => x.questionId, questionId);
+        var options = new DialogOptions()
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.ExtraSmall,
+                Position = DialogPosition.Center,
+            };
+        DialogService.Show<CorrectionsDialog>("Submit Answer Correction", parameters, options);
+    }
 }

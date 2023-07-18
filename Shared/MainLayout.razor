@@ -1,10 +1,66 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager navManager
 
-<div class="page">
-    <main>
-        <article class="content px-1 mb-5">
-            @Body
-        </article>
-    </main>
-</div>
+<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="someTheme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
+<MudLayout>
+    <div class="@(navManager.Uri.Contains("questions") ? "d-none" : "d-block")">
+        <MudAppBar Fixed="true" Bottom="true" Elevation="25">
+            <MudIconButton Href="/dashboard" Icon="@Icons.Material.Filled.Dashboard" Color="Color.Inherit"></MudIconButton>
+            <MudSpacer />
+            <MudIconButton Href="/downloads" Icon="@Icons.Material.Filled.Download" Color="Color.Inherit"></MudIconButton>
+            <MudSpacer />
+            <MudIconButton Href="/settings" Icon="@Icons.Material.Filled.Settings" Color="Color.Inherit"></MudIconButton>
+        </MudAppBar>
+    </div>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code{
+    bool _drawerOpen = true;
+    private MudThemeProvider _mudThemeProvider;
+    private bool _isDarkMode;
+
+    MudTheme someTheme = new()
+        {
+            Palette = new PaletteLight()
+            {
+                Primary = Colors.Blue.Darken2,
+                AppbarBackground = Colors.Purple.Darken3,
+            },
+            PaletteDark = new PaletteDark()
+            {
+                Primary = Colors.Blue.Lighten1,
+            },
+        };
+
+
+    void ThemeToggle() =>
+        _isDarkMode = !_isDarkMode;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+            await _mudThemeProvider.WatchSystemPreference(OnSystemPreferenceChanged);
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnSystemPreferenceChanged(bool newValue)
+    {
+        _isDarkMode = newValue;
+        StateHasChanged();
+    }
+
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}

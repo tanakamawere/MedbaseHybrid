@@ -2,9 +2,8 @@
 @using MedbaseHybrid.Services;
 @inject IApiRepository repository
 @inject IDatabaseRepository database
-
-<PageTitle>Topics</PageTitle>
-
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
 
 <div class="container">
     <div class="fixed-top">
@@ -14,7 +13,7 @@
             </div>
         </TopNavBar>
     </div>
-    <div class="row align-items-center justify-content-center mt-5">
+    <div class="row align-items-center justify-content-center mt-5 mb-auto">
 
         <div class="row">
             @if (!TopicsList.Any() || loadingDownload.Equals(true))
@@ -23,16 +22,24 @@
             }
             else
             {
-                <div class="alert alert-warning @(topicAlreadyDownloaded == true ? "d-block" : "d-none")" role="alert" @onclick="DismissAlreadyDownloadedMessage">
-                    Topic is already downloaded. Click to dismiss this message🫢
-                </div>
-                <div class="alert alert-success @(downloadSuccessful == true ? "d-block" : "d-none")" role="alert" @onclick="DismissDownloadSuccessfulMessage">
-                    Your topic was downloaded successfully! Go to <a href="/downloads">to see your downloads</a>😃
-                </div>
                 <Virtualize Items="TopicsList.ToList()" TItem="Topic" Context="item">
                     <ItemContent>
                         <div class="col-lg-4 mb-2">
-                            <div class="card h-100 shadow border-0">
+                            <MudCard>
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h6">
+                                            @item.Name
+                                        </MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudCardActions>
+                                    <MudButton Variant="Variant.Text" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.Quiz" @onclick="() => OpenDialog(item.TopicRef)">Quiz</MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Download" @onclick="() => Download(item.Id)">Download</MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ViewComfy" Href="@($"questions/{item.TopicRef}/online")">View</MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                            @*<div class="card h-100 shadow border-0">
                                 <div class="card-body p-4">
                                     <h5 class="card-title mb-3">
                                         @item.Name
@@ -66,7 +73,7 @@
                                         </a>
                                     </div>
                                 </div>
-                            </div>
+                            </div>*@
                         </div>
                     </ItemContent>
                 </Virtualize>
@@ -79,8 +86,6 @@
     [Parameter]
     public string courseRef { get; set; } = "";
     bool showCustomisation = false;
-    bool topicAlreadyDownloaded = false;
-    bool downloadSuccessful;
     bool loadingDownload;
     int topicToCustomise;
     private bool negativeMarking = false;
@@ -116,10 +121,10 @@
             if (CheckIfAlreadyDownloaded(topic) == false)
             {
                 await database.SaveTopicAndQuestionsAsync(await repository.GetQuestionsSimple(topic.TopicRef), topic);
-                downloadSuccessful = true;
+                ShowSuccessSnackbar();
             }
             else
-                topicAlreadyDownloaded = true;
+                ShowAlreadyDownloadedSnackbar();
         }
         catch (Exception)
         {
@@ -131,6 +136,33 @@
             StateHasChanged();
         }
     }
+
+    private void ShowSuccessSnackbar()
+    {
+        Snackbar.Add
+        (
+            @<div>
+                Your topic was downloaded successfully!🤭
+            </div>
+        );
+    }
+
+    private void ShowAlreadyDownloadedSnackbar()
+    {
+        Snackbar.Add
+        (
+                @<div>
+                    Topic is already downloaded🥲
+                </div>
+        );   
+    }
+
+    private void OpenDialog(int topic)
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        DialogService.Show<QuizCustomisationDialog>(topic.ToString(), options);
+    }
+
     bool CheckIfAlreadyDownloaded(Topic topic)
     {
         List<Topic> downloadedTopics = database.GetTopicsAsync().ToList();
@@ -142,15 +174,5 @@
             downloaded = true;
         }
         return downloaded;
-    }
-    void DismissAlreadyDownloadedMessage()
-    {
-        topicAlreadyDownloaded = !topicAlreadyDownloaded;
-        StateHasChanged();
-    }
-    void DismissDownloadSuccessfulMessage()
-    {
-        downloadSuccessful = !downloadSuccessful;
-        StateHasChanged();
     }
 }

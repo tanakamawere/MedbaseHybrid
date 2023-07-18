@@ -52,8 +52,11 @@
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Maui" Version="5.0.0" />
         <PackageReference Include="Markdig" Version="0.31.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.3" />
+        <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.1" />
+        <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.4" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+        <PackageReference Include="MudBlazor" Version="6.6.0" />
     </ItemGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">

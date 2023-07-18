@@ -10,8 +10,7 @@
     </div>
 
     <section class="mt-5">
-        <div class="card h-100 shadow border-0 mb-2">
-            <div class="card-body p-4">
+        @*<MudPaper Class="pa-16 ma-2" Elevation="3">
                 <h4 class="card-title mb-3">
                     Change Font
                 </h4>
@@ -19,65 +18,46 @@
                     <p class="card-text mb-1">
                         Changes the font on the questions page
                     </p>
-                    <label>
-                        <select @onchange="SetFont" class="form-select">
-                            <option value="questions-section-mont-font">Montserrat</option>
-                            <option value="questions-section-roboto-font">Roboto</option>
-                            <option value="questions-section-roman-font">Gideon Roman</option>
-                        </select>
-                    </label>
+                    <MudSelect T="string" @onchange="SetFont" AnchorOrigin="Origin.BottomCenter">
+                        <MudSelectItem Value="@("questions-section-mont-font")">Montserrat</MudSelectItem>
+                        <MudSelectItem Value="@("questions-section-roboto-font")">Roboto</MudSelectItem>
+                        <MudSelectItem Value="@("questions-section-roman-font")">Gideon Roman</MudSelectItem>
+                    </MudSelect>
                 </div>
-            </div>
-        </div>
+        </MudPaper>*@
 
-        <div class="card h-100 shadow border-0 mb-2">
-            <div class="card-body p-4">
-                <h4 class="card-title">
-                    Contact Us
-                </h4>
-                <div class="card-body">
-                    <p class="card-text mb-1">
-                        Do you like something? Or want to complain about something? Use any of the networks below
-                    </p>
-
-                    <div class="row text-center">
-                        <div class="col-4">
-                            <a class="btn btn-outline-primary" href="https://wa.me/263718086035">WhatsApp</a>
-                        </div>
-                        <div class="col-4">
-                            <a class="btn btn-outline-primary" href="https://fb.me/medbase.co.zw">Facebook</a>
-                        </div>
-                        <div class="col-4">
-                            <a class="btn btn-outline-primary" href="https://instagram.com/medbase.zw">Instagram</a>
-                        </div>
-                    </div>
-                </div>
+        <MudPaper Class="p-5 mb-2">
+            <MudText Typo="Typo.h4">
+                Contact Us
+            </MudText>
+            <div>
+                <MudText Typo="Typo.body1">
+                    Do you like something? Or want to complain about something? Use any of the networks below
+                </MudText>
+                <MudButton StartIcon="@Icons.Custom.Brands.WhatsApp" Href="https://wa.me/263718086035" Variant="Variant.Filled" Size="Size.Large" Color="Color.Inherit">WhatsApp</MudButton>
+                <MudButton StartIcon="@Icons.Custom.Brands.Facebook" Href="https://fb.me/medbase.co.zw" Variant="Variant.Filled" Size="Size.Large" Color="Color.Inherit">Facebook</MudButton>
+                <MudButton StartIcon="@Icons.Custom.Brands.Instagram" Href="https://instagram.com/medbase.zw" Variant="Variant.Filled" Size="Size.Large" Color="Color.Inherit">Instagram</MudButton>
             </div>
-        </div>
+        </MudPaper>
 
-        <div class="card h-100 shadow border-0 mb-2">
-            <div class="card-body p-4">
-                <h4 class="card-title mb-3">
-                    About Medbase
-                </h4>
-                <div class="card-body">
-                    <p class="card-text fw-lighter">
-                        Built with Blazor Hybrid & C#
-                        <br />
-                        App Version @(VersionTracking.Default.CurrentVersion.ToString())
-                        <br />
-                        <br />
-                        Tanaka Mawere ©️ @(DateTime.Now.Year.ToString())
-                    </p>
-                </div>
+
+        <MudPaper Class="p-5">
+            <MudText Typo="Typo.h4">
+                About Medbase
+            </MudText>
+            <div>
+                <MudText Typo="Typo.body1">
+                    Built with Blazor Hybrid & C#
+                    <br />
+                    App Version @(VersionTracking.Default.CurrentVersion.ToString())
+                    <br />
+                    <br />
+                    Tanaka Mawere ©️ @(DateTime.Now.Year.ToString())
+                </MudText>
             </div>
-        </div>
+        </MudPaper>
 
     </section>
-
-    <div class="fixed-bottom">
-        <BottomTabs />
-    </div>
 </div>
 
 @code {

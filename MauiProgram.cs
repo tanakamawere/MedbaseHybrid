@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using MedbaseHybrid.Repositories;
 using MedbaseHybrid.Services;
+using MudBlazor.Services;
 using CommunityToolkit.Maui;
 
 namespace MedbaseHybrid;
@@ -28,7 +29,8 @@ public static class MauiProgram
 		builder.Services.AddBlazorWebViewDeveloperTools();
 		builder.Logging.AddDebug();
 #endif
-		builder.Services.AddSingleton<IApiRepository, ApiRepository>();
+        builder.Services.AddMudServices();
+        builder.Services.AddSingleton<IApiRepository, ApiRepository>();
 		builder.Services.AddSingleton<IDatabaseRepository, DatabaseRepository>();
 
 		return builder.Build();

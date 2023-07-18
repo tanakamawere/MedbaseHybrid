@@ -160,5 +160,38 @@ namespace MedbaseHybrid.Repositories
         {
             await httpClient.PutAsJsonAsync($"subscriptions/{id}", subscription);
         }
+        public async Task<IEnumerable<Corrections>> GetCorrections()
+        {
+            return await httpClient.GetFromJsonAsync<IEnumerable<Corrections>>($"corrections");
+        }
+
+        public async Task<bool> PostCorrection(Corrections corrections)
+        {
+            var response = await httpClient.PostAsJsonAsync($"corrections/{corrections}", corrections);
+            if (response.IsSuccessStatusCode)
+                return true;
+            else
+                return false;
+        }
+
+        public async Task DeleteCorrection(int id)
+        {
+            await httpClient.DeleteAsync($"corrections/deleteone/{id}");
+        }
+
+        public async Task MergeCorrections()
+        {
+            await httpClient.PostAsync("corrections/mergeall", null);
+        }
+
+        public async Task ClearAllCorrection()
+        {
+            await httpClient.DeleteAsync("corrections/clearall");
+        }
+
+        public async Task MergeOneCorrection(int id)
+        {
+            await httpClient.PostAsJsonAsync($"corrections/mergeone/{id}", id);
+        }
     }
 }

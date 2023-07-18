@@ -19,6 +19,7 @@ namespace MedbaseHybrid.Repositories
         Task<IEnumerable<Subscription>> GetSubscriptions();
         Task<Subscription> GetSubscription(string email);
         Task<IEnumerable<Question>> GetAllQuestions();
+        Task<IEnumerable<Corrections>> GetCorrections();
 
         void PostArticle(Article article);
         void PostTopic(Topic topic);
@@ -37,5 +38,11 @@ namespace MedbaseHybrid.Repositories
         void UpdateCourse(int id, Course course);
         void UpdateArticle(int id, Article article);
         void UpdateSubscription(int id, Subscription subscription);
+
+        Task<bool> PostCorrection(Corrections corrections);
+        Task DeleteCorrection(int id);
+        Task MergeCorrections();
+        Task MergeOneCorrection(int id);
+        Task ClearAllCorrection();
     }
 }

@@ -1,64 +1,24 @@
 ﻿@page "/articles"
 @using MedbaseHybrid.Services;
 @inject IApiRepository repository
+@inject NavigationManager navManager
 
-<div class="container">
-    <div class="fixed-top">
-        <TopNavBar>
-            <div class="container-fluid">
-                <span class="navbar-brand text-white mb-0 h1">Articles</span>
-            </div>
-        </TopNavBar>
-    </div>
-
-    @if (loadingArticles.Equals(true))
+<div class="media-scroller">
+    @foreach (Article item in allArticles)
     {
-        <LoadingComponent />
+        <MudCard @onclick="() => GoToArticle(item.Id)">
+            <MudCardMedia Image="@item.ImageURL" Height="100" />
+            <MudCardContent>
+                <MudText Typo="Typo.h6">
+                    @item.Title
+                </MudText>
+                <MudText Typo="Typo.subtitle2">
+                    @item.DatePosted.ToString("dddd, dd MMMM yyyy")
+                </MudText>
+            </MudCardContent>
+        </MudCard>
     }
-    else
-    {
-        <div class="mt-3">
-
-            @if (!allArticles.Any())
-            {
-                <div class="text-center">
-                    <p class="mt-5">No articles found. Come back later</p>
-                    <img src="img/undraw_empty.svg" style="max-width:300px" />
-                </div>
-            }
-            else
-            {
-                @foreach (Article item in allArticles)
-                {
-                    <div class="card h-100 shadow border-0 mb-2">
-                        <img class="card-img-top" src="@item.ImageURL" alt="..." />
-                        <div class="card-body p-4">
-                            <a class="text-decoration-none link-dark stretched-link" href="@($"https://medbase.co.zw/article/{item.Id}")">
-                                <h5 class="card-title mb-3">
-                                    @item.Title
-                                </h5>
-                                <div class="d-flex align-items-center">
-                                    <div class="small">
-                                        <div class="text-muted">
-                                            @item.DatePosted.ToString("dddd, dd MMMM yyyy")
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                }
-            }
-        </div>
-    }
-
-    <div class="fixed-bottom">
-        <BottomTabs />
-    </div>
 </div>
-
-
-
 @code {
     public IEnumerable<Article> allArticles { get; set; } = Enumerable.Empty<Article>();
     private bool loadingArticles;
@@ -66,7 +26,12 @@
     protected async override Task OnInitializedAsync() 
     {
         loadingArticles = true;
-        allArticles = await repository.GetArticlesNumbered(5);
+        allArticles = await repository.GetArticlesNumbered(3);
         loadingArticles = false;
+    }
+
+    private async void GoToArticle(int article)
+    {
+        await Browser.OpenAsync($"https://medbase.co.zw/article/{article}");
     }
 }

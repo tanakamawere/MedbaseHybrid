@@ -1,12 +1,14 @@
 ﻿@page "/courses"
+@page "/dashboard"
 @using MedbaseHybrid.Services;
 @inject IApiRepository repository
+@inject NavigationManager navMananger;
 
-<div class="container">
+<div class="container mb-5">
     <div class="fixed-top">
         <TopNavBar>
             <div class="container-fluid">
-                <span class="navbar-brand text-white mb-0 h1">Courses</span>
+                <span class="navbar-brand text-white mb-0 h1">Dashboard</span>
             </div>
         </TopNavBar>
     </div>
@@ -19,32 +21,32 @@
         }
         else
         {
-            <div class="row pt-5">
+            <MudText Typo="Typo.h5" Class="fw-bolder mb-1">Articles</MudText>
+            <Articles />
+
+            <MudText Typo="Typo.h5" Class="fw-bolder mb-1 mt-1">Courses</MudText>
+            <div class="row">
                 @foreach (Course item in CoursesList)
                 {
                     <div class="col-6 col-lg-4 mb-5">
-                        <div class="card h-100 shadow border-0">
-                            <img class="card-img-top" src="@item.ImageURL" alt="..." />
-                            <div class="card-body p-4">
-                                <a class="text-decoration-none stretched-link" href="@($"/topics/{item.CourseRef}")">
-                                    <h6 class="card-title mb-3">
+                        <MudCard @onclick="() => GoToTopics(item.CourseRef)">
+                            <MudCardMedia Image="@item.ImageURL" Height="100"/>
+                            <MudCardContent>
+                                <MudCardContent>
+                                    <MudText Typo="Typo.h6">
                                         @item.Title
-                                    </h6>
-                                </a>
-                                <p class="card-text mb-0 d-lg-block d-none fw-light fst-normal">
-                                    @item.Description
-                                </p>
-                            </div>
-                        </div>
+                                    </MudText>
+                                    <MudText Typo="Typo.body2" Class="d-lg-block d-none">
+                                        @item.Description
+                                    </MudText>
+                                </MudCardContent>
+                            </MudCardContent>
+                        </MudCard>
                     </div>
                 }
             </div>
         }
     }
-
-    <div class="fixed-bottom">
-        <BottomTabs />
-    </div>
 </div>
 
 
@@ -57,5 +59,10 @@
     {
         if (Helpers.InternetAvailable())
             CoursesList = await repository.GetCourses();
+    }
+
+    private void GoToTopics(string courseRef)
+    {
+        navMananger.NavigateTo($"/topics/{courseRef}");
     }
 }
