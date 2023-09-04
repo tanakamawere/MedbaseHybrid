@@ -1,4 +1,4 @@
-﻿using MedbaseHybrid.Models;
+﻿using MedbaseLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedbaseHybrid.Services

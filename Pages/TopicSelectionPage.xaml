@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MedbaseHybrid.Pages.TopicSelectionPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:admob="clr-namespace:Plugin.MauiMTAdmob.Controls;assembly=Plugin.MauiMTAdmob"
+    xmlns:helpers="clr-namespace:MedbaseHybrid.Services"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:models="clr-namespace:MedbaseLibrary.Models;assembly=MedbaseLibrary"
+    xmlns:vm="clr-namespace:MedbaseHybrid.ViewModels"
+    Title="{Binding CourseSelected.Title}"
+    x:DataType="vm:TopicSelectionViewModel"
+    Shell.TabBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <mct:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <StackLayout>
+            <ActivityIndicator
+                HorizontalOptions="Center"
+                IsEnabled="{Binding IsBusy}"
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                VerticalOptions="Center" />
+            <CollectionView IsVisible="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" ItemsSource="{Binding Topics}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Topic">
+                        <VerticalStackLayout>
+                            <Border
+                                Padding="20"
+                                MaximumWidthRequest="400"
+                                Stroke="{StaticResource Gray500}"
+                                StrokeShape="RoundRectangle 20"
+                                StrokeThickness="0">
+
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=ViewAllCommand}" CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image HeightRequest="20" WidthRequest="20">
+                                        <Image.Source>
+                                            <FontImageSource
+                                                FontFamily="fasolid"
+                                                Glyph="{x:Static helpers:FontAwesome.ArrowRight}"
+                                                Size="20"
+                                                Color="{AppThemeBinding Light={StaticResource Primary},
+                                                                        Dark={StaticResource White}}" />
+                                        </Image.Source>
+                                    </Image>
+
+                                    <VerticalStackLayout
+                                        Grid.Column="1"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center">
+
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="Large"
+                                            Text="{Binding Name}" />
+
+                                        <HorizontalStackLayout Margin="0,10,0,0" HorizontalOptions="Center">
+                                            <Button
+                                                Margin="2.5"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TopicSelectionViewModel}}, Path=DownloadCommand}"
+                                                CommandParameter="{Binding .}"
+                                                Text="Download" />
+                                            <Button
+                                                Margin="2.5"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TopicSelectionViewModel}}, Path=ViewAllCommand}"
+                                                CommandParameter="{Binding .}"
+                                                Text="View All" />
+                                            <!--<Button
+        Margin="2.5"
+        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TopicSelectionViewModel}}, Path=CreateQuizCommand}"
+        CommandParameter="{Binding .}"
+        Text="Create Quiz" />-->
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+
+                            <admob:MTAdView
+                                AdsId="ca-app-pub-7010150994074481/4797515274"
+                                HeightRequest="100"
+                                WidthRequest="500" />
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <ActivityIndicator
+                HorizontalOptions="Center"
+                IsEnabled="{Binding RefreshCommand.IsRunning}"
+                IsRunning="{Binding RefreshCommand.IsRunning}"
+                IsVisible="{Binding RefreshCommand.IsRunning}"
+                VerticalOptions="CenterAndExpand" />
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

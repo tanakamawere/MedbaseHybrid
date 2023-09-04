@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MedbaseHybrid.Pages.MorePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:MedbaseHybrid.Controls"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:utils="clr-namespace:MedbaseHybrid.Services"
+    xmlns:vm="clr-namespace:MedbaseHybrid.ViewModels"
+    Title="More"
+    x:DataType="vm:MoreViewModel">
+    <ScrollView Orientation="Vertical">
+        <VerticalStackLayout>
+            <controls:SettingsItemControl Title="Theme">
+                <HorizontalStackLayout Margin="5" HorizontalOptions="Center">
+                    <controls:ThemeItemControl
+                        Title="System"
+                        Icon="{x:Static utils:FontAwesome.UserGear}"
+                        StrokeThickness="{Binding SystemStrokeThickness}">
+                        <controls:ThemeItemControl.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ChangeThemeCommand}" CommandParameter="Unspecified" />
+                        </controls:ThemeItemControl.GestureRecognizers>
+                    </controls:ThemeItemControl>
+                    <controls:ThemeItemControl
+                        Title="Light"
+                        Icon="{x:Static utils:FontAwesome.Sun}"
+                        StrokeThickness="{Binding LightStrokeThickness}">
+                        <controls:ThemeItemControl.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ChangeThemeCommand}" CommandParameter="Light" />
+                        </controls:ThemeItemControl.GestureRecognizers>
+                    </controls:ThemeItemControl>
+                    <controls:ThemeItemControl
+                        Title="Dark"
+                        Icon="{x:Static utils:FontAwesome.Moon}"
+                        StrokeThickness="{Binding DarkStrokeThickness}">
+                        <controls:ThemeItemControl.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ChangeThemeCommand}" CommandParameter="Dark" />
+                        </controls:ThemeItemControl.GestureRecognizers>
+                    </controls:ThemeItemControl>
+                </HorizontalStackLayout>
+            </controls:SettingsItemControl>
+
+            <controls:SettingsItemControl Title="Social Links">
+                <ScrollView Orientation="Horizontal">
+
+                    <HorizontalStackLayout Padding="10">
+                        <controls:SocialsItemControl
+                            Title="Instagram"
+                            Icon="{x:Static utils:FontAwesome.Instagram}"
+                            StrokeThickness="0">
+                            <controls:SocialsItemControl.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SocialMediaLinksCommand}" CommandParameter="instagram.com/medbase.co.zw" />
+                            </controls:SocialsItemControl.GestureRecognizers>
+                        </controls:SocialsItemControl>
+                        <controls:SocialsItemControl
+                            Title="Facebook"
+                            Icon="{x:Static utils:FontAwesome.Facebook}"
+                            StrokeThickness="0">
+                            <controls:SocialsItemControl.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SocialMediaLinksCommand}" CommandParameter="fb.me/medbase.co.zw" />
+                            </controls:SocialsItemControl.GestureRecognizers>
+                        </controls:SocialsItemControl>
+                        <controls:SocialsItemControl
+                            Title="WhatsApp"
+                            Icon="{x:Static utils:FontAwesome.Whatsapp}"
+                            StrokeThickness="0">
+                            <controls:SocialsItemControl.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SocialMediaLinksCommand}" CommandParameter="wa.me/263718086035" />
+                            </controls:SocialsItemControl.GestureRecognizers>
+                        </controls:SocialsItemControl>
+
+                    </HorizontalStackLayout>
+                </ScrollView>
+            </controls:SettingsItemControl>
+
+            <controls:SettingsItemControl Title="App Info">
+                <VerticalStackLayout>
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="App Version: " />
+                                <Span Text="{Binding AppVersion}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Text="Copyright© Tanaka Mawere" />
+                    <Button Margin="0,10,0,10" Text="Review on Google Play" />
+                </VerticalStackLayout>
+            </controls:SettingsItemControl>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

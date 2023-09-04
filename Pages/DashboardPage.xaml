@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MedbaseHybrid.Pages.DashboardPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:admob="clr-namespace:Plugin.MauiMTAdmob.Controls;assembly=Plugin.MauiMTAdmob"
+    xmlns:helpers="clr-namespace:MedbaseHybrid.Services"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:models="clr-namespace:MedbaseLibrary.Models;assembly=MedbaseLibrary"
+    xmlns:vm="clr-namespace:MedbaseHybrid.ViewModels"
+    Title="Dashboard"
+    x:DataType="vm:DashboardViewModel">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <mct:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <RefreshView Command="{Binding AllMethodsCommand}" IsRefreshing="{Binding AllMethodsCommand.IsRunning}">
+        <ScrollView Padding="10">
+            <VerticalStackLayout Spacing="2">
+                <!--  Courses CollectionView  -->
+                <Label
+                    HorizontalOptions="Start"
+                    Style="{StaticResource HeaderText}"
+                    Text="Courses"
+                    VerticalOptions="Center" />
+
+                <ActivityIndicator
+                    IsEnabled="{Binding IsBusy}"
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}" />
+                <CollectionView
+                    Margin="-30,0"
+                    IsVisible="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                    ItemsLayout="HorizontalGrid, 3"
+                    ItemsSource="{Binding Courses}"
+                    SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Course">
+                            <Border
+                                Padding="14"
+                                MaximumWidthRequest="400"
+                                Stroke="{StaticResource Gray500}"
+                                StrokeShape="RoundRectangle 20"
+                                StrokeThickness="0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DashboardViewModel}}, Path=GoToCourseCommand}" CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Grid Margin="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image HeightRequest="20" WidthRequest="20">
+                                        <Image.Source>
+                                            <FontImageSource
+                                                FontFamily="fasolid"
+                                                Glyph="{x:Static helpers:FontAwesome.Bell}"
+                                                Size="20"
+                                                Color="{AppThemeBinding Light={StaticResource Primary},
+                                                                        Dark={StaticResource White}}" />
+                                        </Image.Source>
+                                    </Image>
+
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="Body"
+                                            Text="{Binding Title}" />
+                                        <Label
+                                            FontSize="Caption"
+                                            Text="{Binding Description}"
+                                            TextColor="{AppThemeBinding Light={StaticResource Gray500},
+                                                                        Dark={StaticResource Gray300}}" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!--  Blog CollectionView  -->
+                <admob:MTAdView
+                    AdsId="ca-app-pub-7010150994074481/4797515274"
+                    HeightRequest="100"
+                    WidthRequest="500" />
+                <Grid>
+                    <Label
+                        HorizontalOptions="Start"
+                        Style="{StaticResource HeaderText}"
+                        Text="On our blog..."
+                        VerticalOptions="Center" />
+                    <Button
+                        Command="{Binding GoToAllArticlesCommand}"
+                        HorizontalOptions="End"
+                        Style="{StaticResource TransparentButton}"
+                        Text="See more" />
+                </Grid>
+                <ActivityIndicator
+                    IsEnabled="{Binding IsBusy}"
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}" />
+                <CollectionView
+                    EmptyView="No articles to see here yet"
+                    IsVisible="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                    ItemsLayout="HorizontalList"
+                    ItemsSource="{Binding Articles}"
+                    SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Article">
+                            <Border
+                                Margin="20"
+                                Padding="0"
+                                HeightRequest="200"
+                                WidthRequest="200">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DashboardViewModel}}, Path=GoToArticleCommand}"
+                                        CommandParameter="{Binding .}"
+                                        NumberOfTapsRequired="1" />
+                                </Border.GestureRecognizers>
+                                <Grid>
+                                    <Image
+                                        Aspect="Center"
+                                        MaximumWidthRequest="120"
+                                        Source="{Binding ImageURL}" />
+                                    <StackLayout
+                                        Margin="5"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="End">
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="18"
+                                            LineBreakMode="WordWrap"
+                                            Text="{Binding Title}"
+                                            TextColor="White" />
+                                        <Label
+                                            FontSize="14"
+                                            Text="{Binding DatePosted, StringFormat='{}{0:ddd dd MMMM}'}"
+                                            TextColor="White" />
+                                    </StackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <admob:MTAdView
+                    AdsId="ca-app-pub-7010150994074481/4797515274"
+                    HeightRequest="100"
+                    WidthRequest="500" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>

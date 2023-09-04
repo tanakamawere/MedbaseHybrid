@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MedbaseHybrid.Models;
+using MedbaseLibrary.Models;
 using System.Diagnostics;
 
 namespace MedbaseHybrid.Services

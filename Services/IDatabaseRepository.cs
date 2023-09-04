@@ -1,4 +1,4 @@
-﻿using MedbaseHybrid.Models;
+﻿using MedbaseLibrary.Models;
 
 namespace MedbaseHybrid.Services
 {

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MedbaseHybrid.Pages.QuestionsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:admob="clr-namespace:Plugin.MauiMTAdmob.Controls;assembly=Plugin.MauiMTAdmob"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:models="clr-namespace:MedbaseLibrary.Models;assembly=MedbaseLibrary"
+    xmlns:utils="clr-namespace:MedbaseHybrid.Services"
+    xmlns:vm="clr-namespace:MedbaseHybrid.ViewModels"
+    Title="{Binding TopicSelected.Name}"
+    x:DataType="vm:QuestionsViewModel"
+    Shell.TabBarIsVisible="False">
+
+    <ContentPage.Behaviors>
+        <mct:EventToCommandBehavior Command="{Binding GetQuestionsCommand}" EventName="Appearing" />
+    </ContentPage.Behaviors>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <mct:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <!--  Questions CollectionView  -->
+    <StackLayout>
+        <ActivityIndicator
+            HorizontalOptions="Center"
+            IsEnabled="{Binding IsBusy}"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            VerticalOptions="Center" />
+        <CollectionView
+            EmptyView="The list is currently empty"
+            IsVisible="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+            ItemsSource="{Binding Questions}"
+            VerticalOptions="CenterAndExpand"
+            VerticalScrollBarVisibility="Always">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Question">
+                    <VerticalStackLayout>
+
+                        <Border
+                            BackgroundColor="Transparent"
+                            Stroke="Gray"
+                            StrokeThickness="1">
+                            <VerticalStackLayout Margin="5">
+                                <Label HorizontalOptions="StartAndExpand" LineBreakMode="WordWrap">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Id}" />
+                                            <Span Text=". " />
+                                            <Span Text="{Binding QuestionMain}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="a. " />
+                                            <Span Text="{Binding ChildA}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <Label IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:QuestionsViewModel}}, Path=AnswersVisible}" Text="{Binding AnswerA}" />
+
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="b. " />
+                                            <Span Text="{Binding ChildB}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <Label IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:QuestionsViewModel}}, Path=AnswersVisible}" Text="{Binding AnswerB}" />
+
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="c. " />
+                                            <Span Text="{Binding ChildC}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <Label IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:QuestionsViewModel}}, Path=AnswersVisible}" Text="{Binding AnswerC}" />
+
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="d. " />
+                                            <Span Text="{Binding ChildD}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+
+                                <Label IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:QuestionsViewModel}}, Path=AnswersVisible}" Text="{Binding AnswerD}" />
+
+
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="e. " />
+                                            <Span Text="{Binding ChildE}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+
+                                <Label IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:QuestionsViewModel}}, Path=AnswersVisible}" Text="{Binding AnswerE}" />
+
+
+                                <HorizontalStackLayout Margin="0,10,0,0" HorizontalOptions="Center">
+                                    <!--<Button
+                                        Margin="2.5"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:QuestionsViewModel}}, Path=GoToExportImageCommand}"
+                                        CommandParameter="{Binding .}"
+                                        HorizontalOptions="Start"
+                                        Text="Share" />-->
+                                    <Button
+                                        Margin="2.5"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:QuestionsViewModel}}, Path=ShowAnswersCommand}"
+                                        CommandParameter="{Binding .}"
+                                        HorizontalOptions="End"
+                                        Text="Show Answers" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <admob:MTAdView
+                            AdsId="ca-app-pub-7010150994074481/4797515274"
+                            HeightRequest="100"
+                            WidthRequest="500" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>
+</ContentPage>

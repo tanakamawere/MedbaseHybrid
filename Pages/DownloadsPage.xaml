@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MedbaseHybrid.Pages.DownloadsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
+    xmlns:helpers="clr-namespace:MedbaseHybrid.Services"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:models="clr-namespace:MedbaseLibrary.Models;assembly=MedbaseLibrary"
+    xmlns:utils="clr-namespace:MedbaseHybrid.Services"
+    xmlns:vm="clr-namespace:MedbaseHybrid.ViewModels"
+    Title="Downloads"
+    x:DataType="vm:DownloadsViewModel">
+    <RefreshView Command="{Binding GetTopicsCommand}">
+        <StackLayout>
+            <CollectionView EmptyView="Download topics and you'll see them here" ItemsSource="{Binding Topics}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Topic">
+                        <SwipeView android:SwipeView.SwipeTransitionMode="Drag">
+                            <!--<SwipeView.RightItems>
+                                <SwipeItems SwipeBehaviorOnInvoked="Auto">
+                                    <SwipeItem
+                                        BackgroundColor="LightBlue"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=CreateQuizCommand}"
+                                        CommandParameter="{Binding .}"
+                                        Text="Quiz">
+                                        <SwipeItem.IconImageSource>
+                                            <FontImageSource FontFamily="fasolid" Glyph="{x:Static utils:FontAwesome.CircleQuestion}" />
+                                        </SwipeItem.IconImageSource>
+                                    </SwipeItem>
+                                </SwipeItems>
+                            </SwipeView.RightItems>-->
+
+                            <SwipeView.LeftItems>
+                                <SwipeItems SwipeBehaviorOnInvoked="Auto">
+                                    <SwipeItem
+                                        BackgroundColor="Red"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=DeleteCommand}"
+                                        CommandParameter="{Binding .}"
+                                        Text="Delete">
+                                        <SwipeItem.IconImageSource>
+                                            <FontImageSource
+                                                FontFamily="fasolid"
+                                                Glyph="{x:Static utils:FontAwesome.TrashCan}"
+                                                Size="10" />
+                                        </SwipeItem.IconImageSource>
+                                    </SwipeItem>
+                                </SwipeItems>
+                            </SwipeView.LeftItems>
+                            <Border
+                                Padding="20"
+                                MaximumWidthRequest="400"
+                                Stroke="{StaticResource Gray500}"
+                                StrokeShape="RoundRectangle 20"
+                                StrokeThickness="0">
+
+
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=ViewAllCommand}" CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image HeightRequest="20" WidthRequest="20">
+                                        <Image.Source>
+                                            <FontImageSource
+                                                FontFamily="fasolid"
+                                                Glyph="{x:Static helpers:FontAwesome.ArrowRight}"
+                                                Size="20"
+                                                Color="{AppThemeBinding Light={StaticResource Primary},
+                                                                        Dark={StaticResource White}}" />
+                                        </Image.Source>
+                                    </Image>
+
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="Large"
+                                            Text="{Binding Name}" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <ActivityIndicator
+                HorizontalOptions="CenterAndExpand"
+                IsEnabled="{Binding GetTopicsCommand.IsRunning}"
+                IsRunning="{Binding GetTopicsCommand.IsRunning}"
+                IsVisible="{Binding GetTopicsCommand.IsRunning}"
+                VerticalOptions="CenterAndExpand" />
+        </StackLayout>
+    </RefreshView>
+</ContentPage>

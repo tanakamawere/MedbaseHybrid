@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<the49:BottomSheet
+    x:Class="MedbaseHybrid.Controls.AnswersBottomSheet"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:the49="https://schemas.the49.com/dotnet/2023/maui"
+    Padding="16,32"
+    BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                      Dark={StaticResource Gray950}}">
+
+    <VerticalStackLayout>
+        <Label
+            x:Name="TitleLabel"
+            FontAttributes="Bold"
+            FontSize="24" />
+
+        <!--  Child A  -->
+        <Label x:Name="StemA" />
+        <Border
+            Margin="0"
+            Padding="5"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                              Dark={StaticResource Gray600}}"
+            Stroke="{AppThemeBinding Light={StaticResource Gray500},
+                                     Dark={StaticResource Quaternary}}"
+            StrokeThickness="1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="5" />
+            </Border.StrokeShape>
+            <Label x:Name="AnswerA" />
+        </Border>
+
+        <!--  Child B  -->
+        <Label x:Name="StemB" />
+        <Border
+            Margin="0"
+            Padding="5"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                              Dark={StaticResource Gray600}}"
+            Stroke="{AppThemeBinding Light={StaticResource Gray500},
+                                     Dark={StaticResource Quaternary}}"
+            StrokeThickness="1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="5" />
+            </Border.StrokeShape>
+            <Label x:Name="AnswerB" />
+        </Border>
+
+        <!--  Child C  -->
+        <Label x:Name="StemC" />
+        <Border
+            Margin="0"
+            Padding="5"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                              Dark={StaticResource Gray600}}"
+            Stroke="{AppThemeBinding Light={StaticResource Gray500},
+                                     Dark={StaticResource Quaternary}}"
+            StrokeThickness="1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="5" />
+            </Border.StrokeShape>
+            <Label x:Name="AnswerC" />
+        </Border>
+
+        <!--  Child D  -->
+        <Label x:Name="StemD" />
+        <Border
+            Margin="0"
+            Padding="5"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                              Dark={StaticResource Gray600}}"
+            Stroke="{AppThemeBinding Light={StaticResource Gray500},
+                                     Dark={StaticResource Quaternary}}"
+            StrokeThickness="1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="5" />
+            </Border.StrokeShape>
+            <Label x:Name="AnswerD" />
+        </Border>
+
+        <!--  Child E  -->
+        <Label x:Name="StemE" />
+        <Border
+            Margin="0"
+            Padding="5"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                              Dark={StaticResource Gray600}}"
+            Stroke="{AppThemeBinding Light={StaticResource Gray500},
+                                     Dark={StaticResource Quaternary}}"
+            StrokeThickness="1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="5" />
+            </Border.StrokeShape>
+            <Label x:Name="AnswerE" />
+        </Border>
+        <Label FontSize="Small" Text="Click on a stem question if you think the answer is wrong" />
+    </VerticalStackLayout>
+</the49:BottomSheet>
