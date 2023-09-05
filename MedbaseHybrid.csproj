@@ -21,8 +21,8 @@
         <ApplicationIdGuid>620A195F-F4BD-42AD-9B3E-E45F7BCC319B</ApplicationIdGuid>
 
         <!-- Versions -->
-        <ApplicationDisplayVersion>1.3</ApplicationDisplayVersion>
-        <ApplicationVersion>9</ApplicationVersion>
+        <ApplicationDisplayVersion>1.4</ApplicationDisplayVersion>
+        <ApplicationVersion>10</ApplicationVersion>
 
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
@@ -75,10 +75,19 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Update="Controls\CorrectionsPopup.xaml.cs">
+        <DependentUpon>CorrectionsPopup.xaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
       <MauiXaml Update="AppShell.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
       <MauiXaml Update="Controls\AnswersBottomSheet.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
+      <MauiXaml Update="Controls\CorrectionsPopup.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
       <MauiXaml Update="Controls\LoadingPopup.xaml">

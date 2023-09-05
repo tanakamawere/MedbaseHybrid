@@ -36,11 +36,9 @@ public static class MauiProgram
 				essentials.UseVersionTracking();
 			});
 
-		builder.Services.AddMauiBlazorWebView();
         builder.Services.AddSingleton(MopupService.Instance);
 
 #if DEBUG
-        builder.Services.AddBlazorWebViewDeveloperTools();
 		builder.Logging.AddDebug();
 #endif
 		builder.Services.AddSingleton<IApiRepository, ApiRepository>();
@@ -58,8 +56,10 @@ public static class MauiProgram
 
         //ViewModels
         builder.Services.AddSingleton<DashboardViewModel>();
-        builder.Services.AddSingleton<DownloadsViewModel>();
+        builder.Services.AddTransient<DownloadsViewModel>();
         builder.Services.AddTransient<TopicSelectionViewModel>();
+        builder.Services.AddTransient<AnswersSheetViewModel>();
+        builder.Services.AddTransient<CorrectionsPopupViewModel>();
         builder.Services.AddTransient<QuestionsViewModel>();
         builder.Services.AddTransient<MoreViewModel>();
         builder.Services.AddTransient<ExportImageViewModel>();

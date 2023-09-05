@@ -9,6 +9,8 @@
 
     <Border
         Padding="20"
+        BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                          Dark={StaticResource Gray950}}"
         HeightRequest="200"
         WidthRequest="200">
         <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">

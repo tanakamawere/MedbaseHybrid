@@ -5,6 +5,7 @@ using MedbaseHybrid.Pages;
 using MedbaseHybrid.Services;
 using MedbaseLibrary.Services;
 using Mopups.Interfaces;
+using CommunityToolkit.Maui.Alerts;
 
 namespace MedbaseHybrid.ViewModels
 {
@@ -94,6 +95,7 @@ namespace MedbaseHybrid.ViewModels
         async Task DownloadMethod(Topic topic)
         {
             await databaseService.SaveTopicAndQuestionsAsync(await apiService.GetQuestionsSimple(topic.TopicRef), topic);
+            await Toast.Make($"{topic.Name} has been downloaded. Go check it out in your downloads", CommunityToolkit.Maui.Core.ToastDuration.Long, 12).Show();
         }
         bool CheckIfAlreadyDownloaded(Topic topic)
         {

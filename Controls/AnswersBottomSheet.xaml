@@ -3,19 +3,51 @@
     x:Class="MedbaseHybrid.Controls.AnswersBottomSheet"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:MedbaseHybrid.Services"
     xmlns:the49="https://schemas.the49.com/dotnet/2023/maui"
+    xmlns:vm="clr-namespace:MedbaseHybrid.ViewModels"
     Padding="16,32"
+    x:DataType="vm:AnswersSheetViewModel"
     BackgroundColor="{AppThemeBinding Light={StaticResource White},
-                                      Dark={StaticResource Gray950}}">
+                                      Dark={StaticResource Gray950}}"
+    HandleColor="AliceBlue"
+    HasBackdrop="True"
+    HasHandle="True">
 
     <VerticalStackLayout>
-        <Label
-            x:Name="TitleLabel"
-            FontAttributes="Bold"
-            FontSize="24" />
+        <Grid>
+            <Label
+                FontAttributes="Bold"
+                FontSize="24"
+                HorizontalOptions="Start">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="{Binding Question.Id}" />
+                        <Span Text=". " />
+                        <Span Text="{Binding Question.QuestionMain}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <ImageButton
+                Command="{Binding OpenCorrectionsPopupCommand}"
+                HeightRequest="20"
+                HorizontalOptions="End"
+                VerticalOptions="Center"
+                WidthRequest="20">
+                <ImageButton.Source>
+                    <FontImageSource
+                        FontFamily="fasolid"
+                        Glyph="{x:Static helpers:FontAwesome.Pencil}"
+                        Size="20"
+                        Color="{AppThemeBinding Light={StaticResource Primary},
+                                                Dark={StaticResource White}}" />
+                </ImageButton.Source>
+            </ImageButton>
+
+        </Grid>
 
         <!--  Child A  -->
-        <Label x:Name="StemA" />
         <Border
             Margin="0"
             Padding="5"
@@ -27,11 +59,22 @@
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="5" />
             </Border.StrokeShape>
-            <Label x:Name="AnswerA" />
+            <VerticalStackLayout>
+
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="a. " />
+                            <Span Text="{Binding Question.ChildA}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label Text="{Binding Question.AnswerA}" />
+            </VerticalStackLayout>
         </Border>
 
         <!--  Child B  -->
-        <Label x:Name="StemB" />
+
         <Border
             Margin="0"
             Padding="5"
@@ -43,11 +86,20 @@
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="5" />
             </Border.StrokeShape>
-            <Label x:Name="AnswerB" />
+            <VerticalStackLayout>
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="b. " />
+                            <Span Text="{Binding Question.ChildB}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label Text="{Binding Question.AnswerB}" />
+            </VerticalStackLayout>
         </Border>
 
         <!--  Child C  -->
-        <Label x:Name="StemC" />
         <Border
             Margin="0"
             Padding="5"
@@ -59,11 +111,21 @@
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="5" />
             </Border.StrokeShape>
-            <Label x:Name="AnswerC" />
+            <VerticalStackLayout>
+
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="c. " />
+                            <Span Text="{Binding Question.ChildC}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label Text="{Binding Question.AnswerC}" />
+            </VerticalStackLayout>
         </Border>
 
         <!--  Child D  -->
-        <Label x:Name="StemD" />
         <Border
             Margin="0"
             Padding="5"
@@ -75,11 +137,21 @@
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="5" />
             </Border.StrokeShape>
-            <Label x:Name="AnswerD" />
+            <VerticalStackLayout>
+
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="d. " />
+                            <Span Text="{Binding Question.ChildD}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label Text="{Binding Question.AnswerD}" />
+            </VerticalStackLayout>
         </Border>
 
         <!--  Child E  -->
-        <Label x:Name="StemE" />
         <Border
             Margin="0"
             Padding="5"
@@ -91,8 +163,20 @@
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="5" />
             </Border.StrokeShape>
-            <Label x:Name="AnswerE" />
+            <VerticalStackLayout>
+
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="e. " />
+                            <Span Text="{Binding Question.ChildE}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <Label Text="{Binding Question.AnswerE}" />
+            </VerticalStackLayout>
         </Border>
-        <Label FontSize="Small" Text="Click on a stem question if you think the answer is wrong" />
+        <Label FontSize="Small" Text="Click on the pen if you think the answer is wrong to submit a correction" />
     </VerticalStackLayout>
 </the49:BottomSheet>

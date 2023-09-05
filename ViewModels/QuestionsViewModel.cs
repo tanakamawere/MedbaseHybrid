@@ -6,6 +6,7 @@ using MedbaseHybrid.Pages;
 using MedbaseHybrid.Services;
 using MedbaseLibrary.Services;
 using MvvmHelpers;
+using Mopups.Interfaces;
 
 namespace MedbaseHybrid.ViewModels
 {
@@ -26,9 +27,10 @@ namespace MedbaseHybrid.ViewModels
         [ObservableProperty]
         private bool isBusy;
 
-        public QuestionsViewModel(IApiRepository _apiService, IDatabaseRepository _repo)
+        public QuestionsViewModel(IApiRepository _apiService, IDatabaseRepository _repo, IPopupNavigation popup)
         {
             apiService = _apiService;
+            popupService = popup;
             databaseService = _repo;
         }
         [RelayCommand]
@@ -66,15 +68,11 @@ namespace MedbaseHybrid.ViewModels
         [RelayCommand]
         async Task ShowAnswers(Question question)
         {
-            //if(question == null) return;
-            var page = new AnswersBottomSheet(question);
-            page.HasHandle = true;
-            page.HandleColor = Color.Parse("#3b3b3b");
-            page.HasBackdrop = true;
+            if(question == null) return;
 
-            await page.ShowAsync(Shell.Current.Window, true);
+            var page = new AnswersBottomSheet(apiService ,question, popupService);
 
-            //Shell.Current.ShowPopup(new AnswersPopup(question));   
+            await page.ShowAsync(Shell.Current.Window, true); 
         }
         [RelayCommand]
         async Task GoToExportImage(Question question)

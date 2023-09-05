@@ -13,7 +13,10 @@
     x:DataType="vm:DownloadsViewModel">
     <RefreshView Command="{Binding GetTopicsCommand}">
         <StackLayout>
-            <CollectionView EmptyView="Download topics and you'll see them here" ItemsSource="{Binding Topics}">
+            <CollectionView
+                EmptyView="Download topics and you'll see them here"
+                ItemsSource="{Binding Topics}"
+                VerticalOptions="CenterAndExpand">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Topic">
                         <SwipeView android:SwipeView.SwipeTransitionMode="Drag">
