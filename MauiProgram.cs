@@ -37,6 +37,10 @@ public static class MauiProgram
 			});
 
         builder.Services.AddSingleton(MopupService.Instance);
+        builder.Services.AddScoped(sp => new HttpClient 
+        {
+            BaseAddress = new Uri(Constants.apiUrl)
+        });
 
 #if DEBUG
 		builder.Logging.AddDebug();

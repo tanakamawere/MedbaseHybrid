@@ -38,7 +38,14 @@ namespace MedbaseHybrid.ViewModels
             {
                 if (!string.IsNullOrEmpty(QuestionChild) || QuestionAnswer.Equals(null))
                 {
-                    Corrections corrections = new Corrections(0, Question.Id, QuestionChild, QuestionAnswer, QuestionExplanation);
+                    Corrections corrections = new()
+                    {
+                        Id = 0,
+                        QuestionChild = QuestionChild,
+                        QuestionId = Question.Id,
+                        SuggestedAnswer = QuestionAnswer,
+                        SuggestedExplanation = QuestionExplanation,
+                    };
                     var response = await apiService.PostCorrection(corrections);
                     if (response.Equals(true))
                     {
