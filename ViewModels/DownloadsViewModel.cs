@@ -5,12 +5,15 @@ using MedbaseHybrid.Services;
 using Mopups.Interfaces;
 using MvvmHelpers;
 using System.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace MedbaseHybrid.ViewModels
 {
     public partial class DownloadsViewModel : ViewModelBase
     {
         public ObservableRangeCollection<Topic> Topics { get; set; } = new();
+        [ObservableProperty]
+        private Topic topicSelected;
 
         public DownloadsViewModel(IDatabaseRepository _repository, IPopupNavigation _popup)
         {
@@ -46,7 +49,7 @@ namespace MedbaseHybrid.ViewModels
         //}
 
         [RelayCommand]
-        async Task ViewAll(Topic topic)
+        async Task TopicTapped(Topic topic)
         {
             if (topic is null) return;
 

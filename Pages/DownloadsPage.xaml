@@ -11,92 +11,100 @@
     xmlns:vm="clr-namespace:MedbaseHybrid.ViewModels"
     Title="Downloads"
     x:DataType="vm:DownloadsViewModel">
-    <RefreshView Command="{Binding GetTopicsCommand}">
-        <StackLayout>
-            <CollectionView
-                EmptyView="Download topics and you'll see them here"
-                ItemsSource="{Binding Topics}"
-                VerticalOptions="CenterAndExpand">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:Topic">
-                        <SwipeView android:SwipeView.SwipeTransitionMode="Drag">
-                            <!--<SwipeView.RightItems>
-                                <SwipeItems SwipeBehaviorOnInvoked="Auto">
-                                    <SwipeItem
-                                        BackgroundColor="LightBlue"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=CreateQuizCommand}"
-                                        CommandParameter="{Binding .}"
-                                        Text="Quiz">
-                                        <SwipeItem.IconImageSource>
-                                            <FontImageSource FontFamily="fasolid" Glyph="{x:Static utils:FontAwesome.CircleQuestion}" />
-                                        </SwipeItem.IconImageSource>
-                                    </SwipeItem>
-                                </SwipeItems>
-                            </SwipeView.RightItems>-->
 
-                            <SwipeView.LeftItems>
-                                <SwipeItems SwipeBehaviorOnInvoked="Auto">
-                                    <SwipeItem
-                                        BackgroundColor="Red"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=DeleteCommand}"
-                                        CommandParameter="{Binding .}"
-                                        Text="Delete">
-                                        <SwipeItem.IconImageSource>
-                                            <FontImageSource
-                                                FontFamily="fasolid"
-                                                Glyph="{x:Static utils:FontAwesome.TrashCan}"
-                                                Size="10" />
-                                        </SwipeItem.IconImageSource>
-                                    </SwipeItem>
-                                </SwipeItems>
-                            </SwipeView.LeftItems>
-                            <Border
-                                Padding="20"
-                                MaximumWidthRequest="400"
-                                Stroke="{StaticResource Gray500}"
-                                StrokeShape="RoundRectangle 20"
-                                StrokeThickness="0">
+    <StackLayout>
+        <ListView
+            CachingStrategy="RetainElement"
+            HasUnevenRows="False"
+            IsPullToRefreshEnabled="True"
+            IsRefreshing="{Binding GetTopicsCommand.IsRunning}"
+            ItemsSource="{Binding Topics}"
+            RefreshCommand="{Binding GetTopicsCommand}"
+            RowHeight="80"
+            SelectedItem="{Binding TopicSelected}"
+            SelectionMode="None"
+            VerticalOptions="FillAndExpand">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <ViewCell.ContextActions>
+                            <MenuItem
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=DeleteCommand}"
+                                CommandParameter="{Binding .}"
+                                IsDestructive="True"
+                                Text="Delete" />
+                        </ViewCell.ContextActions>
+                        <Grid x:DataType="models:Topic">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=TopicTappedCommand}" CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
 
+                            <Image HeightRequest="20" WidthRequest="20">
+                                <Image.Source>
+                                    <FontImageSource
+                                        FontFamily="fasolid"
+                                        Glyph="{x:Static helpers:FontAwesome.ArrowRight}"
+                                        Size="20"
+                                        Color="{AppThemeBinding Light={StaticResource Primary},
+                                                                Dark={StaticResource White}}" />
+                                </Image.Source>
+                            </Image>
 
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=ViewAllCommand}" CommandParameter="{Binding .}" />
-                                </Border.GestureRecognizers>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="40" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="Large"
+                                    Text="{Binding Name}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                        <!--<Border
+                            Padding="20"
+                            x:DataType="models:Topic"
+                            MaximumWidthRequest="400"
+                            Stroke="{StaticResource Gray500}"
+                            StrokeShape="RoundRectangle 20"
+                            StrokeThickness="0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=ViewAllCommand}" CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
 
-                                    <Image HeightRequest="20" WidthRequest="20">
-                                        <Image.Source>
-                                            <FontImageSource
-                                                FontFamily="fasolid"
-                                                Glyph="{x:Static helpers:FontAwesome.ArrowRight}"
-                                                Size="20"
-                                                Color="{AppThemeBinding Light={StaticResource Primary},
-                                                                        Dark={StaticResource White}}" />
-                                        </Image.Source>
-                                    </Image>
+                                <Image HeightRequest="20" WidthRequest="20">
+                                    <Image.Source>
+                                        <FontImageSource
+                                            FontFamily="fasolid"
+                                            Glyph="{x:Static helpers:FontAwesome.ArrowRight}"
+                                            Size="20"
+                                            Color="{AppThemeBinding Light={StaticResource Primary},
+                                                                    Dark={StaticResource White}}" />
+                                    </Image.Source>
+                                </Image>
 
-                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-
-                                        <Label
-                                            FontAttributes="Bold"
-                                            FontSize="Large"
-                                            Text="{Binding Name}" />
-                                    </VerticalStackLayout>
-                                </Grid>
-                            </Border>
-                        </SwipeView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-            <ActivityIndicator
-                HorizontalOptions="CenterAndExpand"
-                IsEnabled="{Binding GetTopicsCommand.IsRunning}"
-                IsRunning="{Binding GetTopicsCommand.IsRunning}"
-                IsVisible="{Binding GetTopicsCommand.IsRunning}"
-                VerticalOptions="CenterAndExpand" />
-        </StackLayout>
-    </RefreshView>
+                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="Large"
+                                        Text="{Binding Name}" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>-->
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ActivityIndicator
+            HorizontalOptions="CenterAndExpand"
+            IsEnabled="{Binding GetTopicsCommand.IsRunning}"
+            IsRunning="{Binding GetTopicsCommand.IsRunning}"
+            IsVisible="{Binding GetTopicsCommand.IsRunning}"
+            VerticalOptions="CenterAndExpand" />
+    </StackLayout>
 </ContentPage>
