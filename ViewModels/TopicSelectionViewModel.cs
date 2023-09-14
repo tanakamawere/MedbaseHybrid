@@ -6,6 +6,7 @@ using MedbaseHybrid.Services;
 using MedbaseLibrary.Services;
 using Mopups.Interfaces;
 using CommunityToolkit.Maui.Alerts;
+using Plugin.MauiMTAdmob;
 
 namespace MedbaseHybrid.ViewModels
 {
@@ -63,6 +64,7 @@ namespace MedbaseHybrid.ViewModels
         async Task ViewAll(Topic topic)
         {
             if (topic is null) return;
+
 
             await Shell.Current.GoToAsync(nameof(QuestionsPage), true, new Dictionary<string, object>
             {

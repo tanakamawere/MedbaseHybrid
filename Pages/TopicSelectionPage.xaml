@@ -40,52 +40,32 @@
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=ViewAllCommand}" CommandParameter="{Binding .}" />
                                 </Border.GestureRecognizers>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="40" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
+                                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
 
-                                    <Image HeightRequest="20" WidthRequest="20">
-                                        <Image.Source>
-                                            <FontImageSource
-                                                FontFamily="fasolid"
-                                                Glyph="{x:Static helpers:FontAwesome.ArrowRight}"
-                                                Size="20"
-                                                Color="{AppThemeBinding Light={StaticResource Primary},
-                                                                        Dark={StaticResource White}}" />
-                                        </Image.Source>
-                                    </Image>
-
-                                    <VerticalStackLayout
-                                        Grid.Column="1"
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="Large"
                                         HorizontalOptions="Center"
-                                        VerticalOptions="Center">
+                                        Text="{Binding Name}" />
 
-                                        <Label
-                                            FontAttributes="Bold"
-                                            FontSize="Large"
-                                            Text="{Binding Name}" />
-
-                                        <HorizontalStackLayout Margin="0,10,0,0" HorizontalOptions="Center">
-                                            <Button
-                                                Margin="2.5"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TopicSelectionViewModel}}, Path=DownloadCommand}"
-                                                CommandParameter="{Binding .}"
-                                                Text="Download" />
-                                            <Button
-                                                Margin="2.5"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TopicSelectionViewModel}}, Path=ViewAllCommand}"
-                                                CommandParameter="{Binding .}"
-                                                Text="View All" />
-                                            <!--<Button
-        Margin="2.5"
-        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TopicSelectionViewModel}}, Path=CreateQuizCommand}"
-        CommandParameter="{Binding .}"
-        Text="Create Quiz" />-->
-                                        </HorizontalStackLayout>
-                                    </VerticalStackLayout>
-                                </Grid>
+                                    <HorizontalStackLayout Margin="0,10,0,0" HorizontalOptions="Center">
+                                        <Button
+                                            Margin="2.5"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TopicSelectionViewModel}}, Path=DownloadCommand}"
+                                            CommandParameter="{Binding .}"
+                                            Text="Download" />
+                                        <Button
+                                            Margin="2.5"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TopicSelectionViewModel}}, Path=ViewAllCommand}"
+                                            CommandParameter="{Binding .}"
+                                            Text="View All" />
+                                        <!--<Button
+Margin="2.5"
+Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TopicSelectionViewModel}}, Path=CreateQuizCommand}"
+CommandParameter="{Binding .}"
+Text="Create Quiz" />-->
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
                             </Border>
 
                             <admob:MTAdView

@@ -3,6 +3,7 @@ using MedbaseHybrid.Controls;
 using MedbaseHybrid.Services;
 using MedbaseLibrary.Services;
 using Mopups.Interfaces;
+using Plugin.MauiMTAdmob;
 
 namespace MedbaseHybrid.ViewModels
 {
@@ -18,7 +19,7 @@ namespace MedbaseHybrid.ViewModels
 
         public ViewModelBase()
         {
-            
+            CrossMauiMTAdmob.Current.ShowInterstitial();
         }
     }
 }

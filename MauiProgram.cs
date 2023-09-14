@@ -54,6 +54,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<DownloadsPage>();
         builder.Services.AddTransient<TopicSelectionPage>();
         builder.Services.AddTransient<QuestionsPage>();
+        builder.Services.AddTransient<SearchQuestionsPage>();
         builder.Services.AddTransient<MorePage>();
         builder.Services.AddTransient<ExportImagePage>();
 
@@ -64,6 +65,7 @@ public static class MauiProgram
         builder.Services.AddTransient<TopicSelectionViewModel>();
         builder.Services.AddTransient<AnswersSheetViewModel>();
         builder.Services.AddTransient<CorrectionsPopupViewModel>();
+        builder.Services.AddTransient<SearchQuestionsViewModel>();
         builder.Services.AddTransient<QuestionsViewModel>();
         builder.Services.AddTransient<MoreViewModel>();
         builder.Services.AddTransient<ExportImageViewModel>();

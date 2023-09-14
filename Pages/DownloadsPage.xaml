@@ -13,93 +13,52 @@
     x:DataType="vm:DownloadsViewModel">
 
     <StackLayout>
-        <ListView
-            CachingStrategy="RetainElement"
-            HasUnevenRows="False"
-            IsPullToRefreshEnabled="True"
-            IsRefreshing="{Binding GetTopicsCommand.IsRunning}"
-            ItemsSource="{Binding Topics}"
-            RefreshCommand="{Binding GetTopicsCommand}"
-            RowHeight="80"
-            SelectedItem="{Binding TopicSelected}"
-            SelectionMode="None"
-            VerticalOptions="FillAndExpand">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <ViewCell.ContextActions>
-                            <MenuItem
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=DeleteCommand}"
-                                CommandParameter="{Binding .}"
-                                IsDestructive="True"
-                                Text="Delete" />
-                        </ViewCell.ContextActions>
-                        <Grid x:DataType="models:Topic">
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=TopicTappedCommand}" CommandParameter="{Binding .}" />
-                            </Grid.GestureRecognizers>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="40" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+        <RefreshView Command="{Binding GetTopicsCommand}" IsRefreshing="{Binding GetTopicsCommand.IsRunning}">
 
-                            <Image HeightRequest="20" WidthRequest="20">
-                                <Image.Source>
-                                    <FontImageSource
-                                        FontFamily="fasolid"
-                                        Glyph="{x:Static helpers:FontAwesome.ArrowRight}"
-                                        Size="20"
-                                        Color="{AppThemeBinding Light={StaticResource Primary},
-                                                                Dark={StaticResource White}}" />
-                                </Image.Source>
-                            </Image>
-
-                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                                <Label
-                                    FontAttributes="Bold"
-                                    FontSize="Large"
-                                    Text="{Binding Name}" />
-                            </VerticalStackLayout>
-                        </Grid>
-                        <!--<Border
-                            Padding="20"
-                            x:DataType="models:Topic"
-                            MaximumWidthRequest="400"
-                            Stroke="{StaticResource Gray500}"
-                            StrokeShape="RoundRectangle 20"
-                            StrokeThickness="0">
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=ViewAllCommand}" CommandParameter="{Binding .}" />
-                            </Border.GestureRecognizers>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="40" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <Image HeightRequest="20" WidthRequest="20">
-                                    <Image.Source>
-                                        <FontImageSource
-                                            FontFamily="fasolid"
-                                            Glyph="{x:Static helpers:FontAwesome.ArrowRight}"
-                                            Size="20"
-                                            Color="{AppThemeBinding Light={StaticResource Primary},
-                                                                    Dark={StaticResource White}}" />
-                                    </Image.Source>
-                                </Image>
-
+            <CollectionView ItemsSource="{Binding Topics}" VerticalOptions="FillAndExpand">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView>
+                            <SwipeView.LeftItems>
+                                <SwipeItems>
+                                    <SwipeItem
+                                        BackgroundColor="Red"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=DeleteCommand}"
+                                        CommandParameter="{Binding .}"
+                                        Text="Delete">
+                                        <SwipeItem.IconImageSource>
+                                            <FontImageSource
+                                                FontFamily="fasolid"
+                                                Glyph="{x:Static helpers:FontAwesome.Trash}"
+                                                Size="20"
+                                                Color="{AppThemeBinding Light={StaticResource Primary},
+                                                                        Dark={StaticResource White}}" />
+                                        </SwipeItem.IconImageSource>
+                                    </SwipeItem>
+                                </SwipeItems>
+                            </SwipeView.LeftItems>
+                            <Border
+                                Margin="0,5"
+                                x:DataType="models:Topic"
+                                MaximumWidthRequest="400"
+                                Stroke="{StaticResource Gray500}"
+                                StrokeShape="RoundRectangle 16"
+                                StrokeThickness="0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DownloadsViewModel}}, Path=TopicTappedCommand}" CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
                                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
                                     <Label
                                         FontAttributes="Bold"
                                         FontSize="Large"
                                         Text="{Binding Name}" />
                                 </VerticalStackLayout>
-                            </Grid>
-                        </Border>-->
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                            </Border>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
         <ActivityIndicator
             HorizontalOptions="CenterAndExpand"
             IsEnabled="{Binding GetTopicsCommand.IsRunning}"

@@ -22,7 +22,7 @@
     </ContentPage.Resources>
 
     <!--  Questions CollectionView  -->
-    <StackLayout>
+    <Grid>
         <ActivityIndicator
             HorizontalOptions="Center"
             IsEnabled="{Binding IsBusy}"
@@ -32,7 +32,7 @@
         <CollectionView
             EmptyView="The list is currently empty"
             IsVisible="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
-            ItemsSource="{Binding Questions}"
+            ItemsSource="{Binding QuestionPaged.Questions}"
             VerticalOptions="CenterAndExpand"
             VerticalScrollBarVisibility="Always">
             <CollectionView.ItemTemplate>
@@ -40,6 +40,7 @@
                     <VerticalStackLayout>
 
                         <Border
+                            Margin="10"
                             BackgroundColor="Transparent"
                             Stroke="Gray"
                             StrokeThickness="1">
@@ -137,5 +138,80 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-    </StackLayout>
+        <VerticalStackLayout
+            BackgroundColor="{AppThemeBinding Light={StaticResource Primary}}"
+            MaximumHeightRequest="100"
+            VerticalOptions="End">
+            <SearchBar
+                FontSize="14"
+                HorizontalOptions="CenterAndExpand"
+                IsVisible="{Binding OpenSearch}"
+                Placeholder="Search keywords..."
+                SearchCommand="{Binding SearchCommand}"
+                Text="{Binding SearchTerm}" />
+            <Grid Padding="5" HeightRequest="50">
+
+                <!--  Create button to show more options  -->
+
+                <!--  Layout for page buttons  -->
+                <HorizontalStackLayout
+                    HorizontalOptions="Center"
+                    Spacing="10"
+                    VerticalOptions="Center">
+                    <ImageButton
+                        Command="{Binding ChangePageCommand}"
+                        CommandParameter="previous"
+                        HeightRequest="20">
+                        <ImageButton.Source>
+                            <FontImageSource
+                                FontFamily="fasolid"
+                                Glyph="{x:Static utils:FontAwesome.AngleLeft}"
+                                Size="12"
+                                Color="{StaticResource White}" />
+                        </ImageButton.Source>
+                    </ImageButton>
+                    <Label
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Page " />
+                                <Span Text="{Binding QuestionPaged.CurrentPage}" />
+                                <Span Text=" of " />
+                                <Span Text="{Binding QuestionPaged.Pages}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <ImageButton
+                        Command="{Binding ChangePageCommand}"
+                        CommandParameter="next"
+                        HeightRequest="20">
+                        <ImageButton.Source>
+                            <FontImageSource
+                                FontFamily="fasolid"
+                                Glyph="{x:Static utils:FontAwesome.AngleRight}"
+                                Size="12"
+                                Color="{StaticResource White}" />
+                        </ImageButton.Source>
+                    </ImageButton>
+                </HorizontalStackLayout>
+
+                <!--  Search Button  -->
+                <ImageButton
+                    Command="{Binding SearchCommand}"
+                    HeightRequest="20"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center">
+                    <ImageButton.Source>
+                        <FontImageSource
+                            FontFamily="fasolid"
+                            Glyph="{x:Static utils:FontAwesome.MagnifyingGlass}"
+                            Size="10"
+                            Color="{StaticResource White}" />
+                    </ImageButton.Source>
+                </ImageButton>
+            </Grid>
+        </VerticalStackLayout>
+    </Grid>
 </ContentPage>
