@@ -19,7 +19,6 @@ namespace MedbaseHybrid.ViewModels
 
         public ViewModelBase()
         {
-            CrossMauiMTAdmob.Current.ShowInterstitial();
         }
     }
 }

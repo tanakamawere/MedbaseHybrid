@@ -13,9 +13,12 @@
     x:DataType="vm:DownloadsViewModel">
 
     <StackLayout>
-        <RefreshView Command="{Binding GetTopicsCommand}" IsRefreshing="{Binding GetTopicsCommand.IsRunning}">
+        <RefreshView Command="{Binding GetTopicsCommand}" IsRefreshing="{Binding IsBusy}">
 
-            <CollectionView ItemsSource="{Binding Topics}" VerticalOptions="FillAndExpand">
+            <CollectionView
+                EmptyView="Topics you download will be here."
+                ItemsSource="{Binding Topics}"
+                VerticalOptions="FillAndExpand">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <SwipeView>
@@ -61,9 +64,9 @@
         </RefreshView>
         <ActivityIndicator
             HorizontalOptions="CenterAndExpand"
-            IsEnabled="{Binding GetTopicsCommand.IsRunning}"
-            IsRunning="{Binding GetTopicsCommand.IsRunning}"
-            IsVisible="{Binding GetTopicsCommand.IsRunning}"
+            IsEnabled="{Binding IsBusy}"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
             VerticalOptions="CenterAndExpand" />
     </StackLayout>
 </ContentPage>

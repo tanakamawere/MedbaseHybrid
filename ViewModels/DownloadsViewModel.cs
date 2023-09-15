@@ -13,7 +13,7 @@ namespace MedbaseHybrid.ViewModels
     {
         public ObservableRangeCollection<Topic> Topics { get; set; } = new();
         [ObservableProperty]
-        private Topic topicSelected;
+        private Topic? topicSelected;
 
         public DownloadsViewModel(IDatabaseRepository _repository, IPopupNavigation _popup)
         {
@@ -26,27 +26,13 @@ namespace MedbaseHybrid.ViewModels
         }
 
         [RelayCommand]
-        async Task GetTopics()
+        void GetTopics()
         {
+            IsBusy = true;
             Topics.Clear();
             Topics.AddRange(databaseService.GetTopicsAsync());
+            IsBusy = false;
         }
-
-        //View clicks
-        //[RelayCommand]
-        //static async Task CreateQuiz(Topic topic)
-        //{
-        //    if (topic is null) return;
-
-        //    try
-        //    {
-        //        await Shell.Current.ShowPopupAsync(new CustomiseQuizPopup(topic, "offline"));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine(ex.Message);
-        //    }
-        //}
 
         [RelayCommand]
         async Task TopicTapped(Topic topic)

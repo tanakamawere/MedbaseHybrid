@@ -6,7 +6,6 @@ using MedbaseHybrid.Services;
 using MedbaseLibrary.Services;
 using Mopups.Interfaces;
 using CommunityToolkit.Maui.Alerts;
-using Plugin.MauiMTAdmob;
 
 namespace MedbaseHybrid.ViewModels
 {

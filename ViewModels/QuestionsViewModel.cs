@@ -45,8 +45,6 @@ namespace MedbaseHybrid.ViewModels
             apiService = _apiService;
             popupService = popup;
             databaseService = _repo;
-
-            CrossMauiMTAdmob.Current.LoadInterstitial("ca-app-pub-7010150994074481~5231509985");
         }
 
         [RelayCommand]
