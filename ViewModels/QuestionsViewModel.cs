@@ -1,16 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using MedbaseHybrid.Controls;
-using MedbaseLibrary.Models;
-using MedbaseHybrid.Pages;
-using MedbaseHybrid.Services;
-using MedbaseLibrary.Services;
-using MvvmHelpers;
-using Mopups.Interfaces;
-using CommunityToolkit.Maui.Alerts;
-using Plugin.MauiMTAdmob;
-
-namespace MedbaseHybrid.ViewModels
+﻿namespace MedbaseHybrid.ViewModels
 {
     [QueryProperty(nameof(TopicSelected), "topicSelected")]
     [QueryProperty(nameof(Source), "sourceFromTopic")]

@@ -1,11 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using MedbaseLibrary.Models;
-using MedbaseHybrid.Pages;
-using MedbaseHybrid.Services;
-using MedbaseLibrary.Services;
-using MvvmHelpers;
-
-namespace MedbaseHybrid.ViewModels
+﻿namespace MedbaseHybrid.ViewModels
 {
     public partial class DashboardViewModel : ViewModelBase
     {

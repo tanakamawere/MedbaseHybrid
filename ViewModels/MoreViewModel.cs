@@ -1,9 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using MedbaseLibrary.Services;
-using System.Diagnostics;
-
-namespace MedbaseHybrid.ViewModels
+﻿namespace MedbaseHybrid.ViewModels
 {
     public partial class MoreViewModel : ViewModelBase
     {

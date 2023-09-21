@@ -1,11 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using MedbaseLibrary.Models;
-using MedbaseHybrid.Pages;
-using MedbaseHybrid.Services;
-using Mopups.Interfaces;
-using MvvmHelpers;
-using System.Diagnostics;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Diagnostics;
 
 namespace MedbaseHybrid.ViewModels
 {
@@ -14,12 +7,13 @@ namespace MedbaseHybrid.ViewModels
         public ObservableRangeCollection<Topic> Topics { get; set; } = new();
         [ObservableProperty]
         private Topic? topicSelected;
+        private IConnectivity connectivity;
 
-        public DownloadsViewModel(IDatabaseRepository _repository, IPopupNavigation _popup)
+        public DownloadsViewModel(IDatabaseRepository _repository, IPopupNavigation _popup, IConnectivity _connectivity)
         {
             databaseService = _repository;
             popupService = _popup;
-
+            connectivity = _connectivity;
 
             loadingPopup = new();
             GetTopics();
@@ -38,6 +32,12 @@ namespace MedbaseHybrid.ViewModels
         async Task TopicTapped(Topic topic)
         {
             if (topic is null) return;
+
+            if (connectivity.NetworkAccess == NetworkAccess.Internet)
+            {
+                CrossMauiMTAdmob.Current.ShowInterstitial();
+                CrossMauiMTAdmob.Current.LoadInterstitial("ca-app-pub-7010150994074481/8096871111");
+            }
 
             await Shell.Current.GoToAsync(nameof(QuestionsPage), true, new Dictionary<string, object>
             {

@@ -107,10 +107,14 @@
                                         NumberOfTapsRequired="1" />
                                 </Border.GestureRecognizers>
                                 <Grid>
-                                    <Image
-                                        Aspect="Center"
-                                        MaximumWidthRequest="120"
-                                        Source="{Binding ImageURL}" />
+                                    <Image Aspect="Center" MaximumWidthRequest="120">
+                                        <Image.Source>
+                                            <UriImageSource
+                                                CacheValidity="24"
+                                                CachingEnabled="True"
+                                                Uri="{Binding ImageURL}" />
+                                        </Image.Source>
+                                    </Image>
                                     <StackLayout
                                         Margin="5"
                                         HorizontalOptions="Start"

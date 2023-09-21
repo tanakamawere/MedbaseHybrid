@@ -1,12 +1,4 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using MedbaseHybrid.Services;
-using MedbaseLibrary.Models;
-using MedbaseLibrary.Services;
-using Mopups.Interfaces;
-
-namespace MedbaseHybrid.ViewModels
+﻿namespace MedbaseHybrid.ViewModels
 {
     public partial class CorrectionsPopupViewModel : ViewModelBase
     {

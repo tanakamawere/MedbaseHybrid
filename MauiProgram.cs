@@ -1,16 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using CommunityToolkit.Maui;
-using Plugin.MauiMTAdmob;
-using MedbaseHybrid.Pages;
-using MedbaseHybrid.ViewModels;
-using CommunityToolkit.Maui.Storage;
-using Mopups.Services;
-using Mopups.Hosting;
-using The49.Maui.BottomSheet;
-using MedbaseLibrary.Services;
-using MedbaseHybrid.Services;
-
-namespace MedbaseHybrid;
+﻿namespace MedbaseHybrid;
 
 public static class MauiProgram
 {
@@ -47,6 +35,10 @@ public static class MauiProgram
 #endif
 		builder.Services.AddSingleton<IApiRepository, ApiRepository>();
 		builder.Services.AddSingleton<IDatabaseRepository, DatabaseRepository>();
+        builder.Services.AddSingleton(Connectivity.Current);
+        //Registering Barrel
+        Barrel.ApplicationId = Constants.ApplicationId();
+        builder.Services.AddSingleton(Barrel.Current);
 
 
         //Pages & Popups

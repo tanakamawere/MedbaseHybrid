@@ -1,13 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using MedbaseLibrary.Models;
-using MedbaseHybrid.Pages;
-using MedbaseHybrid.Services;
-using MedbaseLibrary.Services;
-using Mopups.Interfaces;
-using CommunityToolkit.Maui.Alerts;
-
-namespace MedbaseHybrid.ViewModels
+﻿namespace MedbaseHybrid.ViewModels
 {
     [QueryProperty(nameof(CourseSelected), "courseSelected")]
     public partial class TopicSelectionViewModel : ViewModelBase
@@ -64,6 +55,8 @@ namespace MedbaseHybrid.ViewModels
         {
             if (topic is null) return;
 
+            CrossMauiMTAdmob.Current.ShowInterstitial();
+            CrossMauiMTAdmob.Current.LoadInterstitial("ca-app-pub-7010150994074481/1084089830");
 
             await Shell.Current.GoToAsync(nameof(QuestionsPage), true, new Dictionary<string, object>
             {

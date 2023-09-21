@@ -1,13 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using MedbaseHybrid.Controls;
-using MedbaseHybrid.Services;
-using MedbaseLibrary.Services;
-using Mopups.Interfaces;
-using Plugin.MauiMTAdmob;
-
-namespace MedbaseHybrid.ViewModels
+﻿namespace MedbaseHybrid.ViewModels
 {
-    public partial class ViewModelBase : ObservableObject
+    public partial class ViewModelBase : CommunityToolkit.Mvvm.ComponentModel.ObservableObject
     {
         public IApiRepository apiService;
         public IDatabaseRepository databaseService;

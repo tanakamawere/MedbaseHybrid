@@ -1,12 +1,4 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using MedbaseHybrid.Controls;
-using MedbaseHybrid.Services;
-using MedbaseLibrary.Models;
-using MedbaseLibrary.Services;
-using Mopups.Interfaces;
-using The49.Maui.BottomSheet;
+﻿using The49.Maui.BottomSheet;
 
 namespace MedbaseHybrid.ViewModels
 {
