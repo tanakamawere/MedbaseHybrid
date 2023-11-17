@@ -12,20 +12,12 @@
         <MudLink Typo="Typo.h6" Class="ml-3" Href="/home" Color="Color.Inherit">
             Medbase
         </MudLink>
-
-        @*<MudIconButton Href="/home" Icon="@Icons.Material.Filled.Dashboard" Color="Color.Inherit"></MudIconButton>
-        <MudSpacer />
-        <MudIconButton Href="/courses" Icon="@Icons.Material.Filled.Book" Color="Color.Inherit"></MudIconButton>
-        <MudSpacer />
-        <MudIconButton Href="/articles" Icon="@Icons.Material.Filled.Newspaper" Color="Color.Inherit"></MudIconButton>
-        <MudSpacer />
-        <MudIconButton Href="/about" Icon="@Icons.Material.Filled.QuestionAnswer" Color="Color.Inherit"></MudIconButton>*@
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <MudNavMenu Rounded="true" Margin="Margin.Dense" Color="Color.Primary" Class="pa-2">
 
             <MudNavLink Href="/home" Icon="@Icons.Material.Filled.Dashboard">Home</MudNavLink>
-            <MudNavLink Href="/courses" Icon="@Icons.Material.Filled.Book">Courses</MudNavLink>
+            <MudNavLink Href="/downloads" Icon="@Icons.Material.Filled.Download">Downloads</MudNavLink>
             <MudNavLink Href="/articles" Icon="@Icons.Material.Filled.Newspaper">Articles</MudNavLink>
             @* <MudNavLink Href="/Gamma" Icon="@Icons.Material.Filled.Download">Gamma</MudNavLink> *@
             <MudNavLink Href="/about" Icon="@Icons.Material.Filled.QuestionAnswer">About & Contact</MudNavLink>

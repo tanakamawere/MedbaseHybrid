@@ -1,13 +1,9 @@
 ﻿@page "/courses"
-@using MedbaseLibrary.Models
-@using MedbaseLibrary.Services
 @inject IApiRepository repository
 @inject NavigationManager navMananger;
 
 <PageTitle>Courses</PageTitle>
 <div class="container">
-
-    <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
 
     @if (!CoursesList.Any())
     {
@@ -40,13 +36,6 @@
 
 @code {
     private IEnumerable<Course> CoursesList { get; set; } = Enumerable.Empty<Course>();
-
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: "#", icon: Icons.Material.Filled.Home),
-        new BreadcrumbItem("Courses", href: "/courses", icon: Icons.Material.Filled.Book)
-    };
-
     protected override Task OnInitializedAsync() => GetArticlesAsync();
 
     private async Task GetArticlesAsync() => CoursesList = await repository.GetCourses();
