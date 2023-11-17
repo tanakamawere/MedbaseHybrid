@@ -1,0 +1,24 @@
+﻿<div class="container-fluid text-center"style="visibility:@(Visibility == true ? "visible" : "hidden")">
+    <h3>Quiz Completed</h3>
+    <lord-icon
+        src="https://cdn.lordicon.com/jvihlqtw.json"
+        trigger="hover"
+        style="width:250px;height:250px">
+    </lord-icon>
+    <h3>You scored @(Percentage)% on the quiz.</h3>
+
+    <h4>Time taken was @(TimeTaken)</h4>
+
+    <a class="btn btn-primary" href="@($"/courses")">
+        Done
+    </a>
+</div>
+
+@code {
+    [Parameter]
+    public double Percentage { get; set; }
+    [Parameter]
+    public string TimeTaken { get; set; }
+    [Parameter]
+    public bool Visibility { get; set; }
+}

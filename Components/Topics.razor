@@ -1,0 +1,101 @@
+﻿@page "/topics/{courseRef}"
+@using MedbaseLibrary.Models
+@using MedbaseLibrary.Services
+@inject IApiRepository repository
+@inject IDialogService DialogService
+
+<PageTitle>Topics</PageTitle>
+
+<div class="container mt-1">
+    <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+    <div class="row gx-5 align-items-center justify-content-center">
+        <div class="row">
+            @if (!TopicsList.Any())
+            {
+                <LoadingComponent />
+            }
+            else
+            {
+                <Virtualize Items="TopicsList.ToList()" TItem="Topic" Context="item">
+                    <ItemContent>
+                        <div class="col-lg-4 mb-2">
+                            <MudCard>
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h6">
+                                            @item.Name
+                                        </MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudCardActions>
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@($"questions/{item.TopicRef}")">View</MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Secondary" @onclick="() => OpenDialog(item.TopicRef)">Quiz</MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                            @*<div class="card h-100 shadow border-0">
+                                <div class="card-body p-4">
+                                    <div class="container-fluid text-center border-0 shadow card-footer mt-2" style="display:@(showCustomisation.Equals(true) && topicToCustomise == item.TopicRef ? "block" : "none")">
+                                        <h6 class="fw-bold">Customise Quiz🛠️z</h6>
+
+
+                                        <div class="container text-center m-1">
+                                                <button class="btn @(negativeMarking.Equals(true) ? "btn-primary" : "btn-outline-primary")" @onclick="ToggleNegativeMarking">
+                                                    @(negativeMarking.Equals(true) ? "Negative Marking On" : "Negative Marking Off")
+                                                </button>
+                                        </div>
+                                        <div class="row text-center align-content-center justify-content-center">
+                                            <p class="col-auto">Number Of Questions</p>
+                                            <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
+                                        </div>
+                                        <a class="btn btn-primary" href="@($"/quiz/{item.TopicRef}/{numberOfQuestions}/{negativeMarking}")">
+                                            Start!😛
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>*@
+                        </div>
+                    </ItemContent>
+                </Virtualize>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string courseRef { get; set; } = "";
+    bool showCustomisation = false;
+    int topicToCustomise;
+    private bool negativeMarking = false;
+    private int numberOfQuestions = 1;
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "#", icon: Icons.Material.Filled.Home),
+        new BreadcrumbItem("Courses", href: "/courses", icon: Icons.Material.Filled.Book),
+        new BreadcrumbItem("Topics", href: "/courses", icon: Icons.Material.Filled.LibraryBooks)
+    };
+
+    private IEnumerable<Topic> TopicsList { get; set; } = Enumerable.Empty<Topic>();
+
+    protected async override Task OnParametersSetAsync() => TopicsList = await repository.GetTopics(courseRef);
+
+    private void ToggleNegativeMarking()
+    {
+        negativeMarking = !negativeMarking;
+    }
+    private void CustomiseQuiz(int reference)
+    {
+        topicToCustomise = reference;
+
+        if (showCustomisation.Equals(false))
+            showCustomisation = true;
+        else if (showCustomisation.Equals(true))
+            showCustomisation = false;
+    }
+
+    private void OpenDialog(int topic)
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        DialogService.Show<QuizCustomisationDialog>(topic.ToString(), options);
+    }
+}

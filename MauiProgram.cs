@@ -1,4 +1,6 @@
-﻿namespace MedbaseHybrid;
+﻿using MudBlazor.Services;
+
+namespace MedbaseHybrid;
 
 public static class MauiProgram
 {
@@ -24,6 +26,8 @@ public static class MauiProgram
 				essentials.UseVersionTracking();
 			});
 
+        builder.Services.AddMauiBlazorWebView();
+        builder.Services.AddMudServices();
         builder.Services.AddSingleton(MopupService.Instance);
         builder.Services.AddScoped(sp => new HttpClient 
         {
@@ -31,10 +35,11 @@ public static class MauiProgram
         });
 
 #if DEBUG
-		builder.Logging.AddDebug();
+        builder.Services.AddBlazorWebViewDeveloperTools();
+        builder.Logging.AddDebug();
 #endif
 		builder.Services.AddSingleton<IApiRepository, ApiRepository>();
-		builder.Services.AddSingleton<IDatabaseRepository, DatabaseRepository>();
+        builder.Services.AddSingleton<IDatabaseRepository, DatabaseRepository>();
         builder.Services.AddSingleton(Connectivity.Current);
         //Registering Barrel
         Barrel.ApplicationId = Constants.ApplicationId();

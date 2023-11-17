@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace MedbaseHybrid.ViewModels
+﻿namespace MedbaseHybrid.ViewModels
 {
     public partial class DownloadsViewModel : ViewModelBase
     {

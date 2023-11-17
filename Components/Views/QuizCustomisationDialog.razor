@@ -1,0 +1,46 @@
+﻿<MudDialog>
+    <DialogContent>
+        <div class="container text-center m-1">
+            <button class="btn @(negativeMarking.Equals(true) ? "btn-primary" : "btn-outline-primary")" @onclick="ToggleNegativeMarking">
+                @(negativeMarking.Equals(true) ? "Negative Marking On" : "Negative Marking Off")
+            </button>
+        </div>
+        <div class="row text-center align-content-center justify-content-center">
+            <p class="col-auto">Number Of Questions</p>
+            <input class="col-auto" type="number" max="10" min="1" @bind="numberOfQuestions" />
+        </div>
+        <a class="btn btn-primary" href="@($"/quiz/topicRefHere/{numberOfQuestions}/{negativeMarking}")">
+            Start!😛
+        </a>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+
+
+    bool showCustomisation = false;
+    int topicToCustomise;
+    private bool negativeMarking = false;
+    private int numberOfQuestions = 1;
+
+    private void ToggleNegativeMarking()
+    {
+        negativeMarking = !negativeMarking;
+    }
+    private void CustomiseQuiz(int reference)
+    {
+        topicToCustomise = reference;
+
+        if (showCustomisation.Equals(false))
+            showCustomisation = true;
+        else if (showCustomisation.Equals(true))
+            showCustomisation = false;
+    }
+}

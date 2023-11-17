@@ -1,0 +1,217 @@
+﻿@page "/quiz/{topicId:int}/{number:int}/{negativeMarking}"
+@using System.Diagnostics;
+@inject IApiRepository repository
+@using Markdig
+
+<PageTitle>Quiz | Medbase</PageTitle>
+
+<div>
+
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/courses">Courses</a></li>
+            <li class="breadcrumb-item"><a href="/courses">Topics</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Quiz</li>
+        </ol>
+    </nav>
+    <div class="container" style="display:@(quizDone == false ? "block" : "none")">
+        @if (!Quizzes.Any())
+        {
+            <div class="text-center">
+                <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <span class="visible">Loading your quiz, please wait a bit...</span>
+            </div>
+        }
+        else
+        {
+            <div class="align-top">
+                <h4>@QuestionSelected.Question</h4>
+            </div>
+            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="@count" aria-valuemin="0" aria-valuemax="@totalQuizzes">
+                <div class="progress-bar" style="width: @((double)count/(double)totalQuizzes * 100)%">@count / @totalQuizzes questions done</div>
+            </div>
+            <div class="text-center align-content-center" style="visibility:@answerVisibility">
+                <h5>You're @answerResult</h5>
+                <h5>The answer is @QuestionSelected.Answer</h5>
+                <br />
+                Explanation: @((MarkupString)Markdown.ToHtml(@QuestionSelected.Explanation))
+            </div>
+        }
+    </div>
+    <div class="fixed-bottom">
+        <TopNavBar>
+
+            <button class="btn btn-primary justify-content-center" style="display:@((answerVisibility == "visible") ? "block" : "none");" @onclick="NextQuestion">
+                Next
+            </button>
+            <div class="row">
+                <div class="col-4">
+                    <button class="btn btn-outline-success" style="display:@((answerVisibility == "visible") ? "none" : "block");" @onclick="() => AnswerResponse(answerTrue)">
+                        True
+                    </button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-outline-info" style="display:@((answerVisibility == "visible") ? "none" : "block");" @onclick="() => AnswerResponse(answerLeft)">
+                        Leave
+                    </button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-outline-primary" style="display:@((answerVisibility == "visible") ? "none" : "block");" @onclick="() => AnswerResponse(answerFalse)">
+                        False
+                    </button>
+                </div>
+            </div>
+
+
+        </TopNavBar>
+    </div>
+</div>
+
+<QuizDone 
+        Visibility="@quizDone"
+        Percentage="@(result * 100)" 
+        TimeTaken="@watch.Elapsed.ToString("mm\\:ss")" />
+
+@code {
+    public List<QuizQuestion> Quizzes = new();
+    private Stopwatch watch = new();
+
+    [Inject]
+    public NavigationManager navigationManager { get; set; }
+    [Parameter]
+    public int topicId { get; set; }
+    [Parameter]
+    public int number { get; set; } 
+    [Parameter]
+    public string negativeMarking { get; set; }
+
+
+    private int count = 0;
+    private int totalQuizzes;
+    private int correctCount = 0;
+    private int wrongCount = 0;
+    double result;
+
+
+    public string numberLeft;
+    public string answerResult;
+    public string answerVisibility = "hidden";
+    public bool quizDone = false;
+
+    public string answerTrue = "true";
+    public string answerFalse = "false";
+    public string answerLeft = "null";
+
+    public QuizQuestion QuestionSelected = new();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        foreach (var item in GetQuizQuestionsAsync(await repository.GetQuizQuestions(topicId, number)))
+        {
+            QuizQuestion card = new()
+                {
+                    Question = $"{item.Id}a. {item.QuestionMain}, {item.ChildA}",
+                    Answer = item.AnswerA,
+                    Explanation = string.IsNullOrEmpty(item.ExplanationA) ? "n/a" : item.ExplanationA
+                };
+            QuizQuestion cardB = new()
+                {
+                    Question = $"{item.Id}b. {item.QuestionMain}, {item.ChildB}",
+                    Answer = item.AnswerB,
+                    Explanation = string.IsNullOrEmpty(item.ExplanationB) ? "n/a" : item.ExplanationB
+                };
+            QuizQuestion cardC = new()
+                {
+                    Question = $"{item.Id}c. {item.QuestionMain}, {item.ChildC}",
+                    Answer = item.AnswerC,
+                    Explanation = string.IsNullOrEmpty(item.ExplanationC) ? "n/a" : item.ExplanationC
+                };
+            QuizQuestion cardD = new()
+                {
+                    Question = $"{item.Id}d. {item.QuestionMain}, {item.ChildD}",
+                    Answer = item.AnswerD,
+                    Explanation = string.IsNullOrEmpty(item.ExplanationD) ? "n/a" : item.ExplanationD
+                };
+            QuizQuestion cardE = new()
+                {
+                    Question = $"{item.Id}e. {item.QuestionMain}, {item.ChildE}",
+                    Answer = item.AnswerE,
+                    Explanation = string.IsNullOrEmpty(item.ExplanationE) ? "n/a" : item.ExplanationE
+                };
+
+            Quizzes.Add(card);
+            Quizzes.Add(cardB);
+            Quizzes.Add(cardC);
+            Quizzes.Add(cardD);
+            Quizzes.Add(cardE);
+        }
+        totalQuizzes = Quizzes.Count;
+        GetQuizQuestion();
+        watch.Start();
+    }
+
+    public List<Question> GetQuizQuestionsAsync(IEnumerable<Question> questions) => questions.Take(number).ToList();
+    void GetQuizQuestion()
+    {
+        if (count < totalQuizzes)
+        {
+            answerVisibility = "hidden";
+
+            numberLeft = $"{totalQuizzes - count} questions left";
+
+            QuestionSelected = Quizzes[count];
+        }
+        else
+        {
+            QuizDone();
+        }
+    }
+
+    void AnswerResponse(string answer)
+    {
+        answerVisibility = "visible";
+
+        if (answer.Equals("null"))
+        {
+            answerResult = "Question left";
+        }
+        else
+        {
+            if (bool.Parse(answer).CompareTo(QuestionSelected.Answer) == 0)
+            {
+                answerResult = "correct";
+                correctCount++;
+            }
+            else
+            {
+                answerResult = "wrong";
+                wrongCount++;
+            }
+        }
+    }
+    void NextQuestion()
+    {
+        answerVisibility = "hidden";
+        count++;
+        GetQuizQuestion();
+    }
+
+    void QuizDone()
+    {
+        watch.Stop();
+
+        if (bool.Parse(negativeMarking))
+        {
+            result = (double)(correctCount - wrongCount) / (double)totalQuizzes;
+        }
+        else
+        {
+            result = (double)correctCount / (double)totalQuizzes;
+        }
+
+        quizDone = true;
+    }
+}

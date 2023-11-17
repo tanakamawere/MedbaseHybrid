@@ -1,0 +1,95 @@
+﻿@page "/about"
+
+<PageTitle>About</PageTitle>
+
+<header class="py-5 medbase-font background-state">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center justify-content-center">
+            <div class="col-lg-6 col-xl-6 col-xxl-4">
+                <div class="my-5 text-center text-xl-start">
+                    <MudText Typo="Typo.h2" class="display-5 text-light fw-bolder mb-2">
+                        About & Contact😍
+                    </MudText>
+                    <MudText Class="text-light">
+                        Medbase is built around the best learning practises of spaced repetition and
+                        active recall. All the questions are available for ease of access to medical students, pharmacy students and everyone in the
+                        health sciences field.
+                    </MudText>
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+                        <MudButton Variant="Variant.Filled" Href="/changelog" StartIcon="@Icons.Material.Filled.ChangeCircle" Color="Color.Primary">Version History</MudButton>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-xxl-6 text-center">
+                <img class="img-fluid rounded-3 my-5"
+                     src="img/joyride.svg" alt="..." />
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Contact cards-->
+<section class="py-5 medbase-font" id="contacts">
+    <div class="container px-5">
+        <div class="text-center mb-5">
+            <i class="bi bi-envelope"></i>
+            <h1 class="fw-bolder">Get in touch📞</h1>
+            <p class="lead fw-normalmb-0">I'd love to hear from you</p>
+        </div>
+
+        <!-- Contact cards-->
+        <div class="row gx-5 row-cols-2 py-5 text-center">
+            <div class="col text-center">
+                <i class="bi bi-whatsapp">🗨️</i>
+                <div class="h5 mb-2">Chat with me</div>
+                <p class="mb-0">
+                    If WhatsApp is your preferred channel of communication,
+                    <MudLink href="https://wa.me/263718086035">
+                        have at it.
+                    </MudLink>
+                </p>
+            </div>
+            <div class="col text-center">
+                <i class="bi bi-envelope text-dark">📧</i>
+                <div class="h5">Send me an email</div>
+                <p class="mb-0">
+                    Get in touch at
+                    <MudLink href="mailto:admin@medbase.co.zw?subject=Medbase:%20<Subject%20here>">
+                        admin@medbase.co.zw
+                    </MudLink>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<hr />
+<section class="py-5 medbase-font">
+    <div class="container px-5">
+        <div class="text-center mb-5">
+            <i class="bi bi-laptop text-dark"></i>
+            <MudText Class="h1 fw-bold">Website Info🫡</MudText>
+            <MudText class="lead fw-normal mb-0">How this website was made🔧</MudText>
+        </div>
+
+        <MudText class="lead mb-1 text-center">
+            This website was coded using C# 12 on the .NET 8 platform.
+            <br />
+            using Blazor
+        </MudText>
+        <div class="col text-center">
+            <i class="bi bi-globe"></i>
+            <div class="h5">Visit my website</div>
+            <MudText class="mb-0">
+                Get in touch at
+                <MudLink href="https://www.tanakamawere.com">
+                    www.tanakamawere.com
+                </MudLink>
+            </MudText>
+        </div>
+    </div>
+</section>
+
+
+@code {
+
+}

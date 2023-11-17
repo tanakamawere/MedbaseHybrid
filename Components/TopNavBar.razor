@@ -1,0 +1,10 @@
+﻿<nav class="navbar justify-content-center" style="background-color:#6397ff">
+    @ChildContent
+</nav>
+
+@code{
+    [Parameter]
+    public string NavTitle { get; set; } = "Medbase";
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = default!;
+}

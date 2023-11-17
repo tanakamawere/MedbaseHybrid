@@ -1,0 +1,99 @@
+﻿@page "/"
+@page "/home"
+@using MedbaseLibrary.Models;
+@using MedbaseLibrary.Services;
+@inject NavigationManager navManager;
+@inject IApiRepository repository
+
+<!-- Header-->
+<header class="py-5 background-state">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center justify-content-center">
+            <div class="col-lg-6 col-xl-6 col-xxl-4">
+                <div class="my-5 text-center text-xl-start">
+                    <MudText Typo="Typo.h2" Class="fw-bold text-light" Color="Color.Inherit">medbase😃</MudText>
+                    <MudText Typo="Typo.subtitle1" Class="lead fw-normal text-light">Over 1,500 MCQs (with answers) on Anatomy, Physiology & Pathology</MudText>
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+                        <MudButton Variant="Variant.Filled" Href="/courses" StartIcon="@Icons.Material.Filled.ContentPasteGo" Color="Color.Primary">Get Started</MudButton>
+                        <MudButton Variant="Variant.Filled" Href="/about" StartIcon="@Icons.Material.Filled.Book" Color="Color.Primary">Learn More</MudButton>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-xxl-6 text-center">
+                <img class="img-fluid rounded-3 my-5" src="img/home_illustration.svg" alt="..." />
+            </div>
+        </div>
+    </div>
+
+</header>
+
+<section class="container">
+    <div class="row gx-5 mt-5 justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+            <div class="text-center">
+                <MudText class="fw-bolder" Typo="Typo.h5">From our blog</MudText>
+                <MudText class="lead fw-normal mb-5" Typo="Typo.h6">
+                    A few bits & bobs on medical school and the likes
+                </MudText>
+            </div>
+        </div>
+    </div>
+    <div class="row gx-5">
+        @foreach (Article item in Articles)
+        {
+            <div class="col-lg-4 mb-5">
+                <MudCard @onclick="() => GoToArticle(item.Id)">
+                    <MudCardMedia Height="300" Image="@item.ImageURL" alt="..." />
+                    <MudCardContent class="card-body p-4">
+                        <h5 class="card-title mb-3">
+                            @item.Title
+                        </h5>
+                        <p class="mb-0">
+                            @item.Summary
+                        </p>
+                        <MudDivider/>
+                        <div class="small">
+                            <MudText Typo="Typo.subtitle2" class="fw-bold">@item.Writer</MudText>
+                            <MudText Typo="Typo.caption">
+                                @item.DatePosted.ToString("dddd, dd MMMM yyyy")
+                            </MudText>
+                        </div>
+                    </MudCardContent>
+                </MudCard>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="stacked-image stacked">
+    <div class="container mt-5">
+        <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-centershadow-lg">
+            <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
+                <MudText Typo="Typo.h2" class="display-4 fw-bold text-light">Medbase Mobile Application📱</MudText>
+                <MudText Class="text-light">
+                    Get your MCQs offline, create quizzes & much more. Everything is better in the app.
+                </MudText>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+                    <a href="https://play.google.com/store/apps/details?id=com.tanakamawere.medbasehybrid"><img src="img/google_play_badge.png" alt="" style="max-width:300px" /></a>
+                </div>
+            </div>
+            <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
+                <img class="rounded-lg-3" src="img/deviceframes.png" alt="" height="450">
+            </div>
+        </div>
+    </div>
+</section>
+
+@code{
+    private IEnumerable<Article> Articles { get; set; } = Enumerable.Empty<Article>();
+
+    protected override Task OnInitializedAsync() => GetArticlesAsync();
+
+    private async Task GetArticlesAsync() => Articles = await repository.GetArticlesNumbered(3);
+
+    private void GoToArticle(int article)
+    {
+        Console.WriteLine(navManager.BaseUri.ToString());
+        navManager.NavigateTo($"/article/{article}");
+    }
+}
