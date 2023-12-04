@@ -1,8 +1,11 @@
 ﻿@page "/topics/{courseRef}"
+@using MedbaseHybrid.Services
 @using MedbaseLibrary.Models
 @using MedbaseLibrary.Services
 @inject IApiRepository repository
 @inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject IDatabaseRepository databaseRepository
 
 <PageTitle>Topics</PageTitle>
 
@@ -29,7 +32,7 @@
                                 </MudCardHeader>
                                 <MudCardActions>
                                     <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@($"questions/{item.TopicRef}")">View</MudButton>
-                                    <MudButton Variant="Variant.Text" Color="Color.Secondary" @onclick="() => OpenDialog(item.TopicRef)">Quiz</MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Secondary" @onclick="() => Download(item)">Download</MudButton>
                                 </MudCardActions>
                             </MudCard>
                             @*<div class="card h-100 shadow border-0">
@@ -68,6 +71,7 @@
     int topicToCustomise;
     private bool negativeMarking = false;
     private int numberOfQuestions = 1;
+    private Snackbar snackbar;
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: "#", icon: Icons.Material.Filled.Home),
@@ -91,6 +95,44 @@
             showCustomisation = true;
         else if (showCustomisation.Equals(true))
             showCustomisation = false;
+    }
+
+    async Task Download(Topic topic)
+    {
+        if (topic is null) return;
+
+        try
+        {
+            //add loading popup here
+            if (CheckIfAlreadyDownloaded(topic) == false)
+                await DownloadMethod(topic);
+            else
+                await Shell.Current.DisplayAlert("Already downloaded", "Your requested topic is already downloaded on your device", "Ok");
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+        finally
+        {
+            //destroy loading popup here
+        }
+    }
+    async Task DownloadMethod(Topic topic)
+    {
+        await databaseRepository.SaveTopicAndQuestionsAsync(await repository.GetQuestionsSimple(topic.TopicRef), topic);
+    }
+    bool CheckIfAlreadyDownloaded(Topic topic)
+    {
+        List<Topic> downloadedTopics = databaseRepository.GetTopicsAsync().ToList();
+        bool downloaded = false;
+        Topic topicFound = downloadedTopics.Where(x => x.Name == topic.Name).FirstOrDefault();
+
+        if (topicFound is not null)
+        {
+            downloaded = true;
+        }
+        return downloaded;
     }
 
     private void OpenDialog(int topic)

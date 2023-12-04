@@ -1,63 +1,65 @@
 ﻿@page "/"
 @page "/home"
+@using MedbaseHybrid.Services
 @using MedbaseLibrary.Models;
+@inject ISnackbar Snackbar
 @using MedbaseLibrary.Services;
 @inject NavigationManager navManager;
 @inject IApiRepository repository
 
-<div class="container flow">
-    <Courses />
+<PageTitle>Courses</PageTitle>
+<div class="container">
+
+    @if (!CoursesList.Any())
+    {
+        <LoadingComponent />
+    }
+    else
+    {
+        <div class="row pt-5">
+            @foreach (Course item in CoursesList)
+            {
+                <div class="col-6 col-lg-4 col-sm-6 mb-5">
+                    <MudCard @onclick="() => GoToTopics(item.CourseRef)">
+                        <MudCardMedia Image="@item.ImageURL" Height="100" />
+                        <MudCardContent>
+                            <MudText Typo="Typo.h6">
+                                @item.Title
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="d-lg-block d-none">
+                                @item.Description
+                            </MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </div>
+
+            }
+        </div>
+
+    }
 </div>
 
-<section class="container">
-    <div class="row gx-5 mt-5 justify-content-center">
-        <div class="col-lg-8 col-xl-6">
-            <div class="text-center">
-                <MudText class="fw-bolder" Typo="Typo.h5">From our blog</MudText>
-                <MudText class="lead fw-normal mb-5" Typo="Typo.h6">
-                    A few bits & bobs on medical school and the likes
-                </MudText>
-            </div>
-        </div>
-    </div>
-
-    <div class="row gx-5">
-        @foreach (Article item in Articles)
-        {
-            <div class="col-lg-4 mb-5">
-                <MudCard @onclick="() => GoToArticle(item.Id)">
-                    <MudCardMedia Height="300" Image="@item.ImageURL" alt="..." />
-                    <MudCardContent class="card-body p-4">
-                        <h5 class="card-title mb-3">
-                            @item.Title
-                        </h5>
-                        <p class="mb-0">
-                            @item.Summary
-                        </p>
-                        <MudDivider/>
-                        <div class="small">
-                            <MudText Typo="Typo.subtitle2" class="fw-bold">@item.Writer</MudText>
-                            <MudText Typo="Typo.caption">
-                                @item.DatePosted.ToString("dddd, dd MMMM yyyy")
-                            </MudText>
-                        </div>
-                    </MudCardContent>
-                </MudCard>
-            </div>
-        }
-    </div>
-</section>
-
-@code{
-    private IEnumerable<Article> Articles { get; set; } = Enumerable.Empty<Article>();
-
-    protected override Task OnInitializedAsync() => GetArticlesAsync();
-
-    private async Task GetArticlesAsync() => Articles = await repository.GetArticlesNumbered(3);
-
-    private void GoToArticle(int article)
+@code {
+    private IEnumerable<Course> CoursesList { get; set; } = Enumerable.Empty<Course>();
+    private Snackbar snackbar;
+    protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine(navManager.BaseUri.ToString());
-        navManager.NavigateTo($"/article/{article}");
+        //check if internet is there first
+        if (Helpers.InternetAvailable() == true)
+        {
+            await GetArticlesAsync();
+        }
+        else
+        {
+            //if not, show error message
+            snackbar = Snackbar.Add("No internet connection. Redirecting to your downloads...", Severity.Success);
+            navManager.NavigateTo("/downloads");
+        }
+    }
+
+    private async Task GetArticlesAsync() => CoursesList = await repository.GetCourses();
+    private void GoToTopics(string courseRef)
+    {
+        navManager.NavigateTo($"/topics/{courseRef}");
     }
 }

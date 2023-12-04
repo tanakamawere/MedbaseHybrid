@@ -3,12 +3,14 @@
     x:Class="MedbaseHybrid.BlazorPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:admob="clr-namespace:Plugin.MauiMTAdmob.Controls;assembly=Plugin.MauiMTAdmob"
     xmlns:local="clr-namespace:MedbaseHybrid"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     BackgroundColor="{DynamicResource Gray100}">
     <ContentPage.Behaviors>
         <toolkit:StatusBarBehavior StatusBarColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Black}}" StatusBarStyle="{AppThemeBinding Light=DarkContent, Dark=LightContent}" />
     </ContentPage.Behaviors>
+
     <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html">
         <BlazorWebView.RootComponents>
             <RootComponent ComponentType="{x:Type local:Main}" Selector="#app" />

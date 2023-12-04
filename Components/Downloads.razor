@@ -8,9 +8,13 @@
 <div class="container">
     <div class="row gx-5 align-items-center justify-content-center">
         <div class="row">
-            @if (!TopicsList.Any())
+            @if (!TopicsList.Any() && IsBusy.Equals(true))
             {
                 <LoadingComponent />
+            }
+            else if (!TopicsList.Any() && IsBusy.Equals(false))
+            {
+                <EmptyComponent />
             }
             else
             {
@@ -61,9 +65,12 @@
 
 @code {
     private IEnumerable<Topic> TopicsList { get; set; } = Enumerable.Empty<Topic>();
+    private bool IsBusy;
 
     protected override void OnInitialized()
     {
+        IsBusy = true;
         TopicsList = repository.GetTopicsAsync();
+        IsBusy = false;
     }
 }
