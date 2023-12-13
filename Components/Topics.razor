@@ -31,7 +31,7 @@
                                     </CardHeaderContent>
                                 </MudCardHeader>
                                 <MudCardActions>
-                                    <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@($"questions/{item.TopicRef}")">View</MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@($"questions/{item.TopicRef}/online")">View</MudButton>
                                     <MudButton Variant="Variant.Text" Color="Color.Secondary" @onclick="() => Download(item)">Download</MudButton>
                                 </MudCardActions>
                             </MudCard>
@@ -81,7 +81,10 @@
 
     private IEnumerable<Topic> TopicsList { get; set; } = Enumerable.Empty<Topic>();
 
-    protected async override Task OnParametersSetAsync() => TopicsList = await repository.GetTopics(courseRef);
+    protected async override Task OnParametersSetAsync() 
+    {
+        TopicsList = await repository.GetTopics(courseRef); 
+    }
 
     private void ToggleNegativeMarking()
     {
@@ -101,13 +104,18 @@
     {
         if (topic is null) return;
 
+        var downloadingDialog = DialogService.Show<LoadingDialog>("Downloading...");
         try
         {
             //add loading popup here
+
             if (CheckIfAlreadyDownloaded(topic) == false)
+            {
                 await DownloadMethod(topic);
+                snackbar = Snackbar.Add("Download was successful", Severity.Success);
+            }
             else
-                await Shell.Current.DisplayAlert("Already downloaded", "Your requested topic is already downloaded on your device", "Ok");
+                snackbar = Snackbar.Add("This topic is already downloaded", Severity.Info);
         }
         catch (Exception)
         {
@@ -116,12 +124,15 @@
         finally
         {
             //destroy loading popup here
+            downloadingDialog.Close();
         }
     }
+
     async Task DownloadMethod(Topic topic)
     {
         await databaseRepository.SaveTopicAndQuestionsAsync(await repository.GetQuestionsSimple(topic.TopicRef), topic);
     }
+
     bool CheckIfAlreadyDownloaded(Topic topic)
     {
         List<Topic> downloadedTopics = databaseRepository.GetTopicsAsync().ToList();
@@ -133,11 +144,5 @@
             downloaded = true;
         }
         return downloaded;
-    }
-
-    private void OpenDialog(int topic)
-    {
-        var options = new DialogOptions { CloseOnEscapeKey = true };
-        DialogService.Show<QuizCustomisationDialog>(topic.ToString(), options);
     }
 }

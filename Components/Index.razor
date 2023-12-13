@@ -8,8 +8,7 @@
 @inject IApiRepository repository
 
 <PageTitle>Courses</PageTitle>
-<div class="container">
-
+<MudContainer>
     @if (!CoursesList.Any())
     {
         <LoadingComponent />
@@ -37,7 +36,7 @@
         </div>
 
     }
-</div>
+</MudContainer>
 
 @code {
     private IEnumerable<Course> CoursesList { get; set; } = Enumerable.Empty<Course>();

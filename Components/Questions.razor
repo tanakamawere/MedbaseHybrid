@@ -1,8 +1,10 @@
-﻿@page "/questions/{topicRef:int}"
+﻿@page "/questions/{topicRef:int}/{source}"
+@using MedbaseHybrid.Services
 @using MedbaseLibrary.Models
 @using MedbaseLibrary.Services
 @inject IDialogService DialogService
-@inject IApiRepository repository
+@inject IDatabaseRepository databaseRepository
+@inject IApiRepository apiRepository
 @using Markdig
 
 <PageTitle>Questions</PageTitle>
@@ -141,6 +143,8 @@
 @code {
     [Parameter]
     public int topicRef { get; set; } = 0;
+    [Parameter]
+    public string source { get; set; } = "offline";
     public int Answers { get; set; } = 0;
     private int paginationPage = 1;
     public bool searchBarOpen = false;
@@ -173,11 +177,17 @@
             Answers = 0;
     }
 
-    private async Task GetQuestions(int page = 1) => QuestionPaged = await repository.GetPagedQuestions(topicRef, page, 10f);
+    private async Task GetQuestions(int page = 1)
+    {
+        if (source == "offline")
+            QuestionPaged = await databaseRepository.GetQuestionsPaged(topicRef, page, 30f);
+        else if (source == "online")
+            QuestionPaged = await apiRepository.GetPagedQuestions(topicRef, page, 10f);
+    }
 
     private async Task GetSearchQuestions(int page = 1)
     {
-        QuestionPaged = await repository.GetSearchPagedQuestions(topicRef, page, 30f, searchTerm);
+        QuestionPaged = await apiRepository.GetSearchPagedQuestions(topicRef, page, 30f, searchTerm);
         if (QuestionPaged.Questions.ToList().Count() == 0)
         {
             searchResultsNull = true;

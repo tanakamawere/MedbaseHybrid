@@ -2,11 +2,13 @@
 @using MedbaseHybrid.Services
 @inject IDatabaseRepository repository
 @inject NavigationManager navMananger;
+@inject ISnackbar Snackbar;
+@inject IDialogService DialogService;
 
 
 <PageTitle>Downloads</PageTitle>
-<div class="container">
-    <div class="row gx-5 align-items-center justify-content-center">
+<MudContainer Class="mt-3">
+    <MudGrid Justify="Justify.Center">
         <div class="row">
             @if (!TopicsList.Any() && IsBusy.Equals(true))
             {
@@ -30,7 +32,8 @@
                                     </CardHeaderContent>
                                 </MudCardHeader>
                                 <MudCardActions>
-                                    <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@($"questions/{item.TopicRef}")">View</MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@($"questions/{item.TopicRef}/offline")">View</MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Surface" OnClick="() => DeleteTopic(item.TopicRef)">Delete</MudButton>
                                 </MudCardActions>
                             </MudCard>
                             @*<div class="card h-100 shadow border-0">
@@ -59,18 +62,40 @@
                 </Virtualize>
             }
         </div>
-    </div>
-</div>
+    </MudGrid>
+</MudContainer>
 
 
 @code {
     private IEnumerable<Topic> TopicsList { get; set; } = Enumerable.Empty<Topic>();
     private bool IsBusy;
+    private Snackbar snackbar;
 
     protected override void OnInitialized()
     {
         IsBusy = true;
         TopicsList = repository.GetTopicsAsync();
         IsBusy = false;
+    }
+
+    private void DeleteTopic(int topic)
+    {
+        var downloadingDialog = DialogService.Show<LoadingDialog>("Deleting...");
+        try
+        {
+            IsBusy = true;
+            repository.DeleteTopicAsync(topic);
+            snackbar = Snackbar.Add("Topic Deleted", Severity.Success);
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+        finally
+        {
+            downloadingDialog.Close();
+            IsBusy = false;
+        }
     }
 }
