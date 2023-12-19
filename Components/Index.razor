@@ -4,6 +4,7 @@
 @using MedbaseLibrary.Models;
 @inject ISnackbar Snackbar
 @using MedbaseLibrary.Services;
+@using Sentry
 @inject NavigationManager navManager;
 @inject IApiRepository repository
 
@@ -59,6 +60,14 @@
     private async Task GetArticlesAsync() => CoursesList = await repository.GetCourses();
     private void GoToTopics(string courseRef)
     {
-        navManager.NavigateTo($"/topics/{courseRef}");
+        try
+        {
+            navManager.NavigateTo($"/topics/{courseRef}");
+        }
+        catch (Exception ex)
+        {
+            snackbar = Snackbar.Add($"Error: {ex.Message}", Severity.Normal);
+            SentrySdk.CaptureException(ex);
+        }
     }
 }

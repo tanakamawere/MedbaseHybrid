@@ -1,5 +1,7 @@
 ﻿@using MedbaseHybrid.Services
+@using Sentry
 @inherits LayoutComponentBase
+@inject NavigationManager navManager
 
 <PageTitle>Medbase | Medical School MCQs</PageTitle>
 
@@ -18,7 +20,8 @@
         <MudNavMenu Rounded="true" Margin="Margin.Dense" Color="Color.Primary" Class="pa-2">
 
             <MudNavLink Class="@(internetOptionsVisibility.Equals(true) ? "d-block" : "d-none")" Href="/home" Icon="@Icons.Material.Filled.Dashboard">Home</MudNavLink>
-            <MudNavLink Href="/downloads" Icon="@Icons.Material.Filled.Download">Downloads</MudNavLink>
+            <MudNavLink OnClick="() => GoToTopics()" Icon="@Icons.Material.Filled.Download">Downloads</MudNavLink>
+            @* <MudNavLink Href="/downloads" Icon="@Icons.Material.Filled.Download">Downloads</MudNavLink> *@
             <MudNavLink Class="@(internetOptionsVisibility.Equals(true) ? "d-block" : "d-none")" Href="/articles" Icon="@Icons.Material.Filled.Newspaper">Articles</MudNavLink>
             @* <MudNavLink Href="/Gamma" Icon="@Icons.Material.Filled.Download">Gamma</MudNavLink> *@
             <MudNavLink Href="/about" Icon="@Icons.Material.Filled.QuestionAnswer">About & Contact</MudNavLink>
@@ -85,5 +88,17 @@
             internetOptionsVisibility = true;
         else
             internetOptionsVisibility = false;
+    }
+
+    private void GoToTopics()
+    {
+        try
+        {
+            navManager.NavigateTo("/downloads");
+        }
+        catch (Exception ex)
+        {
+            SentrySdk.CaptureException(ex);
+        }
     }
 }

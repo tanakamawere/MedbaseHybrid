@@ -1,0 +1,56 @@
+﻿@page "/note/{topicReference:int}"
+@using MedbaseLibrary.Models
+@inject IApiRepository repository
+@using Markdig
+
+
+@if (loading.Equals(true))
+{
+    <LoadingComponent />
+}
+else if (Note == null && loading.Equals(false))
+{
+    <EmptyNotesComponent />
+}
+else
+{
+    <!-- Header-->
+    <header class="py-5 medbase-font background-state">
+        <div class="container px-5">
+            <div class="row gx-5 align-items-center justify-content-center">
+                <div class="col-lg-8 col-xl-4 col-xxl-4">
+                    <div class="my-5 text-center text-xl-start">
+                        <MudText Typo="Typo.h5" class="display-5 fw-bolder mb-2 text-light">
+                            @Note.TopicReferenceName
+                        </MudText>
+                        <MudText class="text-light fw-normal mb-4">
+                            Last Updated: @Note.DateUpdated.ToString("dddd, dd MMMM yyyy") at @Note.DateUpdated.ToString("hh:mm")
+                        </MudText>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <MudContainer>
+        <MudMarkdown Value="@Note.Text" /> 
+        @* @((MarkupString)Markdown.ToHtml(Note.Text)) *@
+    </MudContainer>
+}
+
+@code {
+    [Parameter]
+    public int topicReference { get; set; } = 0;
+
+    public NoteDto Note { get; set; } = new();
+    public bool loading { get; set; } = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (topicReference != 0)
+        {
+            loading = true;
+            Note = await repository.GetNoteDtoByReference(topicReference);
+            loading = false;
+        }
+    }
+}

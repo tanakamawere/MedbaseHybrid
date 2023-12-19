@@ -12,7 +12,7 @@
 
     <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
 
-    @if (!QuestionPaged.Questions.Any())
+    @if (isLoading.Equals(true))
     {
         <div style="display:@(searchResultsNull == true ? "none" : "block");">
             <LoadingComponent />
@@ -22,6 +22,10 @@
             Your search term did not bring back any results on this topic.
             Try to search in another topic.
         </div>
+    }
+    else if (isLoading.Equals(false) && QuestionPaged.Questions.Count().Equals(0))
+    {
+        <UnderConstruction />
     }
     else
     {
@@ -50,7 +54,7 @@
                     Label="Show Toolbar"
                     Class="object-left" />
         </div>
-        <div style="margin-bottom:150px;">
+        <div style="margin-bottom:200px;">
             <Virtualize Items="QuestionPaged.Questions.ToList()" Context="question" TItem="Question">
                 <ItemContent>
                     <MudCard class="mb-2">
@@ -149,7 +153,7 @@
     private int paginationPage = 1;
     public bool searchBarOpen = false;
     public bool searchResultsNull = false;
-
+    private bool isLoading;
     private bool showToolbar = true;
     private string searchTerm = "";
     public int qts;
@@ -179,10 +183,14 @@
 
     private async Task GetQuestions(int page = 1)
     {
+        isLoading = true;
+
         if (source == "offline")
             QuestionPaged = await databaseRepository.GetQuestionsPaged(topicRef, page, 30f);
         else if (source == "online")
             QuestionPaged = await apiRepository.GetPagedQuestions(topicRef, page, 10f);
+
+        isLoading = false;
     }
 
     private async Task GetSearchQuestions(int page = 1)

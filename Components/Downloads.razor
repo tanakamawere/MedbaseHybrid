@@ -32,8 +32,8 @@
                                     </CardHeaderContent>
                                 </MudCardHeader>
                                 <MudCardActions>
-                                    <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@($"questions/{item.TopicRef}/offline")">View</MudButton>
                                     <MudButton Variant="Variant.Text" Color="Color.Surface" OnClick="() => DeleteTopic(item.TopicRef)">Delete</MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@($"questions/{item.TopicRef}/offline")">View MCQs</MudButton>
                                 </MudCardActions>
                             </MudCard>
                             @*<div class="card h-100 shadow border-0">

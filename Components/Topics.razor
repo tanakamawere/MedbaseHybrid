@@ -5,6 +5,7 @@
 @inject IApiRepository repository
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject NavigationManager navManager;
 @inject IDatabaseRepository databaseRepository
 
 <PageTitle>Topics</PageTitle>
@@ -13,9 +14,13 @@
     <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
     <div class="row gx-5 align-items-center justify-content-center">
         <div class="row">
-            @if (!TopicsList.Any())
+            @if (isLoading.Equals(true))
             {
                 <LoadingComponent />
+            }
+            else if (isLoading.Equals(false) && TopicsList.Count().Equals(0))
+            {
+                <UnderConstruction />
             }
             else
             {
@@ -31,8 +36,9 @@
                                     </CardHeaderContent>
                                 </MudCardHeader>
                                 <MudCardActions>
-                                    <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@($"questions/{item.TopicRef}/online")">View</MudButton>
-                                    <MudButton Variant="Variant.Text" Color="Color.Secondary" @onclick="() => Download(item)">Download</MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@($"questions/{item.TopicRef}/online")">MCQs</MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary" @onclick="() => Download(item)">Download</MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary" @onclick="() => GoToNotes(item.TopicRef)">Notes</MudButton>
                                 </MudCardActions>
                             </MudCard>
                             @*<div class="card h-100 shadow border-0">
@@ -72,6 +78,7 @@
     private bool negativeMarking = false;
     private int numberOfQuestions = 1;
     private Snackbar snackbar;
+    private bool isLoading;
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: "#", icon: Icons.Material.Filled.Home),
@@ -83,7 +90,9 @@
 
     protected async override Task OnParametersSetAsync() 
     {
-        TopicsList = await repository.GetTopics(courseRef); 
+        isLoading = true; 
+        TopicsList = await repository.GetTopics(courseRef);
+        isLoading = false;
     }
 
     private void ToggleNegativeMarking()
@@ -144,5 +153,10 @@
             downloaded = true;
         }
         return downloaded;
+    }
+
+    private void GoToNotes(int topicReference)
+    {
+        navManager.NavigateTo($"/note/{topicReference}");
     }
 }

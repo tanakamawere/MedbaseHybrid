@@ -15,9 +15,6 @@
                         active recall. All the questions are available for ease of access to medical students, pharmacy students and everyone in the
                         health sciences field.
                     </MudText>
-                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
-                        <MudButton Variant="Variant.Filled" Href="/changelog" StartIcon="@Icons.Material.Filled.ChangeCircle" Color="Color.Primary">Version History</MudButton>
-                    </div>
                 </div>
             </div>
             <div class="col-xl-6 col-xxl-6 text-center">
@@ -44,7 +41,7 @@
                 <div class="h5 mb-2">Chat with me</div>
                 <p class="mb-0">
                     If WhatsApp is your preferred channel of communication,
-                    <MudLink href="https://wa.me/263785468923">
+                    <MudLink href="@Constants.LinkToWhatsApp">
                         have at it.
                     </MudLink>
                 </p>
@@ -54,7 +51,7 @@
                 <div class="h5">Send me an email</div>
                 <p class="mb-0">
                     Get in touch at
-                    <MudLink href="mailto:tanaka@tanakamawere.co.zw?subject=Medbase:%20<Subject%20here>">
+                    <MudLink href="@Constants.LinkToMyEmail">
                         tanaka@tanakamawere.co.zw
                     </MudLink>
                 </p>
@@ -68,19 +65,21 @@
         <div class="text-center mb-5">
             <i class="bi bi-laptop text-dark"></i>
             <MudText Class="h1 fw-bold">Website Info🫡</MudText>
-            <MudText class="lead fw-normal mb-0">How this website was made🔧</MudText>
+            <MudText class="lead fw-normal mb-0">How this app was made🔧</MudText>
         </div>
 
         <MudText class="lead mb-1 text-center">
-            This application was coded using C# 11 and .NET MAUI Blazor Hybrid
+            This application was coded using C# 12 on the .NET 8 platform.
+            <br />
+            using Blazor Hybrid, MudBlazor and SQLite.
         </MudText>
         <div class="col text-center">
             <i class="bi bi-globe"></i>
             <div class="h5">Visit my website</div>
             <MudText class="mb-0">
                 Get in touch at
-                <MudLink href="https://www.tanakamawere.com">
-                    www.tanakamawere.com
+                <MudLink href="@Constants.LinkToMyWebsite">
+                    @Constants.LinkToMyWebsite
                 </MudLink>
             </MudText>
         </div>
