@@ -1,9 +1,9 @@
 ﻿@page "/"
 @page "/home"
 @using MedbaseHybrid.Services
-@using MedbaseLibrary.Models;
+@using MedbaseComponents.Models;
 @inject ISnackbar Snackbar
-@using MedbaseLibrary.Services;
+@using MedbaseComponents.Services;
 @using Sentry
 @inject NavigationManager navManager;
 @inject IApiRepository repository
@@ -62,7 +62,7 @@
     {
         try
         {
-            navManager.NavigateTo($"/topics/{courseRef}");
+            navManager.NavigateTo($"/topicsMaui/{courseRef}");
         }
         catch (Exception ex)
         {

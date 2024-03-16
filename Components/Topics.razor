@@ -1,7 +1,8 @@
-﻿@page "/topics/{courseRef}"
+﻿@page "/topicsMaui/{courseRef}"
 @using MedbaseHybrid.Services
-@using MedbaseLibrary.Models
-@using MedbaseLibrary.Services
+@using MedbaseComponents.Models
+@using MedbaseComponents.Services
+@using MedbaseComponents.Controls
 @inject IApiRepository repository
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
@@ -36,7 +37,7 @@
                                     </CardHeaderContent>
                                 </MudCardHeader>
                                 <MudCardActions>
-                                    <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@($"questions/{item.TopicRef}/online")">MCQs</MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@($"/questions/{item.TopicRef}/online")">Questions</MudButton>
                                     <MudButton Variant="Variant.Text" Color="Color.Primary" @onclick="() => Download(item)">Download</MudButton>
                                     <MudButton Variant="Variant.Text" Color="Color.Primary" @onclick="() => GoToNotes(item.TopicRef)">Notes</MudButton>
                                 </MudCardActions>
@@ -113,7 +114,7 @@
     {
         if (topic is null) return;
 
-        var downloadingDialog = DialogService.Show<LoadingDialog>("Downloading...");
+        var downloadingDialog = DialogService.Show<LoadingComponent>("Downloading...");
         try
         {
             //add loading popup here

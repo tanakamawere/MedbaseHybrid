@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Storage;
 using MedbaseHybrid.Services;
-using MedbaseLibrary.Services;
+using MedbaseComponents.Services;
 using Microsoft.Extensions.Logging;
 using MudBlazor;
 using MudBlazor.Services;
@@ -47,6 +47,7 @@ public static class MauiProgram
 #endif
 		builder.Services.AddSingleton<IApiRepository, ApiRepository>();
         builder.Services.AddSingleton<IDatabaseRepository, DatabaseRepository>();
+        builder.Services.AddSingleton<IPlatformInfoService, PlatformInfoService>();
         builder.Services.AddSingleton(Connectivity.Current);
         //Registering Barrel
         builder.Services.AddSingleton(FileSaver.Default);

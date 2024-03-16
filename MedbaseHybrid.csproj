@@ -32,7 +32,6 @@
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
     </PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Medbase.MedbaseLibrary" Version="1.0.1" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.7" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.7" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.7" />
@@ -82,6 +81,10 @@
         <PackageReference Include="Plugin.MauiMTAdmob" Version="1.3.2" />
         <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />
         <PackageReference Include="Sentry.Maui" Version="4.1.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MedbaseComponents\MedbaseComponents.csproj" />
     </ItemGroup>
 
     <ItemGroup>

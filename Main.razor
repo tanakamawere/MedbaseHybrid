@@ -1,4 +1,6 @@
-<Router AppAssembly="@typeof(Main).Assembly">
+@using MedbaseComponents.Pages.User;
+
+<Router AppAssembly="@typeof(Main).Assembly" AdditionalAssemblies="new[]{typeof(Questions).Assembly}">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />

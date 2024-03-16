@@ -1,4 +1,4 @@
-﻿using MedbaseLibrary.Models;
+﻿using MedbaseComponents.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedbaseHybrid.Services
@@ -8,8 +8,6 @@ namespace MedbaseHybrid.Services
         public DbSet<Question> Questions { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Topic> Topics { get; set; }
-        public DbSet<Session> Sessions { get; set; }
-        public DbSet<QuestionPack> QuestionPacks { get; set; }
 
         public DataContext()
         {
@@ -20,7 +18,7 @@ namespace MedbaseHybrid.Services
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "medbasedfhvpmkofdjskgjdfagfhd.db3");
+            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "medbasedfhvpmkofdjskgjdfaghd.db3");
             optionsBuilder.UseSqlite($"Filename={dbPath}");
             optionsBuilder.EnableSensitiveDataLogging();
         }

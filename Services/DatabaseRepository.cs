@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MedbaseLibrary.Models;
+using MedbaseComponents.Models;
 using System.Diagnostics;
 
 namespace MedbaseHybrid.Services
@@ -76,20 +76,9 @@ namespace MedbaseHybrid.Services
             return response;
         }
 
-        public IQueryable<Session> GetSessionsAsync()
-        {
-            return context.Sessions;
-        }
-
         public IQueryable<Topic> GetTopicsAsync()
         {
             return context.Topics;
-        }
-
-        public async Task SaveSession(Session session)
-        {
-            context.Sessions.Add(session);
-            await context.SaveChangesAsync();
         }
 
         public async Task SaveTopicAndQuestionsAsync(IEnumerable<Question> questions, Topic topic)

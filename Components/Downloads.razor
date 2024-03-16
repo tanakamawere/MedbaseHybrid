@@ -1,5 +1,6 @@
 ﻿@page "/downloads"
 @using MedbaseHybrid.Services
+@using MedbaseComponents.Controls
 @inject IDatabaseRepository repository
 @inject NavigationManager navMananger;
 @inject ISnackbar Snackbar;
@@ -16,7 +17,7 @@
             }
             else if (!TopicsList.Any() && IsBusy.Equals(false))
             {
-                <EmptyComponent />
+                <EmptyNotesComponent />
             }
             else
             {
@@ -80,7 +81,7 @@
 
     private void DeleteTopic(int topic)
     {
-        var downloadingDialog = DialogService.Show<LoadingDialog>("Deleting...");
+        var downLoadingComponent = DialogService.Show<LoadingComponent>("Deleting...");
         try
         {
             IsBusy = true;
@@ -94,7 +95,7 @@
         }
         finally
         {
-            downloadingDialog.Close();
+            downLoadingComponent.Close();
             IsBusy = false;
         }
     }
