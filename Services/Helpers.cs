@@ -1,6 +1,8 @@
-﻿namespace MedbaseHybrid.Services
+﻿using MedbaseHybrid.MsalClient;
+
+namespace MedbaseHybrid.Services
 {
-    public class Helpers
+    public static class Helpers
     {
         public static bool InternetAvailable()
         {
@@ -22,6 +24,17 @@
                 permitted = true;
 
             return permitted;
+        }
+        public static string[] ToStringArray(this NestedSettings[] nestedSettings)
+        {
+            var result = new string[nestedSettings.Length];
+
+            for (int i = 0; i < nestedSettings.Length; i++)
+            {
+                result[i] = nestedSettings[i].Value;
+            }
+
+            return result!;
         }
     }
 }

@@ -6,6 +6,9 @@ using Microsoft.Extensions.Logging;
 using MudBlazor;
 using MudBlazor.Services;
 using Plugin.MauiMTAdmob;
+using MedbaseHybrid.MsalClient;
+using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace MedbaseHybrid;
 
@@ -45,10 +48,22 @@ public static class MauiProgram
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();
 #endif
-		builder.Services.AddSingleton<IApiRepository, ApiRepository>();
+        var executingAssembly = Assembly.GetExecutingAssembly();
+
+        using var stream = executingAssembly.GetManifestResourceStream("MedbaseHybrid.appsettings.json");
+
+        var configuration = new ConfigurationBuilder()
+                    .AddJsonStream(stream)
+                    .Build();
+
+
+
+        builder.Services.AddSingleton<IApiRepository, ApiRepository>();
         builder.Services.AddSingleton<IDatabaseRepository, DatabaseRepository>();
         builder.Services.AddSingleton<IPlatformInfoService, PlatformInfoService>();
+        builder.Services.AddSingleton<IPCAWrapper, PCAWrapper>();
         builder.Services.AddSingleton(Connectivity.Current);
+        builder.Configuration.AddConfiguration(configuration);
         //Registering Barrel
         builder.Services.AddSingleton(FileSaver.Default);
 

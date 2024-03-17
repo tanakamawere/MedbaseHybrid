@@ -1,7 +1,11 @@
-﻿@using MedbaseHybrid.Services
+﻿@using MedbaseHybrid.MsalClient
+@using MedbaseHybrid.Services
+@using Microsoft.Extensions.Configuration
 @using Sentry
 @inherits LayoutComponentBase
 @inject NavigationManager navManager
+@inject IPCAWrapper _pcaWrapper
+@inject IConfiguration _configuration
 
 <PageTitle>Medbase | Medical School MCQs</PageTitle>
 
@@ -26,6 +30,15 @@
             @* <MudNavLink Href="/Gamma" Icon="@Icons.Material.Filled.Download">Gamma</MudNavLink> *@
             <MudNavLink Href="/about" Icon="@Icons.Material.Filled.QuestionAnswer">About & Contact</MudNavLink>
 
+            <MudDivider />
+            @if (IsLoggedIn)
+            {
+                <MudNavLink Icon="@Icons.Material.Filled.Logout" OnClick="() => OnLogoutClicked()">Logout</MudNavLink>
+            }
+            else
+            {
+                <MudNavLink Icon="@Icons.Material.Filled.Login" OnClick="() => OnLoginClicked()">Login</MudNavLink>
+            }
             <MudDivider />
 
             <MudNavLink OnClick="ThemeToggle" Icon="@(_isDarkMode == true ? Icons.Material.Filled.DarkMode : Icons.Material.Filled.LightMode)">
@@ -100,5 +113,64 @@
         {
             SentrySdk.CaptureException(ex);
         }
+    }
+
+    bool _isLoggedIn = false;
+    public bool IsLoggedIn
+    {
+        get => _isLoggedIn;
+        set
+        {
+            if (_isLoggedIn == value) return;
+            _isLoggedIn = value;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async void OnLoginClicked()
+    {
+        IsLoggedIn = false;
+
+        try
+        {
+            // Attempt silent login, and obtain access token.
+            var result = await _pcaWrapper.AcquireTokenSilentAsync(_pcaWrapper.Scopes).ConfigureAwait(false);
+
+            // Set access token.
+            GlobalValues.AccessToken = result?.AccessToken;
+            if (GlobalValues.AccessToken != null)
+                IsLoggedIn = true;
+
+        }
+        // A MsalUiRequiredException will be thrown, if this is the first attempt to login, or after logging out.
+        catch (MsalUiRequiredException)
+        {
+            try
+            {
+                // Perform interactive login, and obtain access token.
+                var result = await _pcaWrapper.AcquireTokenInteractiveAsync(_pcaWrapper?.Scopes).ConfigureAwait(false);
+
+                // Set access token.
+                GlobalValues.AccessToken = result?.AccessToken;
+                if (GlobalValues.AccessToken != null)
+                    IsLoggedIn = true;
+            }
+            catch (Exception ex)
+            {
+                // Ignore.
+            }
+        }
+        catch
+        {
+            IsLoggedIn = false;
+        }
+
+    }
+
+    private async void OnLogoutClicked()
+    {
+        await _pcaWrapper.SignOutAsync().ConfigureAwait(false);
+        IsLoggedIn = false;
+        GlobalValues.AccessToken = null;
     }
 }
